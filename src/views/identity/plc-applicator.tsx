@@ -53,7 +53,7 @@ const PlcUpdatePage = () => {
 
 	createEffect(() => {
 		const $step = step();
-		if ($step > 1 && $step < 6) {
+		if (($step > 1 && $step < 6) || pending()) {
 			const cleanup = history.block((tx) => {
 				if (window.confirm(`Abort this action?`)) {
 					cleanup();
