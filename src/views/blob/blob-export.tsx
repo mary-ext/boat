@@ -275,7 +275,7 @@ const BlobExportPage = () => {
 								const input = ev.currentTarget;
 								const value = input.value;
 
-								if (value !== '' && isServiceUrlString(value)) {
+								if (value !== '' && !isServiceUrlString(value)) {
 									input.setCustomValidity('Must be a valid service URL');
 								} else {
 									input.setCustomValidity('');
