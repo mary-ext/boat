@@ -1,7 +1,7 @@
 import { At } from '@atcute/client/lexicons';
 
 import { didDocument, DidDocument } from '../types/did-doc';
-import { DID_WEB_RE } from '../utils/strings';
+import { DID_PLC_RE, DID_WEB_RE } from '../utils/strings';
 
 export const getDidDocument = async ({
 	did,
@@ -18,6 +18,10 @@ export const getDidDocument = async ({
 	let rawDoc: any;
 
 	if (type === 'plc') {
+		if (!DID_PLC_RE.test(did)) {
+			throw new Error(`invalid did:plc identifier`);
+		}
+
 		const origin = import.meta.env.VITE_PLC_DIRECTORY_URL;
 		const response = await fetch(`${origin}/${did}`, { signal });
 
@@ -31,8 +35,8 @@ export const getDidDocument = async ({
 
 		rawDoc = json;
 	} else if (type === 'web') {
-		if (!DID_WEB_RE.test(ident)) {
-			throw new Error(`invalid identifier`);
+		if (!DID_WEB_RE.test(did)) {
+			throw new Error(`invalid did:web identifier`);
 		}
 
 		const response = await fetch(`https://${ident}/.well-known/did.json`, { signal });
