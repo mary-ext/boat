@@ -23,7 +23,7 @@ const routes: RouteDefinition[] = [
 	},
 	{
 		path: '/plc-applicator',
-		component: lazy(() => import('./views/identity/plc-applicator')),
+		component: lazy(() => import('./views/identity/plc-applicator/page')),
 	},
 
 	{
