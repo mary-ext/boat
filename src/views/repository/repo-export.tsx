@@ -13,6 +13,8 @@ import { useTitle } from '~/lib/navigation/router';
 import { makeAbortable } from '~/lib/utils/abortable';
 import { formatBytes } from '~/lib/utils/intl/bytes';
 
+import Button from '~/components/inputs/button';
+import TextInput from '~/components/inputs/text-input';
 import Logger, { createLogger } from '~/components/logger';
 
 const RepoExportPage = () => {
@@ -179,45 +181,33 @@ const RepoExportPage = () => {
 				class="m-4 flex flex-col gap-4"
 			>
 				<fieldset disabled={pending()} class="contents">
-					<label class="flex flex-col gap-2">
-						<span class="font-semibold text-gray-600">Handle or DID identifier*</span>
-						<input
-							type="text"
-							name="ident"
-							required
-							pattern={DID_OR_HANDLE_RE.source}
-							placeholder="paul.bsky.social"
-							class="rounded border border-gray-400 px-3 py-2 text-sm placeholder:text-gray-400 focus:border-purple-800 focus:ring-1 focus:ring-purple-800 focus:ring-offset-0"
-						/>
-					</label>
+					<TextInput
+						label="Handle or DID identifier*"
+						type="text"
+						name="ident"
+						autocomplete="username"
+						pattern={/* @once */ DID_OR_HANDLE_RE.source}
+						placeholder="paul.bsky.social"
+						autofocus
+					/>
 
-					<label class="flex flex-col gap-2">
-						<span class="font-semibold text-gray-600">PDS service</span>
-						<input
-							type="url"
-							name="service"
-							placeholder="https://bsky.social"
-							onInput={(ev) => {
-								const input = ev.currentTarget;
-								const value = input.value;
+					<TextInput
+						label="PDS service"
+						type="url"
+						placeholder="https://bsky.social"
+						onChange={(text, event) => {
+							const input = event.currentTarget;
 
-								if (value !== '' && !isServiceUrlString(value)) {
-									input.setCustomValidity('Must be a valid service URL');
-								} else {
-									input.setCustomValidity('');
-								}
-							}}
-							class="rounded border border-gray-400 px-3 py-2 text-sm placeholder:text-gray-400 focus:border-purple-800 focus:ring-1 focus:ring-purple-800 focus:ring-offset-0"
-						/>
-					</label>
+							if (text !== '' && !isServiceUrlString(text)) {
+								input.setCustomValidity('Must be a valid service URL');
+							} else {
+								input.setCustomValidity('');
+							}
+						}}
+					/>
 
 					<div>
-						<button
-							type="submit"
-							class="flex h-9 select-none items-center rounded bg-purple-800 px-4 text-sm font-semibold text-white hover:bg-purple-700 active:bg-purple-700 disabled:pointer-events-none disabled:opacity-50"
-						>
-							Export!
-						</button>
+						<Button type="submit">Export!</Button>
 					</div>
 				</fieldset>
 			</form>

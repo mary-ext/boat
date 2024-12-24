@@ -13,6 +13,8 @@ import { asIdentifier, useSearchParams } from '~/lib/utils/search-params';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
+import Button from '~/components/inputs/button';
+import TextInput from '~/components/inputs/text-input';
 
 const DidLookupPage = () => {
 	const [params, setParams] = useSearchParams({
@@ -58,31 +60,18 @@ const DidLookupPage = () => {
 				}}
 				class="m-4 flex flex-col gap-4"
 			>
-				<label class="flex flex-col gap-2">
-					<span class="font-semibold text-gray-600">Handle or DID identifier*</span>
-					<input
-						ref={(node) => {
-							if (!params.q) {
-								setTimeout(() => node.focus(), 1);
-							}
-						}}
-						type="text"
-						name="ident"
-						required
-						pattern={DID_OR_HANDLE_RE.source}
-						placeholder="paul.bsky.social"
-						value={params.q ?? ''}
-						class="rounded border border-gray-400 px-3 py-2 text-sm placeholder:text-gray-400 focus:border-purple-800 focus:ring-1 focus:ring-purple-800 focus:ring-offset-0"
-					/>
-				</label>
+				<TextInput
+					label="Handle or DID identifier*"
+					type="text"
+					name="ident"
+					autocomplete="username"
+					pattern={/* @once */ DID_OR_HANDLE_RE.source}
+					placeholder="paul.bsky.social"
+					autofocus
+				/>
 
 				<div>
-					<button
-						type="submit"
-						class="flex h-9 select-none items-center rounded bg-purple-800 px-4 text-sm font-semibold text-white hover:bg-purple-700 active:bg-purple-700"
-					>
-						Look up!
-					</button>
+					<Button type="submit">Look up!</Button>
 				</div>
 			</form>
 			<hr class="mx-4 border-gray-300" />
