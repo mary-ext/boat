@@ -8,7 +8,7 @@ interface TextInputProps {
 	type?: 'text' | 'password' | 'url' | 'email';
 	name?: string;
 	required?: boolean;
-	autocomplete?: 'off' | 'on' | 'one-time-code';
+	autocomplete?: 'off' | 'on' | 'one-time-code' | 'username';
 	autocorrect?: 'off' | 'on';
 	pattern?: string;
 	placeholder?: string;
@@ -57,7 +57,7 @@ const TextInput = (props: TextInputProps) => {
 				placeholder={props.placeholder}
 				value={props.value ?? ''}
 				class={textInputStyles(props)}
-				onChange={(ev) => onChange?.(ev.target.value)}
+				onInput={(ev) => onChange?.(ev.target.value)}
 			/>
 
 			<p class="text-pretty text-[0.8125rem] leading-5 text-gray-500 empty:hidden">{props.blurb}</p>

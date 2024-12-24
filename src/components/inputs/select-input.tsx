@@ -39,7 +39,7 @@ const SelectInput = <T extends string>(props: SelectInputProps<T>) => {
 				required={props.required}
 				value={props.value ?? ''}
 				class="rounded border border-gray-400 py-2 pl-3 pr-8 text-sm focus:border-purple-800 focus:ring-1 focus:ring-purple-800 focus:ring-offset-0"
-				onChange={(ev) => onChange?.(ev.target.value as T)}
+				onInput={(ev) => onChange?.(ev.target.value as T)}
 			>
 				{props.options.map((props) => {
 					return (
