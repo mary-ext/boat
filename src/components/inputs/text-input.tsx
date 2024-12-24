@@ -53,7 +53,7 @@ const TextInput = (props: TextInputProps) => {
 				}}
 				type={props.type ?? 'text'}
 				id={fieldId}
-				name={props.type}
+				name={props.name}
 				required={props.required}
 				autocomplete={props.autocomplete}
 				pattern={props.pattern}
