@@ -16,6 +16,7 @@ import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/componen
 
 import { type PlcInformation, PlcApplicatorConstraints } from '../page';
 import { getPlcKeying } from '../plc-utils';
+import { XRPCError } from '@atcute/client';
 
 type Method = 'pds' | 'key';
 
@@ -68,7 +69,11 @@ const Step1_HandleInput = ({
 		onError(error) {
 			let message: string | undefined;
 
-			if (error instanceof DidIsNotPlcError) {
+			if (error instanceof XRPCError) {
+				if (error.kind === 'InvalidRequest' && error.message.includes('resolve handle')) {
+					message = `Can't seem to resolve handle, is it typed correctly?`;
+				}
+			} else if (error instanceof DidIsNotPlcError) {
 				message = error.message;
 			}
 
