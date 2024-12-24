@@ -1,5 +1,8 @@
 import { createEffect, JSX } from 'solid-js';
+
 import { createId } from '~/lib/hooks/id';
+
+import { BoundInputEvent } from './_types';
 
 interface TextInputProps {
 	label: JSX.Element;
@@ -14,7 +17,7 @@ interface TextInputProps {
 	placeholder?: string;
 	value?: string;
 	autofocus?: boolean;
-	onChange?: (next: string) => void;
+	onChange?: (next: string, event: BoundInputEvent<HTMLInputElement>) => void;
 }
 
 const textInputStyles = ({ monospace = false }: TextInputProps) => {
@@ -57,7 +60,7 @@ const TextInput = (props: TextInputProps) => {
 				placeholder={props.placeholder}
 				value={props.value ?? ''}
 				class={textInputStyles(props)}
-				onInput={(ev) => onChange?.(ev.target.value)}
+				onInput={(event) => onChange?.(event.target.value, event)}
 			/>
 
 			<p class="text-pretty text-[0.8125rem] leading-5 text-gray-500 empty:hidden">{props.blurb}</p>

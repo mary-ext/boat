@@ -2,6 +2,8 @@ import { createEffect, JSX } from 'solid-js';
 
 import { createId } from '~/lib/hooks/id';
 
+import { BoundInputEvent } from './_types';
+
 interface SelectInputProps<T extends string> {
 	label: JSX.Element;
 	blurb?: string;
@@ -10,7 +12,7 @@ interface SelectInputProps<T extends string> {
 	value?: T;
 	autofocus?: boolean;
 	options: { value: T; label: string; disabled?: boolean }[];
-	onChange?: (next: T) => void;
+	onChange?: (next: T, event: BoundInputEvent<HTMLSelectElement>) => void;
 }
 
 const SelectInput = <T extends string>(props: SelectInputProps<T>) => {
@@ -39,7 +41,7 @@ const SelectInput = <T extends string>(props: SelectInputProps<T>) => {
 				required={props.required}
 				value={props.value ?? ''}
 				class="rounded border border-gray-400 py-2 pl-3 pr-8 text-sm focus:border-purple-800 focus:ring-1 focus:ring-purple-800 focus:ring-offset-0"
-				onInput={(ev) => onChange?.(ev.target.value as T)}
+				onInput={(event) => onChange?.(event.target.value as T, event)}
 			>
 				{props.options.map((props) => {
 					return (

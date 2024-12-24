@@ -2,13 +2,15 @@ import { JSX } from 'solid-js';
 
 import { createId } from '~/lib/hooks/id';
 
+import { BoundInputEvent } from './_types';
+
 interface RadioInputProps<T extends string> {
 	label: JSX.Element;
 	name?: string;
 	required?: boolean;
 	value?: T | undefined;
 	options: { value: T; label: string }[];
-	onChange?: (next: T) => void;
+	onChange?: (next: T, event: BoundInputEvent<HTMLInputElement>) => void;
 }
 
 const RadioInput = <T extends string>(props: RadioInputProps<T>) => {
@@ -36,7 +38,7 @@ const RadioInput = <T extends string>(props: RadioInputProps<T>) => {
 							value={value}
 							checked={hasValue ? props.value === value : false}
 							class="border-gray-400 text-purple-800 focus:ring-purple-800"
-							onInput={() => onChange?.(value)}
+							onInput={(event) => onChange?.(value, event)}
 						/>
 
 						<label for={optionId} class="text-sm">
