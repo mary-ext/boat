@@ -3,7 +3,6 @@
 // Commit: 3e9dab413f4eda8d6bce565388c5ddb7aeff9f7e
 // Most of the changes are just trimming it down to only include the browser
 // history implementation.
-import { nanoid } from 'nanoid/non-secure';
 
 export type Action = 'traverse' | 'push' | 'replace' | 'update';
 
@@ -327,7 +326,7 @@ const createEvents = <F extends (arg: any) => void>(): Events<F> => {
 };
 
 const createKey = () => {
-	return nanoid();
+	return crypto.randomUUID();
 };
 
 /**
