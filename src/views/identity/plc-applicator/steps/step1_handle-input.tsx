@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 
+import { XRPCError } from '@atcute/client';
 import { At } from '@atcute/client/lexicons';
 
 import { getDidDocument } from '~/api/queries/did-doc';
@@ -16,7 +17,6 @@ import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/componen
 
 import { type PlcInformation, PlcApplicatorConstraints } from '../page';
 import { getPlcKeying } from '../plc-utils';
-import { XRPCError } from '@atcute/client';
 
 type Method = 'pds' | 'key';
 
