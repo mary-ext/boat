@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
 
 import * as CBOR from '@atcute/cbor';
-import * as uint8arrays from 'uint8arrays';
+import { toBase64Url } from '@atcute/multibase';
 
 import { PlcUpdateOp } from '~/api/types/plc';
 
@@ -43,7 +43,7 @@ const Step5_PrivateKeyConfirmation = ({
 			const opBytes = CBOR.encode(operation);
 			const sigBytes = await keypair.sign(opBytes);
 
-			const signature = uint8arrays.toString(sigBytes, 'base64url');
+			const signature = toBase64Url(sigBytes);
 
 			const signedOperation: PlcUpdateOp = {
 				...operation,

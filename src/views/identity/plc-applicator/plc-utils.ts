@@ -1,6 +1,6 @@
 import * as CBOR from '@atcute/cbor';
-import { verifySignature } from '@atproto/crypto';
-import * as uint8arrays from 'uint8arrays';
+import { verifySigWithDidKey } from '@atcute/crypto';
+import { fromBase64Url } from '@atcute/multibase';
 
 import { PlcLogEntry, PlcUpdatePayload } from '~/api/types/plc';
 import { UnwrapArray } from '~/api/utils/types';
@@ -60,7 +60,7 @@ export const getPlcKeying = async (logs: PlcLogEntry[]) => {
 		}
 
 		/** keys that potentially signed this operation */
-		let signers: string[] | undefined;
+		let signers: `did:key:${string}`[] | undefined;
 		if (operation.prev === null) {
 			if (operation.type === 'create') {
 				signers = [operation.recoveryKey, operation.signingKey];
@@ -84,12 +84,12 @@ export const getPlcKeying = async (logs: PlcLogEntry[]) => {
 		assert(signers !== undefined, `no signers found for ${entry.createdAt}`);
 
 		const opBytes = CBOR.encode({ ...operation, sig: undefined });
-		const sigBytes = uint8arrays.fromString(operation.sig, 'base64url');
+		const sigBytes = fromBase64Url(operation.sig);
 
 		/** key that signed this operation */
 		let signedBy: string | undefined;
 		for (const key of signers) {
-			const valid = await verifySignature(key, opBytes, sigBytes);
+			const valid = await verifySigWithDidKey(key, sigBytes, opBytes);
 			if (valid) {
 				signedBy = key;
 				break;

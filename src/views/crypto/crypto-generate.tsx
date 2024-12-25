@@ -1,27 +1,24 @@
 import { createSignal, Show } from 'solid-js';
 
-import { P256Keypair, Secp256k1Keypair } from '@atproto/crypto';
-import { concat, toString } from 'uint8arrays';
+import {
+	createP256Keypair,
+	createSecp256k1Keypair,
+	type P256PrivateKeyExportable,
+	type Secp256k1PrivateKeyExportable,
+} from '@atcute/crypto';
 
 import { useTitle } from '~/lib/navigation/router';
-import { K256_PRIVATE_PREFIX, P256_PRIVATE_PREFIX } from '~/lib/utils/crypto';
 
 import Button from '~/components/inputs/button';
 import RadioInput from '~/components/inputs/radio-input';
 
 type KeyType = 'nistp256' | 'secp256k1';
 
-interface GeneratedKeypair {
-	type: KeyType;
-	publicDidKey: string;
-	privateBytes: Uint8Array;
-	privateMultibase: string;
-	privateHex: string;
-}
+type Keypair = P256PrivateKeyExportable | Secp256k1PrivateKeyExportable;
 
 const CryptoGeneratePage = () => {
 	const [type, setType] = createSignal<KeyType>('secp256k1');
-	const [result, setResult] = createSignal<GeneratedKeypair>();
+	const [result, setResult] = createSignal<Keypair>();
 
 	useTitle(() => `Generate secret keys — boat`);
 
@@ -38,44 +35,17 @@ const CryptoGeneratePage = () => {
 					ev.preventDefault();
 
 					const $type = type();
-
-					let keypair: P256Keypair | Secp256k1Keypair;
-
-					let publicDidKey: string;
-
-					let privateBytes: Uint8Array;
-					let privateMultibase: string;
-					let privateHex: string;
+					let keypair: Keypair;
 
 					if ($type === 'nistp256') {
-						keypair = await P256Keypair.create({ exportable: true });
-
-						privateBytes = await keypair.export();
-						privateMultibase = `z` + toString(concat([P256_PRIVATE_PREFIX, privateBytes]), 'base58btc');
-						privateHex = toString(privateBytes, 'hex');
-
-						publicDidKey = keypair.did();
+						keypair = createP256Keypair();
 					} else if ($type === 'secp256k1') {
-						keypair = await Secp256k1Keypair.create({ exportable: true });
-
-						privateBytes = await keypair.export();
-						privateMultibase = `z` + toString(concat([K256_PRIVATE_PREFIX, privateBytes]), 'base58btc');
-						privateHex = toString(privateBytes, 'hex');
-
-						publicDidKey = keypair.did();
+						keypair = createSecp256k1Keypair();
 					} else {
 						return;
 					}
 
-					const result: GeneratedKeypair = {
-						type: $type,
-						publicDidKey,
-						privateBytes,
-						privateMultibase,
-						privateHex,
-					};
-
-					setResult(result);
+					setResult(keypair);
 				}}
 				class="flex flex-col gap-4 p-4"
 			>
@@ -107,17 +77,17 @@ const CryptoGeneratePage = () => {
 
 						<div>
 							<p class="font-semibold text-gray-600">Public key (did:key)</p>
-							<span class="font-mono">{/* @once */ keypair.publicDidKey}</span>
+							<span class="font-mono">{/* @once */ keypair.did()}</span>
 						</div>
 
 						<div>
 							<p class="font-semibold text-gray-600">Private key (hex)</p>
-							<span class="font-mono">{/* @once */ keypair.privateHex}</span>
+							<span class="font-mono">{/* @once */ keypair.export('hex')}</span>
 						</div>
 
 						<div>
-							<p class="font-semibold text-gray-600">Private key (multibase)</p>
-							<span class="font-mono">{/* @once */ keypair.privateMultibase}</span>
+							<p class="font-semibold text-gray-600">Private key (multikey)</p>
+							<span class="font-mono">{/* @once */ keypair.export('multikey')}</span>
 						</div>
 					</div>
 				)}

@@ -1,6 +1,7 @@
 import { createSignal } from 'solid-js';
 
-import { P256Keypair, Secp256k1Keypair } from '@atproto/crypto';
+import { P256PrivateKey, Secp256k1PrivateKey } from '@atcute/crypto';
+import { fromBase16 } from '@atcute/multibase';
 
 import { createMutation } from '~/lib/utils/mutation';
 
@@ -26,17 +27,15 @@ const Step2_PrivateKeyInput = ({
 
 	const hexMutation = createMutation({
 		async mutationFn({ type, hex }: { type: KeyType; hex: string }) {
-			let keypair: P256Keypair | Secp256k1Keypair;
+			const privateKey = fromBase16(hex);
 
 			if (type === 'nistp256') {
-				keypair = await P256Keypair.import(hex);
+				return new P256PrivateKey(privateKey);
 			} else if (type === 'secp256k1') {
-				keypair = await Secp256k1Keypair.import(hex);
+				return new Secp256k1PrivateKey(privateKey);
 			} else {
 				throw new Error(`unsupported "${type}" type`);
 			}
-
-			return keypair;
 		},
 		onMutate() {
 			setError();

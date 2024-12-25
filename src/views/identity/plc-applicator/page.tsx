@@ -2,7 +2,7 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import type { CredentialManager } from '@atcute/client';
 import type { ComAtprotoIdentityGetRecommendedDidCredentials } from '@atcute/client/lexicons';
-import type { P256Keypair, Secp256k1Keypair } from '@atproto/crypto';
+import type { P256PrivateKey, Secp256k1PrivateKey } from '@atcute/crypto';
 
 import type { DidDocument } from '~/api/types/did-doc';
 import type { PlcUpdatePayload } from '~/api/types/plc';
@@ -35,9 +35,10 @@ export interface PdsSigningMethod {
 	recommendedDidDoc: ComAtprotoIdentityGetRecommendedDidCredentials.Output;
 }
 
+type Keypair = P256PrivateKey | Secp256k1PrivateKey;
 export interface PrivateKeySigningMethod {
 	type: 'private_key';
-	keypair: P256Keypair | Secp256k1Keypair;
+	keypair: Keypair;
 	didPublicKey: string;
 }
 

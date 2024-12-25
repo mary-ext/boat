@@ -85,6 +85,7 @@ export const Step4_PayloadInput = ({
 								payload.alsoKnownAs = recommended.alsoKnownAs;
 							}
 							if (recommended.rotationKeys) {
+								// @ts-expect-error
 								payload.rotationKeys = recommended.rotationKeys;
 							}
 							if (recommended.services) {

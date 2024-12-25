@@ -2,9 +2,13 @@ import * as v from '@badrap/valita';
 
 import { DID_KEY_RE, DID_RE, HANDLE_RE } from '../utils/strings';
 
-export const didString = v.string().assert((input) => DID_RE.test(input), `must be a valid did`);
+export const didString = v
+	.string()
+	.assert((input): input is `did:${string}:${string}` => DID_RE.test(input), `must be a valid did`);
 
-export const didKeyString = v.string().assert((input) => DID_KEY_RE.test(input), `must be a valid did:key`);
+export const didKeyString = v
+	.string()
+	.assert((input): input is `did:key:${string}` => DID_KEY_RE.test(input), `must be a valid did:key`);
 
 export const handleString = v.string().assert((input) => HANDLE_RE.test(input), `must be a valid handle`);
 
