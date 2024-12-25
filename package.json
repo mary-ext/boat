@@ -7,32 +7,32 @@
 		"fmt": "prettier --cache --write ."
 	},
 	"dependencies": {
-		"@atcute/bluesky": "^1.0.7",
-		"@atcute/car": "^1.1.0",
-		"@atcute/cbor": "^1.0.5",
-		"@atcute/cid": "^1.0.1",
-		"@atcute/client": "^2.0.3",
+		"@atcute/bluesky": "^1.0.11",
+		"@atcute/car": "^1.1.1",
+		"@atcute/cbor": "^1.0.7",
+		"@atcute/cid": "^1.0.3",
+		"@atcute/client": "^2.0.6",
 		"@atproto/crypto": "^0.4.2",
 		"@badrap/valita": "^0.4.2",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/tar": "npm:@jsr/mary__tar@^0.2.4",
-		"nanoid": "^5.0.8",
+		"nanoid": "^5.0.9",
 		"native-file-system-adapter": "^3.0.1",
-		"solid-js": "^1.9.2",
+		"solid-js": "^1.9.3",
 		"uint8arrays": "^5.1.0"
 	},
 	"devDependencies": {
 		"@tailwindcss/forms": "^0.5.9",
-		"@types/node": "^22.10.1",
+		"@types/node": "^22.10.2",
 		"autoprefixer": "^10.4.20",
-		"prettier": "^3.3.3",
-		"prettier-plugin-tailwindcss": "^0.6.8",
-		"tailwindcss": "^3.4.14",
-		"terser": "^5.36.0",
-		"typescript": "5.7.0-beta",
-		"vite": "^5.4.9",
-		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.84.0"
+		"prettier": "^3.4.2",
+		"prettier-plugin-tailwindcss": "^0.6.9",
+		"tailwindcss": "^3.4.17",
+		"terser": "^5.37.0",
+		"typescript": "5.7.2",
+		"vite": "^6.0.5",
+		"vite-plugin-solid": "^2.11.0",
+		"wrangler": "^3.99.0"
 	}
 }
