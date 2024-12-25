@@ -11,6 +11,7 @@ import { getPdsEndpoint } from '~/api/types/did-doc';
 import { isServiceUrlString } from '~/api/types/strings';
 import { DID_OR_HANDLE_RE, isDid } from '~/api/utils/strings';
 
+import { useTitle } from '~/lib/navigation/router';
 import { makeAbortable } from '~/lib/utils/abortable';
 import { PromiseQueue } from '~/lib/utils/promise-queue';
 
@@ -202,6 +203,8 @@ const BlobExportPage = () => {
 
 		logger.log(`Finished!`);
 	};
+
+	useTitle(() => `Export blobs — boat`);
 
 	return (
 		<>

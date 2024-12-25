@@ -9,6 +9,8 @@ import type { PlcUpdatePayload } from '~/api/types/plc';
 
 import { history } from '~/globals/navigation';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import { Wizard } from '~/components/wizard';
 
 import type { DetailedPlcEntry } from './plc-utils';
@@ -93,6 +95,8 @@ const PlcApplicatorPage = () => {
 			onCleanup(cleanup);
 		}
 	});
+
+	useTitle(() => `Apply PLC operations — boat`);
 
 	return (
 		<>
