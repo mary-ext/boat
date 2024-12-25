@@ -14,6 +14,11 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/crypto-generate',
+		component: lazy(() => import('./views/crypto/crypto-generate')),
+	},
+
+	{
 		path: '/did-lookup',
 		component: lazy(() => import('./views/identity/did-lookup')),
 	},

@@ -3,6 +3,8 @@ import { Component, ComponentProps } from 'solid-js';
 import { useTitle } from '~/lib/navigation/router';
 
 import HistoryIcon from '~/components/ic-icons/baseline-history';
+import KeyIcon from '~/components/ic-icons/baseline-key';
+import KeyVisualizerIcon from '~/components/ic-icons/baseline-key-visualizer';
 import AdminPanelSettingsOutlinedIcon from '~/components/ic-icons/outline-admin-panel-settings';
 import ArchiveOutlinedIcon from '~/components/ic-icons/outline-archive';
 import BookmarksOutlinedIcon from '~/components/ic-icons/outline-bookmarks';
@@ -101,6 +103,23 @@ const Frontpage = () => {
 					description: `Move your account data to another server`,
 					href: null,
 					icon: MoveUpOutlinedIcon,
+				},
+			],
+		},
+		{
+			name: `Cryptography`,
+			items: [
+				{
+					name: `Generate secret keys`,
+					description: `Create a new secp256k1/nistp256 keypair`,
+					href: `/crypto-generate`,
+					icon: KeyIcon,
+				},
+				{
+					name: `View crypto key info`,
+					description: `Show basic metadata about a public or private key`,
+					href: null,
+					icon: KeyVisualizerIcon,
 				},
 			],
 		},
