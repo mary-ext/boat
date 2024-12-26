@@ -12,14 +12,11 @@ importers:
         specifier: ^1.0.11
         version: 1.0.11(@atcute/client@2.0.6)
       '@atcute/car':
-        specifier: ^1.1.1
-        version: 1.1.1
+        specifier: ^2.0.0
+        version: 2.0.0
       '@atcute/cbor':
-        specifier: ^1.0.7
-        version: 1.0.7
-      '@atcute/cid':
-        specifier: ^1.0.3
-        version: 1.0.3
+        specifier: ^2.0.0
+        version: 2.0.0
       '@atcute/client':
         specifier: ^2.0.6
         version: 2.0.6
@@ -100,14 +97,14 @@ packages:
     peerDependencies:
       '@atcute/client': ^1.0.0 || ^2.0.0
 
-  '@atcute/car@1.1.1':
-    resolution: {integrity: sha512-j6HY//ttIFCbOioDlEowKn2WOGeNavJenZkAP+wWIhsbRlK+V4+TpnJ38IX/VYfMpQHrKweh3W94wRCYp6L5Zg==}
+  '@atcute/car@2.0.0':
+    resolution: {integrity: sha512-J+/AO1fuyD5KHq9WECdC/8nxKrraYKQRQ3rYNk8MOBlNs2EiePX0c0lgCeyoPtb8MkZ+YFlTgHH+QchDUH7VCg==}
 
-  '@atcute/cbor@1.0.7':
-    resolution: {integrity: sha512-z3chucgCqjAN36ySvUVl1VSwtGME4CDS173eaaEfiTSpRIQ6ewKpKlkzapLUNqtLU9iBx884b9c2j6kjEyn1XA==}
+  '@atcute/cbor@2.0.0':
+    resolution: {integrity: sha512-qZNY08eFnZWNrh9MJdhQyJ6X0IfEHySqFEdu0z3OiqfPUAP+qXzZ5x1j1cwdGR1avm3lHXF+hYDMukypzTefbA==}
 
-  '@atcute/cid@1.0.3':
-    resolution: {integrity: sha512-BZbs+Xt0yMci0I2dLqqYsN76ua8lkMk/HQfEIKr7g2XMBlSc0XNCXfZdbAWPwiCK/NuGaPBocYMRwApd4dF2Qg==}
+  '@atcute/cid@2.0.0':
+    resolution: {integrity: sha512-/05zKpODEO5ReAaI5aveW/bqVSF+dWOPp9WiKh95+08qw5xu94CwUi7Wm+S1AdyT4nt1zpiBBgT8EyvGoKuWrg==}
 
   '@atcute/client@2.0.6':
     resolution: {integrity: sha512-mhdqEicGUx0s5HTFOLpz91rcLS9j/g63de0nmAqv7blhU3j+xBf4le54qr2YIXNfnReZI7EwLYLX/YIBez4LGA==}
@@ -1588,18 +1585,18 @@ snapshots:
     dependencies:
       '@atcute/client': 2.0.6
 
-  '@atcute/car@1.1.1':
+  '@atcute/car@2.0.0':
     dependencies:
-      '@atcute/cbor': 1.0.7
-      '@atcute/cid': 1.0.3
+      '@atcute/cbor': 2.0.0
+      '@atcute/cid': 2.0.0
       '@atcute/varint': 1.0.1
 
-  '@atcute/cbor@1.0.7':
+  '@atcute/cbor@2.0.0':
     dependencies:
-      '@atcute/cid': 1.0.3
+      '@atcute/cid': 2.0.0
       '@atcute/multibase': 1.0.1
 
-  '@atcute/cid@1.0.3':
+  '@atcute/cid@2.0.0':
     dependencies:
       '@atcute/multibase': 1.0.1
       '@atcute/varint': 1.0.1

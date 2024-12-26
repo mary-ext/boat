@@ -8,9 +8,8 @@
 	},
 	"dependencies": {
 		"@atcute/bluesky": "^1.0.11",
-		"@atcute/car": "^1.1.1",
-		"@atcute/cbor": "^1.0.7",
-		"@atcute/cid": "^1.0.3",
+		"@atcute/car": "^2.0.0",
+		"@atcute/cbor": "^2.0.0",
 		"@atcute/client": "^2.0.6",
 		"@atcute/crypto": "^1.0.2",
 		"@atcute/multibase": "^1.0.1",
