@@ -1,6 +1,6 @@
-import { createSignal } from 'solid-js';
+import { createMemo, createSignal, Match, Show, Switch } from 'solid-js';
 
-import { P256PrivateKey, Secp256k1PrivateKey } from '@atcute/crypto';
+import { P256PrivateKey, parsePrivateMultikey, Secp256k1PrivateKey } from '@atcute/crypto';
 import { fromBase16 } from '@atcute/multibase';
 
 import { createMutation } from '~/lib/utils/mutation';
@@ -12,7 +12,11 @@ import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/componen
 
 import { PlcApplicatorConstraints } from '../page';
 
-type KeyType = 'nistp256' | 'secp256k1';
+type KeyType = 'p256' | 'secp256k1';
+type KeyFormat = 'hex' | 'multikey';
+
+const HEX_REGEX = /^[0-9a-f]+$/;
+const MULTIKEY_REGEX = /^z[a-km-zA-HJ-NP-Z1-9]+$/;
 
 const Step2_PrivateKeyInput = ({
 	data,
@@ -23,19 +27,53 @@ const Step2_PrivateKeyInput = ({
 	const [error, setError] = createSignal<string>();
 
 	const [type, setType] = createSignal<KeyType>();
-	const [hex, setHex] = createSignal('');
+	const [input, setInput] = createSignal('');
 
-	const hexMutation = createMutation({
-		async mutationFn({ type, hex }: { type: KeyType; hex: string }) {
-			const privateKey = fromBase16(hex);
+	const detectedFormat = createMemo((): KeyFormat | undefined => {
+		const $input = input();
 
-			if (type === 'nistp256') {
-				return new P256PrivateKey(privateKey);
-			} else if (type === 'secp256k1') {
-				return new Secp256k1PrivateKey(privateKey);
-			} else {
+		if (HEX_REGEX.test($input)) {
+			return 'hex';
+		}
+		if (MULTIKEY_REGEX.test($input)) {
+			return 'multikey';
+		}
+	});
+
+	const mutation = createMutation({
+		async mutationFn({ type, input }: { type: KeyType; input: string }) {
+			if (HEX_REGEX.test(input)) {
+				const privateKey = fromBase16(input);
+
+				switch (type) {
+					case 'p256': {
+						return new P256PrivateKey(privateKey);
+					}
+					case 'secp256k1': {
+						return new Secp256k1PrivateKey(privateKey);
+					}
+				}
+
 				throw new Error(`unsupported "${type}" type`);
 			}
+
+			if (MULTIKEY_REGEX.test(input)) {
+				const match = parsePrivateMultikey(input);
+				const privateKey = match.privateKey;
+
+				switch (match.type) {
+					case 'p256': {
+						return new P256PrivateKey(privateKey);
+					}
+					case 'secp256k1': {
+						return new Secp256k1PrivateKey(privateKey);
+					}
+				}
+
+				throw new Error(`unsupported "${type}" type`);
+			}
+
+			throw new Error(`unknown input format`);
 		},
 		onMutate() {
 			setError();
@@ -65,35 +103,54 @@ const Step2_PrivateKeyInput = ({
 	return (
 		<Stage
 			title="Enter your private key"
-			disabled={hexMutation.isPending}
+			disabled={mutation.isPending}
 			onSubmit={() => {
-				hexMutation.mutate({
+				mutation.mutate({
 					type: type()!,
-					hex: hex(),
+					input: input(),
 				});
 			}}
 		>
-			<TextInput
-				label="Hex-encoded private key"
-				blurb="This app runs locally on your browser, your private key stays entirely within your device."
-				placeholder="a5973930f9d348..."
-				value={hex()}
-				required
-				pattern="[0-9a-f]+"
-				autofocus={isActive()}
-				onChange={setHex}
-			/>
+			<Switch>
+				<Match when={!isActive() && mutation.data} keyed>
+					{(keypair) => (
+						<div class="break-words">
+							<p>
+								<b>{/* @once */ keypair.type}</b> keypair provided.
+							</p>
+							<p class="mt-2 font-mono font-medium">{/* @once */ keypair.did()}</p>
+						</div>
+					)}
+				</Match>
 
-			<RadioInput
-				label="This is a..."
-				value={type()}
-				required
-				options={[
-					{ value: 'secp256k1', label: `ES256K (secp256k1) private key` },
-					{ value: 'nistp256', label: `ES256 (nistp256) private key` },
-				]}
-				onChange={setType}
-			/>
+				<Match when>
+					<TextInput
+						label="Private key (hex or multikey)"
+						blurb="This app runs locally on your browser, your private key stays entirely within your device."
+						type={isActive() ? 'text' : 'password'}
+						autocomplete="off"
+						autocorrect="off"
+						placeholder="a5973930f9d348..."
+						value={input()}
+						required
+						autofocus={isActive()}
+						onChange={setInput}
+					/>
+
+					<Show when={detectedFormat() === 'hex'}>
+						<RadioInput
+							label="This is a..."
+							value={type()}
+							required
+							options={[
+								{ value: 'secp256k1', label: `ES256K (secp256k1) private key` },
+								{ value: 'p256', label: `ES256 (p256) private key` },
+							]}
+							onChange={setType}
+						/>
+					</Show>
+				</Match>
+			</Switch>
 
 			<StageErrorView error={error()} />
 
@@ -103,7 +160,9 @@ const Step2_PrivateKeyInput = ({
 				<Button variant="secondary" onClick={onPrevious}>
 					Previous
 				</Button>
-				<Button type="submit">Next</Button>
+				<Button type="submit" disabled={!detectedFormat()}>
+					Next
+				</Button>
 			</StageActions>
 		</Stage>
 	);
