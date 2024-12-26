@@ -24,8 +24,8 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       '@atcute/crypto':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       '@atcute/multibase':
         specifier: ^1.0.1
         version: 1.0.1
@@ -112,8 +112,8 @@ packages:
   '@atcute/client@2.0.6':
     resolution: {integrity: sha512-mhdqEicGUx0s5HTFOLpz91rcLS9j/g63de0nmAqv7blhU3j+xBf4le54qr2YIXNfnReZI7EwLYLX/YIBez4LGA==}
 
-  '@atcute/crypto@1.0.1':
-    resolution: {integrity: sha512-5MBWQhDlmiaQXLoBwCayTWukSkWe3Kj86A+er0tmH3QhU8vb18dn7PoZvCGLjh3q8BoqFpx0aptPPLwbVl2Okg==}
+  '@atcute/crypto@1.0.2':
+    resolution: {integrity: sha512-jKS6JBiuW/5ljiTIrXD98Tp2oLXuoTBgkhQZt7pA/+j3juzsSuS7w16Ldw8p/1XGuhr8yzpMspvvp30QYXQzeQ==}
 
   '@atcute/multibase@1.0.1':
     resolution: {integrity: sha512-lOVNX+pKwxn/OKCEyM7D/LCBPhnW0Ex0JcDRRTwuuI3w2GbrCut41rUF8uZUsrbrplNLMoj7xZkz9EDku/5mvQ==}
@@ -1606,7 +1606,7 @@ snapshots:
 
   '@atcute/client@2.0.6': {}
 
-  '@atcute/crypto@1.0.1':
+  '@atcute/crypto@1.0.2':
     dependencies:
       '@atcute/multibase': 1.0.1
       '@noble/curves': 1.7.0

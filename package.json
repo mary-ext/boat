@@ -12,7 +12,7 @@
 		"@atcute/cbor": "^1.0.7",
 		"@atcute/cid": "^1.0.3",
 		"@atcute/client": "^2.0.6",
-		"@atcute/crypto": "^1.0.1",
+		"@atcute/crypto": "^1.0.2",
 		"@atcute/multibase": "^1.0.1",
 		"@badrap/valita": "^0.4.2",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
