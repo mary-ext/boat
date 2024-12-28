@@ -11,8 +11,8 @@ interface SelectInputProps<T extends string> {
 	required?: boolean;
 	value?: T;
 	autofocus?: boolean;
-	options: { value: T; label: string; disabled?: boolean }[];
-	onChange?: (next: T, event: BoundInputEvent<HTMLSelectElement>) => void;
+	options: { value: NoInfer<T>; label: string; disabled?: boolean }[];
+	onChange?: (next: NoInfer<T>, event: BoundInputEvent<HTMLSelectElement>) => void;
 }
 
 const SelectInput = <T extends string>(props: SelectInputProps<T>) => {

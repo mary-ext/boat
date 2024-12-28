@@ -9,8 +9,8 @@ interface RadioInputProps<T extends string> {
 	name?: string;
 	required?: boolean;
 	value?: T | undefined;
-	options: { value: T; label: string }[];
-	onChange?: (next: T, event: BoundInputEvent<HTMLInputElement>) => void;
+	options: { value: NoInfer<T>; label: string }[];
+	onChange?: (next: NoInfer<T>, event: BoundInputEvent<HTMLInputElement>) => void;
 }
 
 const RadioInput = <T extends string>(props: RadioInputProps<T>) => {
