@@ -35,7 +35,7 @@ export interface PdsSigningMethod {
 	recommendedDidDoc: ComAtprotoIdentityGetRecommendedDidCredentials.Output;
 }
 
-type Keypair = P256PrivateKey | Secp256k1PrivateKey;
+export type Keypair = P256PrivateKey | Secp256k1PrivateKey;
 export interface PrivateKeySigningMethod {
 	type: 'private_key';
 	keypair: Keypair;

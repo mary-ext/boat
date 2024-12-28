@@ -1,24 +1,26 @@
 import { createSignal, Show } from 'solid-js';
 
-import {
-	createP256Keypair,
-	createSecp256k1Keypair,
-	type P256PrivateKeyExportable,
-	type Secp256k1PrivateKeyExportable,
-} from '@atcute/crypto';
+import { type DidKeyString, P256PrivateKeyExportable, Secp256k1PrivateKeyExportable } from '@atcute/crypto';
 
 import { useTitle } from '~/lib/navigation/router';
 
 import Button from '~/components/inputs/button';
 import RadioInput from '~/components/inputs/radio-input';
 
-type KeyType = 'nistp256' | 'secp256k1';
+type KeyType = 'p256' | 'secp256k1';
 
 type Keypair = P256PrivateKeyExportable | Secp256k1PrivateKeyExportable;
 
+interface KeypairResult {
+	type: KeyType;
+	publicDidKey: DidKeyString;
+	privateHex: string;
+	privateMultikey: string;
+}
+
 const CryptoGeneratePage = () => {
 	const [type, setType] = createSignal<KeyType>('secp256k1');
-	const [result, setResult] = createSignal<Keypair>();
+	const [result, setResult] = createSignal<KeypairResult>();
 
 	useTitle(() => `Generate secret keys — boat`);
 
@@ -37,15 +39,28 @@ const CryptoGeneratePage = () => {
 					const $type = type();
 					let keypair: Keypair;
 
-					if ($type === 'nistp256') {
-						keypair = createP256Keypair();
+					if ($type === 'p256') {
+						keypair = await P256PrivateKeyExportable.createKeypair();
 					} else if ($type === 'secp256k1') {
-						keypair = createSecp256k1Keypair();
+						keypair = await Secp256k1PrivateKeyExportable.createKeypair();
 					} else {
 						return;
 					}
 
-					setResult(keypair);
+					const [publicDidKey, privateHex, privateMultikey] = await Promise.all([
+						keypair.exportPublicKey('did'),
+						keypair.exportPrivateKey('rawHex'),
+						keypair.exportPrivateKey('multikey'),
+					]);
+
+					const result: KeypairResult = {
+						type: keypair.type,
+						publicDidKey,
+						privateHex,
+						privateMultikey,
+					};
+
+					setResult(result);
 				}}
 				class="flex flex-col gap-4 p-4"
 			>
@@ -56,7 +71,7 @@ const CryptoGeneratePage = () => {
 					value={type()}
 					options={[
 						{ value: 'secp256k1', label: `ES256K (secp256k1) private key` },
-						{ value: 'nistp256', label: `ES256 (nistp256) private key` },
+						{ value: 'p256', label: `ES256 (p256) private key` },
 					]}
 					onChange={setType}
 				/>
@@ -77,17 +92,17 @@ const CryptoGeneratePage = () => {
 
 						<div>
 							<p class="font-semibold text-gray-600">Public key (did:key)</p>
-							<span class="font-mono">{/* @once */ keypair.did()}</span>
+							<span class="font-mono">{/* @once */ keypair.publicDidKey}</span>
 						</div>
 
 						<div>
 							<p class="font-semibold text-gray-600">Private key (hex)</p>
-							<span class="font-mono">{/* @once */ keypair.export('hex')}</span>
+							<span class="font-mono">{/* @once */ keypair.privateHex}</span>
 						</div>
 
 						<div>
 							<p class="font-semibold text-gray-600">Private key (multikey)</p>
-							<span class="font-mono">{/* @once */ keypair.export('multikey')}</span>
+							<span class="font-mono">{/* @once */ keypair.privateMultikey}</span>
 						</div>
 					</div>
 				)}

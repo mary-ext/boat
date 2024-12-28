@@ -10,7 +10,7 @@ import RadioInput from '~/components/inputs/radio-input';
 import TextInput from '~/components/inputs/text-input';
 import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
 
-import { PlcApplicatorConstraints } from '../page';
+import type { Keypair, PlcApplicatorConstraints, PrivateKeySigningMethod } from '../page';
 
 type KeyType = 'p256' | 'secp256k1';
 type KeyFormat = 'hex' | 'multikey';
@@ -41,51 +41,59 @@ const Step2_PrivateKeyInput = ({
 	});
 
 	const mutation = createMutation({
-		async mutationFn({ type, input }: { type: KeyType; input: string }) {
+		async mutationFn({ type, input }: { type: KeyType; input: string }): Promise<PrivateKeySigningMethod> {
+			let keypair: Keypair | undefined;
+
 			if (HEX_REGEX.test(input)) {
-				const privateKey = fromBase16(input);
+				const privateKeyBytes = fromBase16(input);
 
 				switch (type) {
 					case 'p256': {
-						return new P256PrivateKey(privateKey);
+						keypair = await P256PrivateKey.importRaw(privateKeyBytes);
+						break;
 					}
 					case 'secp256k1': {
-						return new Secp256k1PrivateKey(privateKey);
+						keypair = await Secp256k1PrivateKey.importRaw(privateKeyBytes);
+						break;
+					}
+					default: {
+						throw new Error(`unsupported "${type}" type`);
 					}
 				}
-
-				throw new Error(`unsupported "${type}" type`);
-			}
-
-			if (MULTIKEY_REGEX.test(input)) {
+			} else if (MULTIKEY_REGEX.test(input)) {
 				const match = parsePrivateMultikey(input);
-				const privateKey = match.privateKey;
+				const privateKeyBytes = match.privateKeyBytes;
 
 				switch (match.type) {
 					case 'p256': {
-						return new P256PrivateKey(privateKey);
+						keypair = await P256PrivateKey.importRaw(privateKeyBytes);
+						break;
 					}
 					case 'secp256k1': {
-						return new Secp256k1PrivateKey(privateKey);
+						keypair = await Secp256k1PrivateKey.importRaw(privateKeyBytes);
+						break;
+					}
+					default: {
+						throw new Error(`unsupported "${type}" type`);
 					}
 				}
-
-				throw new Error(`unsupported "${type}" type`);
+			} else {
+				throw new Error(`unknown input format`);
 			}
 
-			throw new Error(`unknown input format`);
+			return {
+				type: 'private_key',
+				didPublicKey: await keypair.exportPublicKey('did'),
+				keypair: keypair,
+			};
 		},
 		onMutate() {
 			setError();
 		},
-		onSuccess(keypair) {
+		onSuccess(method) {
 			onNext('Step3_OperationSelect', {
 				info: data.info,
-				method: {
-					type: 'private_key',
-					didPublicKey: keypair.did(),
-					keypair: keypair,
-				},
+				method,
 			});
 		},
 		onError(error) {
@@ -113,19 +121,19 @@ const Step2_PrivateKeyInput = ({
 		>
 			<Switch>
 				<Match when={!isActive() && mutation.data} keyed>
-					{(keypair) => (
+					{(method) => (
 						<div class="break-words">
 							<p>
-								<b>{/* @once */ keypair.type}</b> keypair provided.
+								<b>{/* @once */ method.keypair.type}</b> keypair provided.
 							</p>
-							<p class="mt-2 font-mono font-medium">{/* @once */ keypair.did()}</p>
+							<p class="mt-2 font-mono font-medium">{/* @once */ method.didPublicKey}</p>
 						</div>
 					)}
 				</Match>
 
 				<Match when>
 					<TextInput
-						label="Private key (hex or multikey)"
+						label="Private key (raw hex or multikey)"
 						blurb="This app runs locally on your browser, your private key stays entirely within your device."
 						type={isActive() ? 'text' : 'password'}
 						autocomplete="off"

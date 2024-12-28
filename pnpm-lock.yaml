@@ -21,8 +21,8 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       '@atcute/crypto':
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: 2.0.0-alpha.1
+        version: 2.0.0-alpha.1
       '@atcute/multibase':
         specifier: ^1.0.1
         version: 1.0.1
@@ -109,8 +109,8 @@ packages:
   '@atcute/client@2.0.6':
     resolution: {integrity: sha512-mhdqEicGUx0s5HTFOLpz91rcLS9j/g63de0nmAqv7blhU3j+xBf4le54qr2YIXNfnReZI7EwLYLX/YIBez4LGA==}
 
-  '@atcute/crypto@1.0.2':
-    resolution: {integrity: sha512-jKS6JBiuW/5ljiTIrXD98Tp2oLXuoTBgkhQZt7pA/+j3juzsSuS7w16Ldw8p/1XGuhr8yzpMspvvp30QYXQzeQ==}
+  '@atcute/crypto@2.0.0-alpha.1':
+    resolution: {integrity: sha512-nVk4VC4esAIKq1kFc75Y5R2Y5cO/HtCh+li9lRSB4b5PSyL8mHoZNoR0OLa1VQhc1FDvykAD56iXvUz6XnCKCw==}
 
   '@atcute/multibase@1.0.1':
     resolution: {integrity: sha512-lOVNX+pKwxn/OKCEyM7D/LCBPhnW0Ex0JcDRRTwuuI3w2GbrCut41rUF8uZUsrbrplNLMoj7xZkz9EDku/5mvQ==}
@@ -572,13 +572,8 @@ packages:
   '@jsr/mary__tar@0.2.4':
     resolution: {integrity: sha512-jFjPcZj8DRSukPLZOt6+h74cVFdfdTMG9gzbW67YByCJTD52PEpe2sNcfCSw4mQ8hZBNgwiufCPyYL8hR9yicA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__tar/0.2.4.tgz}
 
-  '@noble/curves@1.7.0':
-    resolution: {integrity: sha512-UTMhXK9SeDhFJVrHeUJ5uZlI6ajXg10O6Ddocf9S6GjbSBVZsJo88HzKwXznNfGpMTRDyJkqMjNDPYgf0qFWnw==}
-    engines: {node: ^14.21.3 || >=16}
-
-  '@noble/hashes@1.6.0':
-    resolution: {integrity: sha512-YUULf0Uk4/mAA89w+k3+yUYh6NrEvxZa5T6SY3wlMvE2chHkxFUUIDI8/XW1QSC357iA5pSnqt7XEhvFOqmDyQ==}
-    engines: {node: ^14.21.3 || >=16}
+  '@noble/secp256k1@2.1.0':
+    resolution: {integrity: sha512-XLEQQNdablO0XZOIniFQimiXsZDNwaYgL96dZwC54Q30imSbAOFf3NKtepc+cXyuZf5Q1HCgbqgZ2UFFuHVcEw==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1609,10 +1604,10 @@ snapshots:
 
   '@atcute/client@2.0.6': {}
 
-  '@atcute/crypto@1.0.2':
+  '@atcute/crypto@2.0.0-alpha.1':
     dependencies:
       '@atcute/multibase': 1.0.1
-      '@noble/curves': 1.7.0
+      '@noble/secp256k1': 2.1.0
 
   '@atcute/multibase@1.0.1': {}
 
@@ -1949,11 +1944,7 @@ snapshots:
 
   '@jsr/mary__tar@0.2.4': {}
 
-  '@noble/curves@1.7.0':
-    dependencies:
-      '@noble/hashes': 1.6.0
-
-  '@noble/hashes@1.6.0': {}
+  '@noble/secp256k1@2.1.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
