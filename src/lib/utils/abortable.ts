@@ -6,8 +6,7 @@ export const makeAbortable = (): Abortable => {
 	let controller: AbortController | undefined;
 
 	const cleanup = (): void => {
-		controller?.abort();
-		return (controller = undefined);
+		return (controller &&= controller.abort() as undefined);
 	};
 
 	const signal = (): AbortSignal => {
