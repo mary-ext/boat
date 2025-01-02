@@ -12,17 +12,17 @@ importers:
         specifier: ^1.0.11
         version: 1.0.11(@atcute/client@2.0.6)
       '@atcute/car':
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.0.1
+        version: 2.0.1
       '@atcute/cbor':
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.0.1
+        version: 2.0.1
       '@atcute/client':
         specifier: ^2.0.6
         version: 2.0.6
       '@atcute/crypto':
-        specifier: 2.0.0-alpha.1
-        version: 2.0.0-alpha.1
+        specifier: 2.1.1
+        version: 2.1.1
       '@atcute/multibase':
         specifier: ^1.0.1
         version: 1.0.1
@@ -52,8 +52,8 @@ importers:
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.4.17)
       '@types/node':
-        specifier: ^22.10.2
-        version: 22.10.2
+        specifier: ^22.10.3
+        version: 22.10.3
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.49)
@@ -74,10 +74,10 @@ importers:
         version: 5.7.2
       vite:
         specifier: ^6.0.6
-        version: 6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1)
+        version: 6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0)
       vite-plugin-solid:
         specifier: ^2.11.0
-        version: 2.11.0(solid-js@1.9.3)(vite@6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1))
+        version: 2.11.0(solid-js@1.9.3)(vite@6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0))
       wrangler:
         specifier: ^3.99.0
         version: 3.99.0
@@ -97,26 +97,26 @@ packages:
     peerDependencies:
       '@atcute/client': ^1.0.0 || ^2.0.0
 
-  '@atcute/car@2.0.0':
-    resolution: {integrity: sha512-J+/AO1fuyD5KHq9WECdC/8nxKrraYKQRQ3rYNk8MOBlNs2EiePX0c0lgCeyoPtb8MkZ+YFlTgHH+QchDUH7VCg==}
+  '@atcute/car@2.0.1':
+    resolution: {integrity: sha512-Z1YLniYwChJaHUWJH+99Ru6tNGI3xBngAdlM8qe3xij/wTUaIg14QgXLdWqk6smWTV+bR5IJ+Iiylt2zIJ+XXQ==}
 
-  '@atcute/cbor@2.0.0':
-    resolution: {integrity: sha512-qZNY08eFnZWNrh9MJdhQyJ6X0IfEHySqFEdu0z3OiqfPUAP+qXzZ5x1j1cwdGR1avm3lHXF+hYDMukypzTefbA==}
+  '@atcute/cbor@2.0.1':
+    resolution: {integrity: sha512-6wgD8gB/+zJqds1TjPMQ1tgZ3Rs5JnSLs+rncCoRonAh8T8SUdcm+c4i3gecUp6FYR1i6m1nZqh1FjQwv9fuHg==}
 
-  '@atcute/cid@2.0.0':
-    resolution: {integrity: sha512-/05zKpODEO5ReAaI5aveW/bqVSF+dWOPp9WiKh95+08qw5xu94CwUi7Wm+S1AdyT4nt1zpiBBgT8EyvGoKuWrg==}
+  '@atcute/cid@2.0.1':
+    resolution: {integrity: sha512-EccyJMNzsxaERZxQVdFgrvDcDmoV0FGNH0dxpxBMTK3dW9FHFf2BeVFo9rktGaq7akfi4NmUmde99kCEftvmEw==}
 
   '@atcute/client@2.0.6':
     resolution: {integrity: sha512-mhdqEicGUx0s5HTFOLpz91rcLS9j/g63de0nmAqv7blhU3j+xBf4le54qr2YIXNfnReZI7EwLYLX/YIBez4LGA==}
 
-  '@atcute/crypto@2.0.0-alpha.1':
-    resolution: {integrity: sha512-nVk4VC4esAIKq1kFc75Y5R2Y5cO/HtCh+li9lRSB4b5PSyL8mHoZNoR0OLa1VQhc1FDvykAD56iXvUz6XnCKCw==}
+  '@atcute/crypto@2.1.1':
+    resolution: {integrity: sha512-2/VA37IdnJHug6a44eCADAVMB8FU079LA47fKcufn7H2gQ2fVEdDFhB+cvmJJi1mgZb7y32U6wUmTpZ7GCAXIA==}
 
   '@atcute/multibase@1.0.1':
     resolution: {integrity: sha512-lOVNX+pKwxn/OKCEyM7D/LCBPhnW0Ex0JcDRRTwuuI3w2GbrCut41rUF8uZUsrbrplNLMoj7xZkz9EDku/5mvQ==}
 
-  '@atcute/varint@1.0.1':
-    resolution: {integrity: sha512-GXWu+CIfpQGSMSOSUskjwU/licxH8WcyX4t11mRKafQIE4Yi3v5GuchMYVOu89YX15tY93QzY/0zMQDCWoke8Q==}
+  '@atcute/varint@1.0.2':
+    resolution: {integrity: sha512-0O31hePzzr4O3NGWHUKKOyta6CGSL+AtN8iir8grGxu9jXyI7DBARlw6PbgKA6uTAvsXdpmRmF8MX+p0TsLnNg==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -572,8 +572,8 @@ packages:
   '@jsr/mary__tar@0.2.4':
     resolution: {integrity: sha512-jFjPcZj8DRSukPLZOt6+h74cVFdfdTMG9gzbW67YByCJTD52PEpe2sNcfCSw4mQ8hZBNgwiufCPyYL8hR9yicA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__tar/0.2.4.tgz}
 
-  '@noble/secp256k1@2.1.0':
-    resolution: {integrity: sha512-XLEQQNdablO0XZOIniFQimiXsZDNwaYgL96dZwC54Q30imSbAOFf3NKtepc+cXyuZf5Q1HCgbqgZ2UFFuHVcEw==}
+  '@noble/secp256k1@2.2.1':
+    resolution: {integrity: sha512-rRUkSwEaCR4/ucvEOKrCFuzXVal6BQHLMgCr49VCksl0pdcdOjOjJ8u7zUEMjdWnwVMJ0K8tPxjO0n+yO0wjjw==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -709,8 +709,8 @@ packages:
   '@types/node-forge@1.3.11':
     resolution: {integrity: sha512-FQx220y22OKNTqaByeBGqHWYz4cl94tpcxeFdvBo3wjG6XPBuZ0BNgNZRV5J5TFmmcsJ4IzsLkmGRiQbnYsBEQ==}
 
-  '@types/node@22.10.2':
-    resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
+  '@types/node@22.10.3':
+    resolution: {integrity: sha512-DifAyw4BkrufCILvD3ucnuN8eydUfc/C1GlyrnI+LK6543w5/L3VeVgf05o3B4fqSXP1dKYLOZsKfutpxPzZrw==}
 
   acorn-walk@8.3.4:
     resolution: {integrity: sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==}
@@ -1504,8 +1504,8 @@ packages:
       yaml:
         optional: true
 
-  vitefu@1.0.4:
-    resolution: {integrity: sha512-y6zEE3PQf6uu/Mt6DTJ9ih+kyJLr4XcSgHR2zUkM8SWDhuixEJxfJ6CZGMHh1Ec3vPLoEA0IHU5oWzVqw8ulow==}
+  vitefu@1.0.5:
+    resolution: {integrity: sha512-h4Vflt9gxODPFNGPwp4zAMZRpZR7eslzwH2c5hn5kNZ5rhnKyRJ50U+yGCdc2IRaBs8O4haIgLNGrV5CrpMsCA==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
     peerDependenciesMeta:
@@ -1562,8 +1562,8 @@ packages:
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
-  yaml@2.6.1:
-    resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
+  yaml@2.7.0:
+    resolution: {integrity: sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -1586,32 +1586,32 @@ snapshots:
     dependencies:
       '@atcute/client': 2.0.6
 
-  '@atcute/car@2.0.0':
+  '@atcute/car@2.0.1':
     dependencies:
-      '@atcute/cbor': 2.0.0
-      '@atcute/cid': 2.0.0
-      '@atcute/varint': 1.0.1
+      '@atcute/cbor': 2.0.1
+      '@atcute/cid': 2.0.1
+      '@atcute/varint': 1.0.2
 
-  '@atcute/cbor@2.0.0':
+  '@atcute/cbor@2.0.1':
     dependencies:
-      '@atcute/cid': 2.0.0
+      '@atcute/cid': 2.0.1
       '@atcute/multibase': 1.0.1
 
-  '@atcute/cid@2.0.0':
+  '@atcute/cid@2.0.1':
     dependencies:
       '@atcute/multibase': 1.0.1
-      '@atcute/varint': 1.0.1
+      '@atcute/varint': 1.0.2
 
   '@atcute/client@2.0.6': {}
 
-  '@atcute/crypto@2.0.0-alpha.1':
+  '@atcute/crypto@2.1.1':
     dependencies:
       '@atcute/multibase': 1.0.1
-      '@noble/secp256k1': 2.1.0
+      '@noble/secp256k1': 2.2.1
 
   '@atcute/multibase@1.0.1': {}
 
-  '@atcute/varint@1.0.1': {}
+  '@atcute/varint@1.0.2': {}
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -1944,7 +1944,7 @@ snapshots:
 
   '@jsr/mary__tar@0.2.4': {}
 
-  '@noble/secp256k1@2.1.0': {}
+  '@noble/secp256k1@2.2.1': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2048,9 +2048,9 @@ snapshots:
 
   '@types/node-forge@1.3.11':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
-  '@types/node@22.10.2':
+  '@types/node@22.10.3':
     dependencies:
       undici-types: 6.20.0
 
@@ -2504,7 +2504,7 @@ snapshots:
   postcss-load-config@4.0.2(postcss@8.4.49):
     dependencies:
       lilconfig: 3.1.3
-      yaml: 2.6.1
+      yaml: 2.7.0
     optionalDependencies:
       postcss: 8.4.49
 
@@ -2760,7 +2760,7 @@ snapshots:
 
   validate-html-nesting@1.2.2: {}
 
-  vite-plugin-solid@2.11.0(solid-js@1.9.3)(vite@6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1)):
+  vite-plugin-solid@2.11.0(solid-js@1.9.3)(vite@6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0)):
     dependencies:
       '@babel/core': 7.26.0
       '@types/babel__core': 7.20.5
@@ -2768,26 +2768,26 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.9.3
       solid-refresh: 0.6.3(solid-js@1.9.3)
-      vite: 6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1)
-      vitefu: 1.0.4(vite@6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1))
+      vite: 6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0)
+      vitefu: 1.0.5(vite@6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
-  vite@6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1):
+  vite@6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0):
     dependencies:
       esbuild: 0.24.2
       postcss: 8.4.49
       rollup: 4.29.1
     optionalDependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
       fsevents: 2.3.3
       jiti: 1.21.7
       terser: 5.37.0
-      yaml: 2.6.1
+      yaml: 2.7.0
 
-  vitefu@1.0.4(vite@6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1)):
+  vitefu@1.0.5(vite@6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0)):
     optionalDependencies:
-      vite: 6.0.6(@types/node@22.10.2)(jiti@1.21.7)(terser@5.37.0)(yaml@2.6.1)
+      vite: 6.0.6(@types/node@22.10.3)(jiti@1.21.7)(terser@5.37.0)(yaml@2.7.0)
 
   web-streams-polyfill@3.3.3:
     optional: true
@@ -2848,7 +2848,7 @@ snapshots:
 
   yallist@3.1.1: {}
 
-  yaml@2.6.1: {}
+  yaml@2.7.0: {}
 
   youch@3.3.4:
     dependencies:

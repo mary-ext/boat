@@ -8,10 +8,10 @@
 	},
 	"dependencies": {
 		"@atcute/bluesky": "^1.0.11",
-		"@atcute/car": "^2.0.0",
-		"@atcute/cbor": "^2.0.0",
+		"@atcute/car": "^2.0.1",
+		"@atcute/cbor": "^2.0.1",
 		"@atcute/client": "^2.0.6",
-		"@atcute/crypto": "2.0.0-alpha.1",
+		"@atcute/crypto": "2.1.1",
 		"@atcute/multibase": "^1.0.1",
 		"@badrap/valita": "^0.4.2",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
@@ -23,7 +23,7 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/forms": "^0.5.9",
-		"@types/node": "^22.10.2",
+		"@types/node": "^22.10.3",
 		"autoprefixer": "^10.4.20",
 		"prettier": "^3.4.2",
 		"prettier-plugin-tailwindcss": "^0.6.9",
