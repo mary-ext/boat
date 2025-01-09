@@ -12,17 +12,17 @@
 		"@atcute/cbor": "^2.1.1",
 		"@atcute/client": "^2.0.6",
 		"@atcute/crypto": "^2.2.0",
-		"@atcute/multibase": "^1.1.1",
+		"@atcute/multibase": "^1.1.2",
 		"@badrap/valita": "^0.4.2",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/tar": "npm:@jsr/mary__tar@^0.2.4",
 		"nanoid": "^5.0.9",
 		"native-file-system-adapter": "^3.0.1",
-		"solid-js": "^1.9.3"
+		"solid-js": "^1.9.4"
 	},
 	"devDependencies": {
-		"@tailwindcss/forms": "^0.5.9",
+		"@tailwindcss/forms": "^0.5.10",
 		"@types/node": "^22.10.5",
 		"autoprefixer": "^10.4.20",
 		"prettier": "^3.4.2",
@@ -32,6 +32,6 @@
 		"typescript": "5.7.2",
 		"vite": "^6.0.7",
 		"vite-plugin-solid": "^2.11.0",
-		"wrangler": "^3.99.0"
+		"wrangler": "^3.100.0"
 	}
 }
