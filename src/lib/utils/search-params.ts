@@ -3,6 +3,7 @@ import { batch, createSignal } from 'solid-js';
 import { At } from '@atcute/client/lexicons';
 
 import { DID_OR_HANDLE_RE, DID_RE, HANDLE_RE } from '~/api/utils/strings';
+import { UnwrapArray } from '~/api/utils/types';
 
 export interface ParamParser<T> {
 	parse: (value: string | string[] | null) => T | null;
@@ -172,6 +173,21 @@ export const asString = createParser({
 		return value;
 	},
 });
+
+export const asStringUnion = <const T extends [string, ...string[]][]>(values: T) => {
+	return createParser({
+		parse(value) {
+			if (typeof value === 'string' && values.includes(value as UnwrapArray<T>)) {
+				return value;
+			}
+
+			return null;
+		},
+		serialize(value) {
+			return value;
+		},
+	});
+};
 
 export const asInteger = createParser({
 	parse(value) {
