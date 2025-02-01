@@ -8,6 +8,8 @@ import { UnwrapArray } from '~/api/utils/types';
 
 import { history } from '~/globals/navigation';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import { Wizard } from '~/components/wizard';
 
 import Step1_HandleInput from './steps/step1_handle-input';
@@ -71,6 +73,8 @@ const ThreadgateApplicatorPage = () => {
 			onCleanup(cleanup);
 		}
 	});
+
+	useTitle(() => `Retroactive thread gating — boat`);
 
 	return (
 		<>
