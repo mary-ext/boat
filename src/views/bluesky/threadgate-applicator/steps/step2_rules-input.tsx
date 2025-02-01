@@ -115,9 +115,9 @@ const Step2_RulesInput = ({
 		const $threadRules = threadRules();
 
 		return (
-			$threads.length !== 0 &&
-			$threadRulesPreset === ThreadRulePreset.CUSTOM &&
-			($threadRules === undefined || $threadRules.length === 0)
+			$threads.length === 0 ||
+			($threadRulesPreset === ThreadRulePreset.CUSTOM &&
+				($threadRules === undefined || $threadRules.length === 0))
 		);
 	});
 
