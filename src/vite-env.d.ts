@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
-/// <reference types="@atcute/bluesky" />
+
+/// <reference types="@atcute/bluesky/lexicons" />
 
 interface ImportMetaEnv {
 	VITE_PLC_DIRECTORY_URL: string;

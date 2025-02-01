@@ -29,6 +29,9 @@ importers:
       '@badrap/valita':
         specifier: ^0.4.2
         version: 0.4.2
+      '@mary/array-fns':
+        specifier: npm:@jsr/mary__array-fns@^0.1.0
+        version: '@jsr/mary__array-fns@0.1.0'
       '@mary/events':
         specifier: npm:@jsr/mary__events@^0.1.0
         version: '@jsr/mary__events@0.1.0'
@@ -568,6 +571,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@jsr/mary__array-fns@0.1.0':
+    resolution: {integrity: sha512-rG8Ng1Arl86T1Lv4of4LC8OcdpGxcxG/j8K01K6lyG0lI9imLT7e6FknuMVs5MQ5jH6NUBYnPOfmVAv4sd/OkA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__array-fns/0.1.0.tgz}
 
   '@jsr/mary__events@0.1.0':
     resolution: {integrity: sha512-oS6jVOaXTaNEa6avRncwrEtUYaBKrq/HEybPa9Z3aoeMs+RSly0vn0KcOj/fy2H6iTBkeh3wa8+/9nFjhKyKIg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.1.0.tgz}
@@ -1933,6 +1939,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@jsr/mary__array-fns@0.1.0': {}
 
   '@jsr/mary__events@0.1.0': {}
 

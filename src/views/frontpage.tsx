@@ -10,6 +10,7 @@ import ArchiveOutlinedIcon from '~/components/ic-icons/outline-archive';
 import BookmarksOutlinedIcon from '~/components/ic-icons/outline-bookmarks';
 import DirectionsCarOutlinedIcon from '~/components/ic-icons/outline-directions-car';
 import ExploreOutlinedIcon from '~/components/ic-icons/outline-explore';
+import MarkChatReadOutlinedIcon from '~/components/ic-icons/outline-mark-chat-read';
 import MoveUpOutlinedIcon from '~/components/ic-icons/outline-move-up';
 import VisibilityOutlinedIcon from '~/components/ic-icons/outline-visibility';
 
@@ -120,6 +121,17 @@ const Frontpage = () => {
 					description: `Show basic metadata about a public or private key`,
 					href: null,
 					icon: KeyVisualizerIcon,
+				},
+			],
+		},
+		{
+			name: `Bluesky`,
+			items: [
+				{
+					name: `Retroactive thread gating`,
+					description: `Set reply permissions for all of your past Bluesky posts`,
+					href: `/bsky-threadgate-applicator`,
+					icon: MarkChatReadOutlinedIcon,
 				},
 			],
 		},

@@ -9,6 +9,11 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/bsky-threadgate-applicator',
+		component: lazy(() => import('./views/bluesky/threadgate-applicator/page')),
+	},
+
+	{
 		path: '/blob-export',
 		component: lazy(() => import('./views/blob/blob-export')),
 	},

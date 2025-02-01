@@ -6,9 +6,10 @@ import { BoundInputEvent } from './_types';
 
 interface RadioInputProps<T extends string> {
 	label: JSX.Element;
+	blurb?: JSX.Element;
 	name?: string;
 	required?: boolean;
-	value?: T | undefined;
+	value?: T;
 	options: { value: NoInfer<T>; label: string }[];
 	onChange?: (next: NoInfer<T>, event: BoundInputEvent<HTMLInputElement>) => void;
 }
@@ -47,6 +48,8 @@ const RadioInput = <T extends string>(props: RadioInputProps<T>) => {
 					</span>
 				);
 			})}
+
+			<p class="text-pretty text-[0.8125rem] leading-5 text-gray-500 empty:hidden">{props.blurb}</p>
 		</fieldset>
 	);
 };

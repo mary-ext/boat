@@ -26,7 +26,11 @@ export interface AtUri {
 }
 
 export const isDid = (value: string): value is At.DID => {
-	return DID_RE.test(value);
+	return value.length >= 7 && DID_RE.test(value);
+};
+
+export const isHandle = (value: string): boolean => {
+	return value.length >= 4 && HANDLE_RE.test(value);
 };
 
 export const parseAtUri = (str: string): AtUri => {
