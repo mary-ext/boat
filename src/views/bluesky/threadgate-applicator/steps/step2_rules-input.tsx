@@ -14,11 +14,11 @@ import RadioInput from '~/components/inputs/radio-input';
 import { Stage, StageActions, WizardStepProps } from '~/components/wizard';
 
 import CircularProgressView from '~/components/circular-progress-view';
+import Button from '~/components/inputs/button';
 import ToggleInput from '~/components/inputs/toggle-input';
 
 import { ThreadgateApplicatorConstraints } from '../page';
 import { sortThreadgateAllow } from '../utils';
-import Button from '~/components/inputs/button';
 
 const enum FilterType {
 	ALL = 'all',
