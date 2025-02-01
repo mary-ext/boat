@@ -26,7 +26,12 @@ const buttonStyles = ({ variant = 'primary', disabled = false }: ButtonProps): s
 
 const Button = (props: ButtonProps) => {
 	return (
-		<button type={props.type ?? 'button'} class={buttonStyles(props)} onClick={props.onClick}>
+		<button
+			type={props.type ?? 'button'}
+			disabled={props.disabled}
+			class={buttonStyles(props)}
+			onClick={props.onClick}
+		>
 			{props.children}
 		</button>
 	);
