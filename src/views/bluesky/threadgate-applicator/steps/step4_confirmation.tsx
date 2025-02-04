@@ -134,12 +134,12 @@ const Step4_Confirmation = ({
 							if (remaining < RATELIMIT_POINT_LIMIT) {
 								// add some delay to be sure
 								const delta = reset - Date.now() + 5_000;
-								using _progress = logger.progress(`Reached ratelimit, waiting ${delta}ms`);
+								using _progress = logger.progress(`Ratelimited, waiting ${delta}ms`);
 
 								await new Promise((resolve) => setTimeout(resolve, delta));
 							}
 						} else {
-							using _progress = logger.progress(`Reached ratelimit, waiting 1 minute`);
+							using _progress = logger.progress(`Ratelimited, waiting`);
 
 							await new Promise((resolve) => setTimeout(resolve, 60 * 1_000));
 						}
