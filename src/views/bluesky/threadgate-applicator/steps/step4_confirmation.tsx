@@ -1,6 +1,6 @@
-import { createSignal } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
-import { HeadersObject, XRPC } from '@atcute/client';
+import { XRPC, XRPCError } from '@atcute/client';
 import { AppBskyFeedThreadgate, ComAtprotoRepoApplyWrites } from '@atcute/client/lexicons';
 import { chunked } from '@mary/array-fns';
 
@@ -12,6 +12,7 @@ import ToggleInput from '~/components/inputs/toggle-input';
 import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
 
 import { parseAtUri } from '~/api/utils/strings';
+import Logger, { createLogger } from '~/components/logger';
 import { ThreadgateApplicatorConstraints } from '../page';
 
 const Step4_Confirmation = ({
@@ -22,12 +23,14 @@ const Step4_Confirmation = ({
 }: WizardStepProps<ThreadgateApplicatorConstraints, 'Step4_Confirmation'>) => {
 	const [checked, setChecked] = createSignal(false);
 
-	const [status, setStatus] = createSignal<string>();
 	const [error, setError] = createSignal<string>();
+
+	const [isLoggerVisible, setIsLoggerVisible] = createSignal(false);
+	const logger = createLogger();
 
 	const mutation = createMutation({
 		async mutationFn() {
-			setStatus(`Preparing records`);
+			logger.log(`Preparing writes`);
 
 			const rules = data.rules;
 			const writes: ComAtprotoRepoApplyWrites.Input['writes'] = [];
@@ -83,43 +86,83 @@ const Step4_Confirmation = ({
 				}
 			}
 
+			logger.log(`${writes.length} write operations to apply`);
+
 			const did = data.profile.didDoc.id;
 			const rpc = new XRPC({ handler: data.manager });
 
-			const total = writes.length;
-			let written = 0;
-			for (const chunk of chunked(writes, 200)) {
-				setStatus(`Writing records (${written}/${total})`);
+			const RATELIMIT_POINT_LIMIT = 150 * 3;
 
-				const { headers } = await rpc.call('com.atproto.repo.applyWrites', {
-					data: {
-						repo: did,
-						writes: chunk,
-					},
-				});
+			{
+				using progress = logger.progress(`Applying writes`);
 
-				written += chunk.length;
+				let written = 0;
+				for (const chunk of chunked(writes, 200)) {
+					try {
+						const { headers } = await rpc.call('com.atproto.repo.applyWrites', {
+							data: {
+								repo: did,
+								writes: chunk,
+							},
+						});
 
-				await waitForRatelimit(headers, 150 * 3);
+						written += chunk.length;
+						progress.update(`Applying writes (${written} applied)`);
+
+						if ('ratelimit-remaining' in headers) {
+							const remaining = +headers['ratelimit-remaining'];
+							const reset = +headers['ratelimit-reset'] * 1_000;
+
+							if (remaining < RATELIMIT_POINT_LIMIT) {
+								// add some delay to be sure
+								const delta = reset - Date.now() + 5_000;
+								using _progress = logger.progress(`Reached ratelimit, waiting ${delta}ms`);
+
+								await new Promise((resolve) => setTimeout(resolve, delta));
+							}
+						}
+					} catch (err) {
+						if (!(err instanceof XRPCError) || err.kind !== 'RateLimitExceeded') {
+							throw err;
+						}
+
+						const headers = err.headers;
+						if ('ratelimit-remaining' in headers) {
+							const remaining = +headers['ratelimit-remaining'];
+							const reset = +headers['ratelimit-reset'] * 1_000;
+
+							if (remaining < RATELIMIT_POINT_LIMIT) {
+								// add some delay to be sure
+								const delta = reset - Date.now() + 5_000;
+								using _progress = logger.progress(`Reached ratelimit, waiting ${delta}ms`);
+
+								await new Promise((resolve) => setTimeout(resolve, delta));
+							}
+						} else {
+							using _progress = logger.progress(`Reached ratelimit, waiting 1 minute`);
+
+							await new Promise((resolve) => setTimeout(resolve, 60 * 1_000));
+						}
+					}
+				}
 			}
 		},
 		onMutate() {
 			setError();
-		},
-		onSettled() {
-			setStatus();
+			setIsLoggerVisible(true);
 		},
 		onSuccess() {
+			logger.log(`All writes applied`);
 			onNext('Step5_Finished', {});
 		},
 		onError(error) {
 			let message: string | undefined;
 
 			if (message !== undefined) {
-				setError(message);
+				logger.error(message);
 			} else {
 				console.error(error);
-				setError(`Something went wrong: ${error}`);
+				logger.error(`Something went wrong:\n${error}`);
 			}
 		},
 	});
@@ -139,12 +182,9 @@ const Step4_Confirmation = ({
 
 			<ToggleInput label="I understand" required checked={checked()} onChange={setChecked} />
 
-			<div
-				hidden={status() === undefined}
-				class="whitespace-pre-wrap text-[0.8125rem] font-medium leading-5 text-gray-500"
-			>
-				{status()}
-			</div>
+			<Show when={isLoggerVisible()}>
+				<Logger logger={logger} />
+			</Show>
 
 			<StageErrorView error={error()} />
 
@@ -161,17 +201,3 @@ const Step4_Confirmation = ({
 };
 
 export default Step4_Confirmation;
-
-const waitForRatelimit = async (headers: HeadersObject, expected: number) => {
-	if ('ratelimit-remaining' in headers) {
-		const remaining = +headers['ratelimit-remaining'];
-		const reset = +headers['ratelimit-reset'] * 1_000;
-
-		if (remaining < expected) {
-			// add some delay to be sure
-			const delta = reset - Date.now() + 5_000;
-
-			await new Promise((resolve) => setTimeout(resolve, delta));
-		}
-	}
-};
