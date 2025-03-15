@@ -1,9 +1,8 @@
 import { createSignal } from 'solid-js';
 
 import * as CBOR from '@atcute/cbor';
+import type { Operation, UnsignedOperation } from '@atcute/did-plc';
 import { toBase64Url } from '@atcute/multibase';
-
-import { PlcUpdateOp } from '~/api/types/plc';
 
 import { generateConfirmationCode } from '~/lib/utils/confirmation-code';
 import { createMutation } from '~/lib/utils/mutation';
@@ -30,7 +29,7 @@ const Step5_PrivateKeyConfirmation = ({
 			const payload = data.payload;
 			const prev = data.base;
 
-			const operation: Omit<PlcUpdateOp, 'sig'> = {
+			const operation: UnsignedOperation = {
 				type: 'plc_operation',
 				prev: prev!.cid,
 
@@ -45,7 +44,7 @@ const Step5_PrivateKeyConfirmation = ({
 
 			const signature = toBase64Url(sigBytes);
 
-			const signedOperation: PlcUpdateOp = {
+			const signedOperation: Operation = {
 				...operation,
 				sig: signature,
 			};
@@ -122,7 +121,7 @@ const Step5_PrivateKeyConfirmation = ({
 
 export default Step5_PrivateKeyConfirmation;
 
-const pushPlcOperation = async (did: string, operation: PlcUpdateOp) => {
+const pushPlcOperation = async (did: string, operation: Operation) => {
 	const origin = import.meta.env.VITE_PLC_DIRECTORY_URL;
 	const response = await fetch(`${origin}/${did}`, {
 		method: 'post',

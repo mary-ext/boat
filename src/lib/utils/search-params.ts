@@ -1,8 +1,8 @@
 import { batch, createSignal } from 'solid-js';
 
 import { At } from '@atcute/client/lexicons';
+import { isDid, isHandle } from '@atcute/identity';
 
-import { DID_OR_HANDLE_RE, DID_RE, HANDLE_RE } from '~/api/utils/strings';
 import { UnwrapArray } from '~/api/utils/types';
 
 export interface ParamParser<T> {
@@ -223,7 +223,7 @@ export const asBoolean = createParser({
 
 export const asDID = createParser({
 	parse(value) {
-		if (typeof value === 'string' && DID_RE.test(value)) {
+		if (typeof value === 'string' && isDid(value)) {
 			return value as At.DID;
 		}
 
@@ -236,7 +236,7 @@ export const asDID = createParser({
 
 export const asHandle = createParser({
 	parse(value) {
-		if (typeof value === 'string' && HANDLE_RE.test(value)) {
+		if (typeof value === 'string' && isHandle(value)) {
 			return value;
 		}
 
@@ -249,7 +249,7 @@ export const asHandle = createParser({
 
 export const asIdentifier = createParser({
 	parse(value) {
-		if (typeof value === 'string' && DID_OR_HANDLE_RE.test(value)) {
+		if (typeof value === 'string' && (isDid(value) || isHandle(value))) {
 			return value;
 		}
 

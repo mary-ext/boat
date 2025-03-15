@@ -1,12 +1,12 @@
 import { createSignal } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
-import { At } from '@atcute/client/lexicons';
+import { type Did, isHandle, isPlcDid } from '@atcute/identity';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
 import { getPlcAuditLogs } from '~/api/queries/plc';
-import { DID_OR_HANDLE_RE, DID_PLC_RE, isDid } from '~/api/utils/strings';
+import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { createMutation } from '~/lib/utils/mutation';
 
@@ -38,15 +38,18 @@ const Step1_HandleInput = ({
 
 	const mutation = createMutation({
 		async mutationFn({ identifier }: MutationVariables): Promise<PlcInformation> {
-			let did: At.DID;
-			if (isDid(identifier)) {
+			let did: Did<'plc'>;
+			if (isPlcDid(identifier)) {
 				did = identifier;
-			} else {
-				did = await resolveHandleViaAppView({ handle: identifier });
-			}
+			} else if (isHandle(identifier)) {
+				const resolved = await resolveHandleViaAppView({ handle: identifier });
+				if (!isPlcDid(resolved)) {
+					throw new DidIsNotPlcError(`${resolved} does not resolve to a did:plc`);
+				}
 
-			if (!DID_PLC_RE.test(did)) {
-				throw new DidIsNotPlcError(`"${did}" is not did:plc`);
+				did = resolved;
+			} else {
+				throw new DidIsNotPlcError(`${identifier} is not a valid did:plc or handle`);
 			}
 
 			const [didDoc, logs] = await Promise.all([getDidDocument({ did }), getPlcAuditLogs({ did })]);

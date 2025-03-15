@@ -1,10 +1,10 @@
 import { createSignal, JSX, Match, onCleanup, Switch } from 'solid-js';
 
-import { At } from '@atcute/client/lexicons';
+import type { IndexedEntry, Service } from '@atcute/did-plc';
+import { type Did, type Handle, isHandle, isPlcDid } from '@atcute/identity';
 
 import { resolveHandleViaAppView } from '~/api/queries/handle';
-import { PlcLogEntry, Service } from '~/api/types/plc';
-import { DID_OR_HANDLE_RE, isDid } from '~/api/utils/strings';
+import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { getPlcAuditLogs } from '~/api/queries/plc';
 import { useTitle } from '~/lib/navigation/router';
@@ -29,15 +29,18 @@ const PlcOperationLogPage = () => {
 	const query = createQuery(
 		() => params.q,
 		async (identifier, signal) => {
-			let did: At.DID;
-			if (isDid(identifier)) {
+			let did: Did<'plc'>;
+			if (isPlcDid(identifier)) {
 				did = identifier;
-			} else {
-				did = await resolveHandleViaAppView({ handle: identifier, signal });
-			}
+			} else if (isHandle(identifier)) {
+				const resolved = await resolveHandleViaAppView({ handle: identifier, signal });
+				if (!isPlcDid(resolved)) {
+					throw new Error(`${identifier} is not a valid identifier`);
+				}
 
-			if (!did.startsWith('did:plc:')) {
-				throw new Error(`${did} is not plc`);
+				did = resolved;
+			} else {
+				throw new Error(`${identifier} is not a valid identifier`);
 			}
 
 			const logs = await getPlcAuditLogs({ did, signal });
@@ -63,7 +66,7 @@ const PlcOperationLogPage = () => {
 					const formData = new FormData(ev.currentTarget);
 					ev.preventDefault();
 
-					const ident = formData.get('ident') as string;
+					const ident = formData.get('ident') as Did | Handle;
 					setParams({ q: ident });
 				}}
 				class="m-4 flex flex-col gap-4"
@@ -372,7 +375,7 @@ const groupBy = <K, T>(items: T[], keyFn: (item: T, index: number) => K): Map<K,
 type DiffEntry =
 	| {
 			type: 'identity_created';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			rotationKeys: string[];
@@ -382,27 +385,27 @@ type DiffEntry =
 	  }
 	| {
 			type: 'identity_tombstoned';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 	  }
 	| {
 			type: 'rotation_key_added';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			rotation_key: string;
 	  }
 	| {
 			type: 'rotation_key_removed';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			rotation_key: string;
 	  }
 	| {
 			type: 'verification_method_added';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			method_id: string;
@@ -410,7 +413,7 @@ type DiffEntry =
 	  }
 	| {
 			type: 'verification_method_removed';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			method_id: string;
@@ -418,7 +421,7 @@ type DiffEntry =
 	  }
 	| {
 			type: 'verification_method_changed';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			method_id: string;
@@ -427,21 +430,21 @@ type DiffEntry =
 	  }
 	| {
 			type: 'handle_added';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			handle: string;
 	  }
 	| {
 			type: 'handle_removed';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			handle: string;
 	  }
 	| {
 			type: 'handle_changed';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			prev_handle: string;
@@ -449,7 +452,7 @@ type DiffEntry =
 	  }
 	| {
 			type: 'service_added';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			service_id: string;
@@ -458,7 +461,7 @@ type DiffEntry =
 	  }
 	| {
 			type: 'service_removed';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			service_id: string;
@@ -467,7 +470,7 @@ type DiffEntry =
 	  }
 	| {
 			type: 'service_changed';
-			orig: PlcLogEntry;
+			orig: IndexedEntry;
 			nullified: boolean;
 			at: string;
 			service_id: string;
@@ -477,7 +480,7 @@ type DiffEntry =
 			next_service_endpoint: string;
 	  };
 
-const createOperationHistory = (entries: PlcLogEntry[]): DiffEntry[] => {
+const createOperationHistory = (entries: IndexedEntry[]): DiffEntry[] => {
 	const history: DiffEntry[] = [];
 
 	for (let idx = 0, len = entries.length; idx < len; idx++) {

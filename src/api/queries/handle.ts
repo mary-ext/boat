@@ -1,21 +1,22 @@
-import { simpleFetchHandler, XRPC } from '@atcute/client';
-import { At } from '@atcute/client/lexicons';
+import { type AtprotoDid, type Handle, isHandle } from '@atcute/identity';
+import { XrpcHandleResolver } from '@atcute/identity-resolver';
 
-import { appViewRpc } from '~/globals/rpc';
+const handleResolver = new XrpcHandleResolver({
+	serviceUrl: import.meta.env.VITE_APPVIEW_URL,
+});
 
 export const resolveHandleViaAppView = async ({
 	handle,
 	signal,
 }: {
-	handle: string;
+	handle: Handle;
 	signal?: AbortSignal;
-}): Promise<At.DID> => {
-	const { data } = await appViewRpc.get('com.atproto.identity.resolveHandle', {
-		signal: signal,
-		params: { handle: handle },
-	});
+}): Promise<AtprotoDid> => {
+	if (!isHandle(handle)) {
+		throw new Error(`invalid handle: ${handle}`);
+	}
 
-	return data.did;
+	return await handleResolver.resolve(handle, { signal });
 };
 
 export const resolveHandleViaPds = async ({
@@ -24,15 +25,10 @@ export const resolveHandleViaPds = async ({
 	signal,
 }: {
 	service: string;
-	handle: string;
+	handle: Handle;
 	signal?: AbortSignal;
-}): Promise<At.DID> => {
-	const rpc = new XRPC({ handler: simpleFetchHandler({ service }) });
+}): Promise<AtprotoDid> => {
+	const resolver = new XrpcHandleResolver({ serviceUrl: service });
 
-	const { data } = await rpc.get('com.atproto.identity.resolveHandle', {
-		signal,
-		params: { handle },
-	});
-
-	return data.did;
+	return await resolver.resolve(handle, { signal });
 };

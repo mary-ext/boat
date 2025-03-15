@@ -1,10 +1,11 @@
 import { createSignal } from 'solid-js';
 
-import type { AppBskyFeedThreadgate, At } from '@atcute/client/lexicons';
+import type { AppBskyFeedThreadgate } from '@atcute/client/lexicons';
+import { type AtprotoDid, isAtprotoDid, isHandle } from '@atcute/identity';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
-import { DID_OR_HANDLE_RE, isDid } from '~/api/utils/strings';
+import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { appViewRpc } from '~/globals/rpc';
 
@@ -32,11 +33,13 @@ const Step1_HandleInput = ({
 		async mutationFn({ identifier }: { identifier: string }, signal) {
 			setStatus(`Resolving identity`);
 
-			let did: At.DID;
-			if (isDid(identifier)) {
+			let did: AtprotoDid;
+			if (isAtprotoDid(identifier)) {
 				did = identifier;
-			} else {
+			} else if (isHandle(identifier)) {
 				did = await resolveHandleViaAppView({ handle: identifier, signal });
+			} else {
+				throw new Error(`Invalid identifier`);
 			}
 
 			const didDoc = await getDidDocument({ did, signal });

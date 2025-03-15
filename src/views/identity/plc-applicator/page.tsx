@@ -3,9 +3,9 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 import type { CredentialManager } from '@atcute/client';
 import type { ComAtprotoIdentityGetRecommendedDidCredentials } from '@atcute/client/lexicons';
 import type { P256PrivateKey, Secp256k1PrivateKey } from '@atcute/crypto';
+import type { DidDocument } from '@atcute/identity';
 
-import type { DidDocument } from '~/api/types/did-doc';
-import type { PlcUpdatePayload } from '~/api/types/plc';
+import { UpdatePayload } from '~/api/types/plc';
 
 import { history } from '~/globals/navigation';
 
@@ -69,13 +69,13 @@ export type PlcApplicatorConstraints = {
 		info: PlcInformation;
 		method: PdsSigningMethod;
 		base: DetailedPlcEntry;
-		payload: PlcUpdatePayload;
+		payload: UpdatePayload;
 	};
 	Step5_PrivateKeyConfirmation: {
 		info: PlcInformation;
 		method: PrivateKeySigningMethod;
 		base: DetailedPlcEntry;
-		payload: PlcUpdatePayload;
+		payload: UpdatePayload;
 	};
 
 	Step6_Finished: {};

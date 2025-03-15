@@ -2,14 +2,13 @@ import { FileSystemWritableFileStream, showSaveFilePicker } from 'native-file-sy
 import { createSignal } from 'solid-js';
 
 import { simpleFetchHandler, XRPC, XRPCError } from '@atcute/client';
-import { At } from '@atcute/client/lexicons';
+import { type AtprotoDid, getPdsEndpoint, isAtprotoDid, isHandle } from '@atcute/identity';
 import { writeTarEntry } from '@mary/tar';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView, resolveHandleViaPds } from '~/api/queries/handle';
-import { getPdsEndpoint } from '~/api/types/did-doc';
 import { isServiceUrlString } from '~/api/types/strings';
-import { DID_OR_HANDLE_RE, isDid } from '~/api/utils/strings';
+import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { useTitle } from '~/lib/navigation/router';
 import { makeAbortable } from '~/lib/utils/abortable';
@@ -36,15 +35,20 @@ const BlobExportPage = () => {
 	}) => {
 		logger.info(`Starting export for ${identifier}`);
 
-		let did: At.DID;
-		if (isDid(identifier)) {
+		let did: AtprotoDid;
+		if (isAtprotoDid(identifier)) {
 			did = identifier;
-		} else if (service) {
-			did = await resolveHandleViaPds({ service, handle: identifier, signal });
-			logger.log(`Resolved handle to ${did}`);
+		} else if (isHandle(identifier)) {
+			if (service) {
+				did = await resolveHandleViaPds({ service, handle: identifier, signal });
+				logger.log(`Resolved handle to ${did}`);
+			} else {
+				did = await resolveHandleViaAppView({ handle: identifier, signal });
+				logger.log(`Resolved handle to ${did}`);
+			}
 		} else {
-			did = await resolveHandleViaAppView({ handle: identifier, signal });
-			logger.log(`Resolved handle to ${did}`);
+			logger.error(`Invalid identifier`);
+			return;
 		}
 
 		if (!service) {

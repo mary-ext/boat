@@ -2,8 +2,8 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { CredentialManager } from '@atcute/client';
 import { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
+import { DidDocument } from '@atcute/identity';
 
-import { DidDocument } from '~/api/types/did-doc';
 import { UnwrapArray } from '~/api/utils/types';
 
 import { history } from '~/globals/navigation';

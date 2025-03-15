@@ -1,13 +1,11 @@
 import { batch, createSignal, Match, Show, Switch } from 'solid-js';
 
 import { CredentialManager, XRPCError } from '@atcute/client';
-import { At } from '@atcute/client/lexicons';
+import { type AtprotoDid, type DidDocument, getPdsEndpoint, isAtprotoDid, isHandle } from '@atcute/identity';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
-import { DidDocument, getPdsEndpoint } from '~/api/types/did-doc';
 import { formatTotpCode, TOTP_RE } from '~/api/utils/auth';
-import { isDid } from '~/api/utils/strings';
 
 import { createMutation } from '~/lib/utils/mutation';
 
@@ -54,11 +52,13 @@ const BlueskyLoginStep = (props: BlueskyLoginSectionProps) => {
 			service = service?.trim() || undefined;
 
 			if (service === undefined) {
-				let did: At.DID;
-				if (!isDid(identifier)) {
+				let did: AtprotoDid;
+				if (isAtprotoDid(identifier)) {
+					did = identifier;
+				} else if (isHandle(identifier)) {
 					did = await resolveHandleViaAppView({ handle: identifier });
 				} else {
-					did = identifier;
+					throw new InsufficientLoginError(`Invalid identifier`);
 				}
 
 				const didDoc = await getDidDocument({ did });

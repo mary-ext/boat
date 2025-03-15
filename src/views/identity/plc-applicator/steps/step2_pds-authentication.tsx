@@ -2,9 +2,9 @@ import { createSignal, Match, Show, Switch } from 'solid-js';
 
 import { AtpAccessJwt, CredentialManager, XRPC, XRPCError } from '@atcute/client';
 import { decodeJwt } from '@atcute/client/utils/jwt';
+import { getPdsEndpoint } from '@atcute/identity';
 
-import { getPdsEndpoint } from '~/api/types/did-doc';
-import { TOTP_RE, formatTotpCode } from '~/api/utils/auth';
+import { formatTotpCode, TOTP_RE } from '~/api/utils/auth';
 
 import { createMutation } from '~/lib/utils/mutation';
 

@@ -1,18 +1,19 @@
 import { createSignal, Show } from 'solid-js';
 
 import { XRPC, XRPCError } from '@atcute/client';
-import { AppBskyFeedThreadgate, ComAtprotoRepoApplyWrites } from '@atcute/client/lexicons';
+import type { AppBskyFeedThreadgate, ComAtprotoRepoApplyWrites } from '@atcute/client/lexicons';
 import { chunked } from '@mary/array-fns';
+
+import { parseAddressedAtUri } from '~/api/utils/at-uri';
 
 import { dequal } from '~/lib/utils/dequal';
 import { createMutation } from '~/lib/utils/mutation';
 
 import Button from '~/components/inputs/button';
 import ToggleInput from '~/components/inputs/toggle-input';
+import Logger, { createLogger } from '~/components/logger';
 import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
 
-import { parseAtUri } from '~/api/utils/strings';
-import Logger, { createLogger } from '~/components/logger';
 import { ThreadgateApplicatorConstraints } from '../page';
 
 const Step4_Confirmation = ({
@@ -39,7 +40,7 @@ const Step4_Confirmation = ({
 			for (const { post, threadgate } of data.threads) {
 				if (threadgate === null) {
 					if (rules !== undefined) {
-						const { rkey } = parseAtUri(post.uri);
+						const { rkey } = parseAddressedAtUri(post.uri);
 
 						const record: AppBskyFeedThreadgate.Record = {
 							$type: 'app.bsky.feed.threadgate',
@@ -58,7 +59,7 @@ const Step4_Confirmation = ({
 					}
 				} else {
 					if (rules === undefined && !threadgate.hiddenReplies?.length) {
-						const { rkey } = parseAtUri(threadgate.uri);
+						const { rkey } = parseAddressedAtUri(threadgate.uri);
 
 						writes.push({
 							$type: 'com.atproto.repo.applyWrites#delete',
@@ -66,7 +67,7 @@ const Step4_Confirmation = ({
 							rkey: rkey,
 						});
 					} else if (!dequal(threadgate.allow, rules)) {
-						const { rkey } = parseAtUri(threadgate.uri);
+						const { rkey } = parseAddressedAtUri(threadgate.uri);
 
 						const record: AppBskyFeedThreadgate.Record = {
 							$type: 'app.bsky.feed.threadgate',

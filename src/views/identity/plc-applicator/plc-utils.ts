@@ -1,13 +1,14 @@
 import * as CBOR from '@atcute/cbor';
 import { verifySigWithDidKey } from '@atcute/crypto';
+import type { IndexedEntry } from '@atcute/did-plc';
 import { fromBase64Url } from '@atcute/multibase';
 
-import { PlcLogEntry, PlcUpdatePayload } from '~/api/types/plc';
+import { UpdatePayload } from '~/api/types/plc';
 import { UnwrapArray } from '~/api/utils/types';
 
 import { assert } from '~/lib/utils/invariant';
 
-export const getPlcPayload = (entry: PlcLogEntry): PlcUpdatePayload => {
+export const getPlcPayload = (entry: IndexedEntry): UpdatePayload => {
 	const op = entry.operation;
 	assert(op.type === 'plc_operation' || op.type === 'create');
 
@@ -37,7 +38,7 @@ export const getPlcPayload = (entry: PlcLogEntry): PlcUpdatePayload => {
 	assert(false);
 };
 
-export const getPlcKeying = async (logs: PlcLogEntry[]) => {
+export const getPlcKeying = async (logs: IndexedEntry[]) => {
 	logs = logs.filter((entry) => !entry.nullified);
 
 	const length = logs.length;
@@ -112,7 +113,7 @@ export const getPlcKeying = async (logs: PlcLogEntry[]) => {
 type DetailedEntries = Awaited<ReturnType<typeof getPlcKeying>>;
 export type DetailedPlcEntry = UnwrapArray<DetailedEntries>;
 
-export const getCurrentSignersFromEntry = (entry: PlcLogEntry): string[] => {
+export const getCurrentSignersFromEntry = (entry: IndexedEntry): string[] => {
 	const operation = entry.operation;
 
 	/** keys that can sign the next operation */

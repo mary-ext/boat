@@ -1,11 +1,11 @@
 import { Match, Switch } from 'solid-js';
 
-import { At } from '@atcute/client/lexicons';
+import { isAtprotoDid, isHandle, type AtprotoDid, type Did, type Handle } from '@atcute/identity';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
 import { isServiceUrlString } from '~/api/types/strings';
-import { DID_OR_HANDLE_RE, isDid } from '~/api/utils/strings';
+import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { useTitle } from '~/lib/navigation/router';
 import { createQuery } from '~/lib/utils/query';
@@ -24,11 +24,13 @@ const DidLookupPage = () => {
 	const query = createQuery(
 		() => params.q,
 		async (identifier, signal) => {
-			let did: At.DID;
-			if (isDid(identifier)) {
+			let did: AtprotoDid;
+			if (isAtprotoDid(identifier)) {
 				did = identifier;
-			} else {
+			} else if (isHandle(identifier)) {
 				did = await resolveHandleViaAppView({ handle: identifier, signal });
+			} else {
+				throw new Error(`Invalid identifier`);
 			}
 
 			const doc = await getDidDocument({ did, signal });
@@ -55,7 +57,7 @@ const DidLookupPage = () => {
 					const formData = new FormData(ev.currentTarget);
 					ev.preventDefault();
 
-					const ident = formData.get('ident') as string;
+					const ident = formData.get('ident') as Did | Handle;
 					setParams({ q: ident });
 				}}
 				class="m-4 flex flex-col gap-4"
@@ -99,17 +101,13 @@ const DidLookupPage = () => {
 
 									<div>
 										<p class="font-semibold text-gray-600">Identifies as</p>
-										<ol class="list-disc pl-4">
-											{doc.alsoKnownAs.map((ident) => (
-												<li>{ident}</li>
-											))}
-										</ol>
+										<ol class="list-disc pl-4">{doc.alsoKnownAs?.map((ident) => <li>{ident}</li>)}</ol>
 									</div>
 
 									<div>
 										<p class="font-semibold text-gray-600">Services</p>
 										<ol class="list-disc pl-4">
-											{doc.service.map(({ id, type, serviceEndpoint }, idx) => {
+											{doc.service?.map(({ id, type, serviceEndpoint }, idx) => {
 												const isString = typeof serviceEndpoint === 'string';
 												const isURL = isString && URL.canParse('' + serviceEndpoint);
 												const isServiceUrl = isString && isServiceUrlString(serviceEndpoint);
@@ -167,7 +165,7 @@ const DidLookupPage = () => {
 									<div>
 										<p class="font-semibold text-gray-600">Verification methods</p>
 										<ol class="list-disc pl-4">
-											{doc.verificationMethod.map(({ id, type, publicKeyMultibase }, idx) => {
+											{doc.verificationMethod?.map(({ id, type, publicKeyMultibase }, idx) => {
 												return (
 													<li class={idx !== 0 ? `mt-3` : ``}>
 														<p class="font-medium">{id.replace(doc.id, '')}</p>
