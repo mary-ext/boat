@@ -1,6 +1,7 @@
 import { createSignal } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
+import { processIndexedEntryLog } from '@atcute/did-plc';
 import { type Did, isHandle, isPlcDid } from '@atcute/identity';
 
 import { getDidDocument } from '~/api/queries/did-doc';
@@ -16,7 +17,6 @@ import TextInput from '~/components/inputs/text-input';
 import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
 
 import { type PlcInformation, PlcApplicatorConstraints } from '../page';
-import { getPlcKeying } from '../plc-utils';
 
 type Method = 'pds' | 'key';
 
@@ -53,10 +53,11 @@ const Step1_HandleInput = ({
 			}
 
 			const [didDoc, logs] = await Promise.all([getDidDocument({ did }), getPlcAuditLogs({ did })]);
+			const { canonical } = await processIndexedEntryLog(did, logs);
 
 			return {
-				didDoc,
-				logs: await getPlcKeying(logs),
+				didDoc: didDoc,
+				logs: canonical,
 			};
 		},
 		onMutate() {

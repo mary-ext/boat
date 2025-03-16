@@ -3,7 +3,8 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 import type { CredentialManager } from '@atcute/client';
 import type { ComAtprotoIdentityGetRecommendedDidCredentials } from '@atcute/client/lexicons';
 import type { P256PrivateKey, Secp256k1PrivateKey } from '@atcute/crypto';
-import type { DidDocument } from '@atcute/identity';
+import type { CompatibleOperation, IndexedEntry, IndexedEntryWithSigner } from '@atcute/did-plc';
+import type { Did, DidDocument } from '@atcute/identity';
 
 import { UpdatePayload } from '~/api/types/plc';
 
@@ -12,8 +13,6 @@ import { history } from '~/globals/navigation';
 import { useTitle } from '~/lib/navigation/router';
 
 import { Wizard } from '~/components/wizard';
-
-import type { DetailedPlcEntry } from './plc-utils';
 
 import Step1_HandleInput from './steps/step1_handle-input';
 import Step2_PdsAuthentication from './steps/step2_pds-authentication';
@@ -26,7 +25,7 @@ import Step6_Finished from './steps/step6_finished';
 
 export interface PlcInformation {
 	didDoc: DidDocument;
-	logs: DetailedPlcEntry[];
+	logs: IndexedEntryWithSigner[];
 }
 
 export interface PdsSigningMethod {
@@ -39,7 +38,7 @@ export type Keypair = P256PrivateKey | Secp256k1PrivateKey;
 export interface PrivateKeySigningMethod {
 	type: 'private_key';
 	keypair: Keypair;
-	didPublicKey: string;
+	didPublicKey: Did<'key'>;
 }
 
 export type SigningMethod = PdsSigningMethod | PrivateKeySigningMethod;
@@ -62,19 +61,19 @@ export type PlcApplicatorConstraints = {
 	Step4_PayloadInput: {
 		info: PlcInformation;
 		method: SigningMethod;
-		base: DetailedPlcEntry;
+		base: IndexedEntry<CompatibleOperation>;
 	};
 
 	Step5_PdsConfirmation: {
 		info: PlcInformation;
 		method: PdsSigningMethod;
-		base: DetailedPlcEntry;
+		base: IndexedEntry<CompatibleOperation>;
 		payload: UpdatePayload;
 	};
 	Step5_PrivateKeyConfirmation: {
 		info: PlcInformation;
 		method: PrivateKeySigningMethod;
-		base: DetailedPlcEntry;
+		base: IndexedEntry<CompatibleOperation>;
 		payload: UpdatePayload;
 	};
 

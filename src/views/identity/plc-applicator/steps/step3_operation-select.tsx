@@ -1,11 +1,20 @@
-import { createMemo, createSignal } from 'solid-js';
+import { createMemo, createSignal, Show } from 'solid-js';
+
+import {
+	type CompatibleOperation,
+	type DisputeCandidate,
+	getDisputeCandidates,
+	type IndexedEntryWithSigner,
+	normalizeOp,
+} from '@atcute/did-plc';
+import type { Did } from '@atcute/identity';
 
 import Button from '~/components/inputs/button';
 import SelectInput from '~/components/inputs/select-input';
 import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
 
 import { PlcApplicatorConstraints } from '../page';
-import { getCurrentSignersFromEntry } from '../plc-utils';
+import RadioInput from '~/components/inputs/radio-input';
 
 const Step3_OperationSelect = ({
 	data,
@@ -14,92 +23,127 @@ const Step3_OperationSelect = ({
 	onNext,
 }: WizardStepProps<PlcApplicatorConstraints, 'Step3_OperationSelect'>) => {
 	const [error, setError] = createSignal<string>();
-	const [selectedCid, setSelectedCid] = createSignal<string>();
 
-	const options = createMemo(() => {
-		const signingMethod = data.method;
-		const logs = data.info.logs;
+	const [type, setType] = createSignal<'append' | 'dispute'>();
+	const [cid, setCid] = createSignal<string>();
 
-		let ownKey: string | undefined;
-		if (signingMethod.type === 'pds') {
-			ownKey = signingMethod.recommendedDidDoc.rotationKeys?.at(-1);
-		} else if (signingMethod.type === 'private_key') {
-			ownKey = signingMethod.didPublicKey;
-		}
+	const canAppend = createMemo(() => {
+		const signing = data.method;
 
-		if (ownKey === undefined) {
-			return [];
-		}
+		const lastOp = data.info.logs.at(-1) as IndexedEntryWithSigner<CompatibleOperation>;
+		const { rotationKeys } = normalizeOp(lastOp.operation);
 
-		const length = logs.length;
-		const items = logs.map((entry, idx) => {
-			const signers = getCurrentSignersFromEntry(entry);
-			const last = idx === length - 1;
-
-			let enabled = signers.includes(ownKey!);
-
-			// If we're showing older operations for forking/nullification,
-			// check to see that our key has priority over the signer.
-			if (enabled && !last) {
-				if (signingMethod.type === 'pds') {
-					// `signPlcOperation` will always grab the last op
-					enabled = false;
-				} else {
-					const holderKey = logs[idx + 1].signedBy;
-
-					const holderPriority = signers.indexOf(holderKey);
-					const ownPriority = signers.indexOf(ownKey);
-
-					enabled = ownPriority < holderPriority;
+		switch (signing.type) {
+			case 'pds': {
+				const key = signing.recommendedDidDoc.rotationKeys?.at(-1) as Did<'key'> | undefined;
+				if (!key) {
+					return false;
 				}
+
+				return rotationKeys.includes(key);
 			}
+			case 'private_key': {
+				return rotationKeys.includes(signing.didPublicKey);
+			}
+		}
+	});
 
-			return {
-				value: entry.cid,
-				label: `${entry.createdAt} (by ${entry.signedBy})`,
-				disabled: !enabled,
-			};
-		});
+	const disputes = createMemo((): DisputeCandidate[] => {
+		const signing = data.method;
 
-		return items.reverse();
+		switch (signing.type) {
+			case 'pds': {
+				// signPlcOperation always grabs the last operation, so we can't make
+				// any dispute attempts.
+				return [];
+			}
+			case 'private_key': {
+				return getDisputeCandidates(data.info.logs, signing.didPublicKey);
+			}
+		}
 	});
 
 	return (
 		<Stage
-			title="Select which operation to use as foundation"
+			title="What do you want to do?"
 			onSubmit={() => {
 				setError();
 
-				const cid = selectedCid();
-				const entry = data.info.logs.find((entry) => entry.cid === cid);
+				const $type = type();
+				const $cid = cid();
 
-				if (!entry) {
-					setError(`Can't find CID ${cid}`);
-					return;
+				switch ($type) {
+					case 'append': {
+						const lastOp = data.info.logs.at(-1) as IndexedEntryWithSigner<CompatibleOperation>;
+
+						onNext('Step4_PayloadInput', {
+							info: data.info,
+							method: data.method,
+							base: lastOp,
+						});
+
+						break;
+					}
+					case 'dispute': {
+						const entry = disputes().find((entry) => entry.base.cid === $cid);
+						if (!entry) {
+							setError(`Can't find dispute entry for ${$cid}`);
+							return;
+						}
+
+						onNext('Step4_PayloadInput', {
+							info: data.info,
+							method: data.method,
+							base: entry.base,
+						});
+
+						break;
+					}
 				}
-
-				const operation = entry.operation;
-				if (operation.type !== 'plc_operation' && operation.type === 'create') {
-					setError(`Expected operation to be of type "plc_operation" or "create"`);
-					return;
-				}
-
-				onNext('Step4_PayloadInput', {
-					info: data.info,
-					method: data.method,
-					base: entry,
-				});
 			}}
 		>
-			<SelectInput
-				label="Base operation"
-				blurb="Some operations can't be used as a base if the rotation key does not have the privilege for nullification, or if it is not listed."
+			<RadioInput
+				label="I want to..."
 				required
-				value={selectedCid()}
-				autofocus={isActive()}
-				options={[{ value: '', label: `Select an operation...` }, ...options()]}
-				onChange={setSelectedCid}
+				value={type()}
+				options={[
+					{
+						value: 'append',
+						label: `Append an operation`,
+						disabled: !canAppend(),
+					},
+					{
+						value: 'dispute',
+						label: `Dispute an existing operation`,
+						disabled: disputes().length === 0,
+					},
+				]}
+				onChange={setType}
 			/>
+
+			<Show when={type() === 'dispute'}>
+				<SelectInput
+					label="Dispute operation"
+					blurb="Select an operation to dispute."
+					required
+					value={cid()}
+					autofocus={isActive()}
+					options={[
+						{ value: '', label: `Select an operation...` },
+						...disputes().map((entry) => ({
+							value: entry.base.cid,
+							label: `${entry.base.cid} ➔ ${entry.disputed.cid} (by ${entry.disputed.signedBy})`,
+						})),
+					]}
+					onChange={setCid}
+				/>
+			</Show>
+
+			<Show when={!canAppend() && disputes().length === 0}>
+				<p class="whitespace-pre-wrap text-[0.8125rem] font-medium leading-5 text-red-800">
+					This rotation key can't be used.
+				</p>
+			</Show>
 
 			<StageErrorView error={error()} />
 
@@ -108,7 +152,9 @@ const Step3_OperationSelect = ({
 				<Button variant="secondary" onClick={onPrevious}>
 					Previous
 				</Button>
-				<Button type="submit">Next</Button>
+				<Button type="submit" disabled={type() === undefined}>
+					Next
+				</Button>
 			</StageActions>
 		</Stage>
 	);

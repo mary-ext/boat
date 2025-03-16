@@ -1,10 +1,6 @@
-import * as CBOR from '@atcute/cbor';
-import { verifySigWithDidKey } from '@atcute/crypto';
 import type { IndexedEntry } from '@atcute/did-plc';
-import { fromBase64Url } from '@atcute/multibase';
 
 import { UpdatePayload } from '~/api/types/plc';
-import { UnwrapArray } from '~/api/utils/types';
 
 import { assert } from '~/lib/utils/invariant';
 
@@ -36,94 +32,4 @@ export const getPlcPayload = (entry: IndexedEntry): UpdatePayload => {
 	}
 
 	assert(false);
-};
-
-export const getPlcKeying = async (logs: IndexedEntry[]) => {
-	logs = logs.filter((entry) => !entry.nullified);
-
-	const length = logs.length;
-	const promises = logs.map(async (entry, idx) => {
-		const operation = entry.operation;
-		if (operation.type === 'plc_tombstone') {
-			return;
-		}
-
-		// If it's not the last entry, check if the next entry ahead of this one
-		// was made within the last 72 hours.
-		if (idx !== length - 1) {
-			const next = logs[idx + 1]!;
-			const date = new Date(next.createdAt);
-			const diff = Date.now() - date.getTime();
-
-			if (diff / (1_000 * 60 * 60) > 72) {
-				return;
-			}
-		}
-
-		/** keys that potentially signed this operation */
-		let signers: `did:key:${string}`[] | undefined;
-		if (operation.prev === null) {
-			if (operation.type === 'create') {
-				signers = [operation.recoveryKey, operation.signingKey];
-			} else if (operation.type === 'plc_operation') {
-				signers = operation.rotationKeys;
-			}
-		} else {
-			const prev = logs[idx - 1];
-			assert(prev !== undefined, `missing previous entry from ${entry.createdAt}`);
-			assert(prev.cid === operation.prev, `prev cid mismatch on ${entry.createdAt}`);
-
-			const prevOp = prev.operation;
-
-			if (prevOp.type === 'create') {
-				signers = [prevOp.recoveryKey, prevOp.signingKey];
-			} else if (prevOp.type === 'plc_operation') {
-				signers = prevOp.rotationKeys;
-			}
-		}
-
-		assert(signers !== undefined, `no signers found for ${entry.createdAt}`);
-
-		const opBytes = CBOR.encode({ ...operation, sig: undefined });
-		const sigBytes = fromBase64Url(operation.sig);
-
-		/** key that signed this operation */
-		let signedBy: string | undefined;
-		for (const key of signers) {
-			const valid = await verifySigWithDidKey(key, sigBytes, opBytes);
-			if (valid) {
-				signedBy = key;
-				break;
-			}
-		}
-
-		assert(signedBy !== undefined, `no valid signer for ${entry.createdAt}`);
-
-		return {
-			...entry,
-			signers,
-			signedBy,
-		};
-	});
-
-	const fulfilled = await Promise.all(promises);
-	return fulfilled.filter((entry) => entry !== undefined);
-};
-
-type DetailedEntries = Awaited<ReturnType<typeof getPlcKeying>>;
-export type DetailedPlcEntry = UnwrapArray<DetailedEntries>;
-
-export const getCurrentSignersFromEntry = (entry: IndexedEntry): string[] => {
-	const operation = entry.operation;
-
-	/** keys that can sign the next operation */
-	let nextSigners: string[] | undefined;
-	if (operation.type === 'create') {
-		nextSigners = [operation.recoveryKey, operation.signingKey];
-	} else if (operation.type === 'plc_operation') {
-		nextSigners = operation.rotationKeys;
-	}
-
-	assert(nextSigners !== undefined, `no signers found for ${entry.createdAt}`);
-	return nextSigners;
 };
