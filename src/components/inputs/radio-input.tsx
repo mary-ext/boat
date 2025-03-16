@@ -10,7 +10,7 @@ interface RadioInputProps<T extends string> {
 	name?: string;
 	required?: boolean;
 	value?: T;
-	options: { value: NoInfer<T>; label: string }[];
+	options: { value: NoInfer<T>; label: string; disabled?: boolean }[];
 	onChange?: (next: NoInfer<T>, event: BoundInputEvent<HTMLInputElement>) => void;
 }
 
@@ -26,11 +26,11 @@ const RadioInput = <T extends string>(props: RadioInputProps<T>) => {
 				<span class="font-semibold text-gray-600">{props.label}</span>
 			</legend>
 
-			{props.options.map(({ value, label }, idx) => {
+			{props.options.map(({ value, label, disabled }, idx) => {
 				const optionId = fieldId + idx;
 
 				return (
-					<span class="flex items-center gap-3">
+					<fieldset disabled={disabled} class="flex items-center gap-3 disabled:opacity-50">
 						<input
 							type="radio"
 							id={optionId}
@@ -45,7 +45,7 @@ const RadioInput = <T extends string>(props: RadioInputProps<T>) => {
 						<label for={optionId} class="text-sm">
 							{label}
 						</label>
-					</span>
+					</fieldset>
 				);
 			})}
 
