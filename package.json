@@ -21,7 +21,7 @@
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/tar": "npm:@jsr/mary__tar@^0.2.4",
-		"nanoid": "^5.1.3",
+		"nanoid": "^5.1.4",
 		"native-file-system-adapter": "^3.0.1",
 		"solid-js": "^1.9.5"
 	},
