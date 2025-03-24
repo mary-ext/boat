@@ -61,9 +61,9 @@ const Frontpage = () => {
 					icon: ArchiveOutlinedIcon,
 				},
 				{
-					name: `Unpack CAR file`,
+					name: `Unpack archive`,
 					description: `Extract a repository archive into a tarball`,
-					href: '/car-unpack',
+					href: '/repo-archive-unpack',
 					icon: DirectionsCarOutlinedIcon,
 				},
 				{

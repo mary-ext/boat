@@ -157,12 +157,12 @@ const UnpackCarPage = () => {
 		);
 	};
 
-	useTitle(() => `Unpack CAR file — boat`);
+	useTitle(() => `Unpack archive — boat`);
 
 	return (
 		<>
 			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">Unpack CAR file</h1>
+				<h1 class="text-lg font-bold text-purple-800">Unpack archive</h1>
 				<p class="text-gray-600">Extract a repository archive into a tarball</p>
 			</div>
 			<hr class="mx-4 border-gray-300" />

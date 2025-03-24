@@ -41,8 +41,8 @@ const routes: RouteDefinition[] = [
 		component: lazy(() => import('./views/repository/repo-export')),
 	},
 	{
-		path: '/car-unpack',
-		component: lazy(() => import('./views/repository/car-unpack')),
+		path: '/repo-archive-unpack',
+		component: lazy(() => import('./views/repository/repo-archive-unpack')),
 	},
 
 	{
