@@ -67,9 +67,9 @@ const Frontpage = () => {
 					icon: DirectionsCarOutlinedIcon,
 				},
 				{
-					name: `Repository explorer`,
-					description: `Explore an account's public records`,
-					href: null,
+					name: `Explore archive`,
+					description: `Explore a repository archive`,
+					href: '/repo-archive-explore',
 					icon: ExploreOutlinedIcon,
 				},
 			],

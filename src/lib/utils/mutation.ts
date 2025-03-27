@@ -49,6 +49,7 @@ export type MutationReturn<D, V> = (
 ) & {
 	mutate(variables: V): void;
 	mutateAsync(variables: V): Promise<D>;
+	reset(): void;
 };
 
 type MutationFunction<D = unknown, V = unknown> = (variables: V, signal: AbortSignal) => Promise<D>;
@@ -74,6 +75,11 @@ export const createMutation = <D, V = void>(options: MutationOptions<D, V>): Mut
 		{ s: MutationState.IDLE },
 		{ equals: (prev, next) => prev.s === next.s },
 	);
+
+	const reset = () => {
+		cleanup();
+		setState({ s: MutationState.IDLE });
+	};
 
 	const mutate = async (variables: V): Promise<D> => {
 		const signal = getSignal();
@@ -139,6 +145,7 @@ export const createMutation = <D, V = void>(options: MutationOptions<D, V>): Mut
 		},
 		mutateAsync: mutate,
 		mutate: (variables: V) => mutate(variables).then(noop, noop),
+		reset: reset,
 	} as any;
 };
 

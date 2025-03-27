@@ -17,6 +17,9 @@ importers:
       '@atcute/cbor':
         specifier: ^2.2.0
         version: 2.2.0
+      '@atcute/cid':
+        specifier: ^2.2.0
+        version: 2.2.0
       '@atcute/client':
         specifier: ^2.0.8
         version: 2.0.8
@@ -35,6 +38,9 @@ importers:
       '@atcute/multibase':
         specifier: ^1.1.2
         version: 1.1.2
+      '@atcute/tid':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@badrap/valita':
         specifier: ^0.4.3
         version: 0.4.3
@@ -137,6 +143,9 @@ packages:
 
   '@atcute/multibase@1.1.2':
     resolution: {integrity: sha512-KFX+c7a/u2jSNcRw0rLaUHG/XEKf1A1c8XF5soHnsb1JMCShihf/anfZ1kJ4no/IlIp9HEHV3PQRQO2sWL6ASQ==}
+
+  '@atcute/tid@1.0.2':
+    resolution: {integrity: sha512-ahmjroNyeDPJhtuf3+HTJropaH04HmJ8fhntDu73Gpz/RkAF7+nkz6kcP2QTgfvMCgMPAJUdskAAP82GPDTY9w==}
 
   '@atcute/uint8array@1.0.1':
     resolution: {integrity: sha512-AAnlFKyfDRgb9GNZJbhQ6OuMhbmNPirQyapb8KnmcEhxQZ3+tt+4NcwqekEegY4MpNqSTYeeTdyxq0wGZv1JHg==}
@@ -1774,6 +1783,8 @@ snapshots:
   '@atcute/multibase@1.1.2':
     dependencies:
       '@atcute/uint8array': 1.0.1
+
+  '@atcute/tid@1.0.2': {}
 
   '@atcute/uint8array@1.0.1': {}
 
