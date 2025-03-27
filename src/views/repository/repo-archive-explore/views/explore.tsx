@@ -20,70 +20,72 @@ const ExploreView = ({ archive, onClose }: ExploreViewProps) => {
 
 	return (
 		<>
-			<div class="flex flex-wrap items-center p-2">
-				<button
-					type="button"
-					title="This repository"
-					disabled={view().type === 'repo'}
-					onClick={() => {
-						setView({ type: 'repo' });
-					}}
-					class="grid shrink-0 place-items-center rounded p-1.5 text-xl text-purple-700 hover:bg-gray-200 disabled:pointer-events-none disabled:text-black"
-				>
-					<ArchiveOutlinedIcon />
-				</button>
+			<div class="flex items-start justify-between gap-1 p-2">
+				<div class="flex flex-wrap items-center">
+					<button
+						type="button"
+						title="This repository"
+						disabled={view().type === 'repo'}
+						onClick={() => {
+							setView({ type: 'repo' });
+						}}
+						class="grid shrink-0 place-items-center rounded p-1.5 text-xl text-purple-700 hover:bg-gray-200 disabled:pointer-events-none disabled:text-black"
+					>
+						<ArchiveOutlinedIcon />
+					</button>
 
-				<Show
-					when={(() => {
-						const $view = view();
-						switch ($view.type) {
-							case 'collection':
-							case 'record': {
-								return $view.collection;
+					<Show
+						when={(() => {
+							const $view = view();
+							switch ($view.type) {
+								case 'collection':
+								case 'record': {
+									return $view.collection;
+								}
 							}
-						}
-					})()}
-				>
-					{(collection) => (
-						<>
-							<ChevronRightIcon class="shrink-0 text-base text-gray-500" />
-							<button
-								type="button"
-								disabled={view().type === 'collection'}
-								onClick={() => {
-									setView({ type: 'collection', collection: collection() });
-								}}
-								class="truncate rounded p-1.5 font-mono font-medium text-purple-700 hover:bg-gray-200 disabled:pointer-events-none disabled:text-black"
-							>
-								{collection().name}
-							</button>
-						</>
-					)}
-				</Show>
+						})()}
+					>
+						{(collection) => (
+							<>
+								<ChevronRightIcon class="shrink-0 text-base text-gray-500" />
+								<button
+									type="button"
+									disabled={view().type === 'collection'}
+									onClick={() => {
+										setView({ type: 'collection', collection: collection() });
+									}}
+									class="truncate rounded p-1.5 font-mono font-medium text-purple-700 hover:bg-gray-200 disabled:pointer-events-none disabled:text-black"
+								>
+									{collection().name}
+								</button>
+							</>
+						)}
+					</Show>
 
-				<Show
-					when={(() => {
-						const $view = view();
-						switch ($view.type) {
-							case 'record': {
-								return $view.record;
+					<Show
+						when={(() => {
+							const $view = view();
+							switch ($view.type) {
+								case 'record': {
+									return $view.record;
+								}
 							}
-						}
-					})()}
-				>
-					{(record) => (
-						<>
-							<ChevronRightIcon class="shrink-0 text-base text-gray-500" />
-							<button
-								type="button"
-								disabled={view().type === 'record'}
-								class="truncate rounded p-1.5 font-mono font-medium text-purple-700 hover:bg-gray-200 disabled:pointer-events-none disabled:text-black"
-							>
-								{record().key}
-							</button>
-						</>
-					)}
-				</Show>
+						})()}
+					>
+						{(record) => (
+							<>
+								<ChevronRightIcon class="shrink-0 text-base text-gray-500" />
+								<button
+									type="button"
+									disabled={view().type === 'record'}
+									class="truncate rounded p-1.5 font-mono font-medium text-purple-700 hover:bg-gray-200 disabled:pointer-events-none disabled:text-black"
+								>
+									{record().key}
+								</button>
+							</>
+						)}
+					</Show>
+				</div>
 
 				<div class="grow"></div>
 
