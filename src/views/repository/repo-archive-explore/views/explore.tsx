@@ -20,7 +20,7 @@ const ExploreView = ({ archive, onClose }: ExploreViewProps) => {
 
 	return (
 		<>
-			<div class="flex items-start justify-between gap-1 p-2">
+			<div class="sticky top-0 z-10 flex items-start justify-between gap-1 bg-white p-2">
 				<div class="flex flex-wrap items-center">
 					<button
 						type="button"
