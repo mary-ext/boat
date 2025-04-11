@@ -3,6 +3,9 @@
 // Commit: 3e9dab413f4eda8d6bce565388c5ddb7aeff9f7e
 // Most of the changes are just trimming it down to only include the browser
 // history implementation.
+import { nanoid } from 'nanoid/non-secure';
+
+import { EventEmitter } from '@mary/events';
 
 export type Action = 'traverse' | 'push' | 'replace' | 'update';
 
@@ -111,14 +114,14 @@ export const createBrowserHistory = (options: BrowserHistoryOptions = {}): Brows
 	let blockedPopTx: Transition | null = null;
 	const handlePop = () => {
 		if (blockedPopTx) {
-			blockers.call(blockedPopTx);
+			emitter.emit('block', blockedPopTx);
 			blockedPopTx = null;
 		} else {
 			const nextAction: Action = 'traverse';
 			const nextLocation = getCurrentLocation();
 			const nextIndex = nextLocation.index;
 
-			if (blockers.length) {
+			if (emitter.has('block')) {
 				if (nextIndex != null) {
 					const delta = location.index - nextIndex;
 					if (delta) {
@@ -154,8 +157,10 @@ export const createBrowserHistory = (options: BrowserHistoryOptions = {}): Brows
 		}
 	};
 
-	const listeners = createEvents<Listener>();
-	const blockers = createEvents<Blocker>();
+	const emitter = new EventEmitter<{
+		update: [evt: Update];
+		block: [tx: Transition];
+	}>();
 
 	let location = getCurrentLocation();
 
@@ -194,12 +199,12 @@ export const createBrowserHistory = (options: BrowserHistoryOptions = {}): Brows
 	};
 
 	const allowTx = (action: Action, location: Location, retry: () => void): boolean => {
-		return !blockers.length || (blockers.call({ action, location, retry }), false);
+		return !emitter.emit('block', { action, location, retry });
 	};
 
 	const applyTx = (nextAction: Action): void => {
 		location = getCurrentLocation();
-		listeners.call({ action: nextAction, location });
+		emitter.emit('update', { action: nextAction, location });
 	};
 
 	const navigate = (to: To, { replace, state }: NavigateOptions = {}): void => {
@@ -263,14 +268,14 @@ export const createBrowserHistory = (options: BrowserHistoryOptions = {}): Brows
 			return go(1);
 		},
 		listen: (listener) => {
-			return listeners.push(listener);
+			return emitter.on('update', listener);
 		},
 		block: (blocker) => {
-			const unblock = blockers.push(blocker);
-
-			if (blockers.length === 1) {
+			if (!emitter.has('block')) {
 				window.addEventListener(BeforeUnloadEventType, promptBeforeUnload);
 			}
+
+			const unblock = emitter.on('block', blocker);
 
 			return () => {
 				unblock();
@@ -278,7 +283,7 @@ export const createBrowserHistory = (options: BrowserHistoryOptions = {}): Brows
 				// Remove the beforeunload listener so the document may
 				// still be salvageable in the pagehide event.
 				// See https://html.spec.whatwg.org/#unloading-documents
-				if (!blockers.length) {
+				if (!emitter.has('block')) {
 					window.removeEventListener(BeforeUnloadEventType, promptBeforeUnload);
 				}
 			};
@@ -293,40 +298,8 @@ const promptBeforeUnload = (event: BeforeUnloadEvent): void => {
 	event.preventDefault();
 };
 
-interface Events<F extends (arg: any) => void> {
-	length: number;
-	push: (fn: F) => () => void;
-	call: (arg: Parameters<F>[0]) => void;
-}
-
-const createEvents = <F extends (arg: any) => void>(): Events<F> => {
-	const handlers: F[] = [];
-
-	return {
-		get length() {
-			return handlers.length;
-		},
-		push(fn: F) {
-			handlers.push(fn);
-
-			return () => {
-				const index = handlers.indexOf(fn);
-
-				if (index !== -1) {
-					handlers.splice(index, 1);
-				}
-			};
-		},
-		call(arg) {
-			for (let idx = 0, len = handlers.length; idx < len; idx++) {
-				(0, handlers[idx])(arg);
-			}
-		},
-	};
-};
-
 const createKey = () => {
-	return crypto.randomUUID();
+	return nanoid();
 };
 
 /**

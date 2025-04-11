@@ -48,8 +48,8 @@ importers:
         specifier: npm:@jsr/mary__array-fns@^0.1.4
         version: '@jsr/mary__array-fns@0.1.4'
       '@mary/events':
-        specifier: npm:@jsr/mary__events@^0.1.0
-        version: '@jsr/mary__events@0.1.0'
+        specifier: npm:@jsr/mary__events@^0.2.0
+        version: '@jsr/mary__events@0.2.0'
       '@mary/solid-freeze':
         specifier: npm:@externdefs/solid-freeze@^0.1.1
         version: '@externdefs/solid-freeze@0.1.1(solid-js@1.9.5)'
@@ -732,8 +732,8 @@ packages:
   '@jsr/mary__array-fns@0.1.4':
     resolution: {integrity: sha512-+HbGYR9Ll5blEmAvVAoPejyGj01YeBbVmJ59qxaMDKt5i3F90ohYLA5a78y6AULDlet1IxYB+a/cMN+A0vGnDg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__array-fns/0.1.4.tgz}
 
-  '@jsr/mary__events@0.1.0':
-    resolution: {integrity: sha512-oS6jVOaXTaNEa6avRncwrEtUYaBKrq/HEybPa9Z3aoeMs+RSly0vn0KcOj/fy2H6iTBkeh3wa8+/9nFjhKyKIg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.1.0.tgz}
+  '@jsr/mary__events@0.2.0':
+    resolution: {integrity: sha512-WcBRbtuTno3zcfXKd7SEeKr1lAJF+CQ8BCv+PEEMmNKNqFurkEksGxRB3UDPZxIxjJ7sAqMVTL26wRuMpAcIeA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.2.0.tgz}
 
   '@jsr/mary__tar@0.2.4':
     resolution: {integrity: sha512-jFjPcZj8DRSukPLZOt6+h74cVFdfdTMG9gzbW67YByCJTD52PEpe2sNcfCSw4mQ8hZBNgwiufCPyYL8hR9yicA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__tar/0.2.4.tgz}
@@ -2208,7 +2208,7 @@ snapshots:
 
   '@jsr/mary__array-fns@0.1.4': {}
 
-  '@jsr/mary__events@0.1.0': {}
+  '@jsr/mary__events@0.2.0': {}
 
   '@jsr/mary__tar@0.2.4': {}
 

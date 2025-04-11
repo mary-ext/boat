@@ -1,5 +1,6 @@
 /* @refresh reload */
 import {
+	type Accessor,
 	type Component,
 	For,
 	type JSX,
@@ -11,6 +12,7 @@ import {
 	createSignal,
 	getOwner,
 	onCleanup,
+	untrack,
 	useContext,
 } from 'solid-js';
 import { delegateEvents } from 'solid-js/web';
@@ -57,6 +59,7 @@ interface MatchedRoute {
 
 export interface MatchedRouteState extends MatchedRoute {
 	readonly id: string;
+	scrollPos: { x: number; y: number } | undefined;
 }
 
 interface RouterState {
@@ -68,6 +71,7 @@ interface RouterState {
 interface ViewContextObject {
 	owner: Owner | null;
 	route: MatchedRouteState;
+	isActive: () => boolean;
 }
 
 let _entry: Location;
@@ -86,7 +90,7 @@ interface RouteEvent {
 	enter: boolean;
 }
 
-const routerEvents = new EventEmitter<{ [key: string]: (event: RouteEvent) => void }>();
+const routerEvents = new EventEmitter<{ [key: string]: [event: RouteEvent] }>();
 
 export { routerEvents as UNSAFE_routerEvents };
 
@@ -105,7 +109,11 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 			const nextKey = matched.id || _entry.key;
 
 			const isSingle = !!matched.id;
-			const matchedState: MatchedRouteState = { ...matched, id: nextKey };
+			const matchedState: MatchedRouteState = {
+				...matched,
+				id: nextKey,
+				scrollPos: undefined,
+			};
 
 			const next: Record<string, MatchedRouteState> = { [nextKey]: matchedState };
 
@@ -118,8 +126,6 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 	}
 
 	_cleanup = createRoot((cleanup) => {
-		createEventListener;
-
 		onCleanup(
 			history.listen(({ action, location: nextEntry }) => {
 				const currentEntry = _entry;
@@ -127,7 +133,7 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 
 				if (action !== 'update') {
 					const pathname = nextEntry.pathname;
-					let matched = matchRoute(pathname);
+					const matched = matchRoute(pathname);
 
 					if (!matched) {
 						return;
@@ -139,8 +145,14 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 					let singles = current.singles;
 					let isNew = false;
 
+					const prevId = current.active;
+
 					const nextId = matched.id || nextEntry.key;
-					const matchedState: MatchedRouteState = { ...matched, id: nextId };
+					const matchedState: MatchedRouteState = {
+						...matched,
+						id: nextId,
+						scrollPos: undefined,
+					};
 
 					let nextViews: typeof views | undefined;
 
@@ -163,17 +175,16 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 					}
 
 					if (!matched.id) {
-						// Add this view, if it's already present, set `shouldCall` to true
 						if (!(nextId in views)) {
 							if (nextViews) {
 								nextViews[nextId] = matchedState;
+								isNew = true;
 							} else {
 								nextViews = { ...views, [nextId]: matchedState };
 								isNew = true;
 							}
 						}
 					} else {
-						// Add this view, if it's already present, set `shouldCall` to true
 						if (!(nextId in singles)) {
 							singles = { ...singles, [nextId]: matchedState };
 							isNew = true;
@@ -184,19 +195,33 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 						views = nextViews;
 					}
 
-					routerEvents.emit(current.active, { focus: false, enter: false });
+					{
+						const prev = current.views[prevId] || current.singles[prevId];
+						if (prev) {
+							prev.scrollPos = { x: window.scrollX, y: window.scrollY };
+						}
+					}
+
+					routerEvents.emit(prevId, { focus: false, enter: false });
+
 					setState({ active: nextId, views: views, singles: singles });
 
-					if (!isNew) {
+					if (isNew) {
+						// Scroll to top if we're pushing or replacing, it's a new page.
+						window.scrollTo(0, 0);
+					} else {
+						{
+							const next = views[nextId] || singles[nextId];
+							if (next?.scrollPos) {
+								const pos = next.scrollPos;
+								window.scrollTo(pos.x, pos.y);
+							}
+						}
+
 						routerEvents.emit(nextId, {
 							focus: true,
 							enter: action !== 'traverse' || nextEntry.index > currentEntry.index,
 						});
-					}
-
-					// Scroll to top if we're pushing or replacing, it's a new page.
-					if (!matched.id && (action === 'push' || action === 'replace')) {
-						window.scrollTo({ top: 0, behavior: 'instant' });
 					}
 				}
 			}),
@@ -235,10 +260,7 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 			}
 
 			evt.preventDefault();
-
-			if (location.pathname !== pathname || location.search !== search || location.hash !== hash) {
-				history.navigate({ pathname, search, hash });
-			}
+			history.navigate({ pathname, search, hash });
 		});
 
 		return cleanup;
@@ -273,20 +295,27 @@ export const useParams = <T extends Record<string, string>>() => {
 };
 
 export const onRouteEnter = (cb: () => void) => {
-	const { route } = useViewContext();
+	const { route, isActive } = useViewContext();
 
-	cb();
+	if (untrack(isActive)) {
+		cb();
+	}
+
 	onCleanup(routerEvents.on(route.id, (e) => e.enter && cb()));
 };
 
-export const createFocusEffect = (cb: () => void) => {
-	const { route } = useViewContext();
-	const [active, setActive] = createSignal(true);
+export const useIsFocused = (): Accessor<boolean> => {
+	const { isActive } = useViewContext();
 
-	onCleanup(routerEvents.on(route.id, (e) => setActive(e.focus)));
+	return isActive;
+};
+
+export const createFocusEffect = (cb: () => void) => {
+	const isFocused = useIsFocused();
+
 	createEffect(() => {
-		if (active()) {
-			cb();
+		if (isFocused()) {
+			createEffect(cb);
 		}
 	});
 };
@@ -305,7 +334,6 @@ export const RouterView = (props: RouterViewProps) => {
 	const render = props.render;
 
 	const renderView = (matched: MatchedRouteState) => {
-		const def = matched.def;
 		const id = matched.id;
 
 		const active = createMemo((): boolean => state().active === id);
@@ -313,21 +341,8 @@ export const RouterView = (props: RouterViewProps) => {
 		const context: ViewContextObject = {
 			owner: getOwner(),
 			route: matched,
+			isActive: active,
 		};
-
-		if (def.single) {
-			let storedHeight: number | undefined;
-
-			onCleanup(
-				routerEvents.on(id, (ev) => {
-					if (!ev.focus) {
-						storedHeight = document.documentElement.scrollTop;
-					} else if (storedHeight !== undefined) {
-						window.scrollTo({ top: storedHeight, behavior: 'instant' });
-					}
-				}),
-			);
-		}
 
 		return (
 			<Freeze freeze={!active()}>
