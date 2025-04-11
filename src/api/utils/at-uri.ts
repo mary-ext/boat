@@ -1,10 +1,6 @@
+import type { At } from '@atcute/client/lexicons';
+
 import { assert } from '~/lib/utils/invariant';
-
-type Did<TMethod extends string = string> = `did:${TMethod}:${string}`;
-
-type Nsid = `${string}.${string}.${string}`;
-
-type RecordKey = string;
 
 const DID_RE = /^did:([a-z]+):([a-zA-Z0-9._:%\-]*[a-zA-Z0-9._\-])$/;
 
@@ -16,22 +12,22 @@ const RECORD_KEY_RE = /^(?!\.{1,2}$)[a-zA-Z0-9_~.:-]{1,512}$/;
 const ATURI_RE =
 	/^at:\/\/([a-zA-Z0-9._:%-]+)(?:\/([a-zA-Z0-9-.]+)(?:\/([a-zA-Z0-9._~:@!$&%')(*+,;=-]+))?)?(?:#(\/[a-zA-Z0-9._~:@!$&%')(*+,;=\-[\]/\\]*))?$/;
 
-const isDid = (input: unknown): input is Did => {
+const isDid = (input: unknown): input is At.Did => {
 	return typeof input === 'string' && input.length >= 7 && input.length <= 2048 && DID_RE.test(input);
 };
 
-const isNsid = (input: unknown): input is Nsid => {
+const isNsid = (input: unknown): input is At.Nsid => {
 	return typeof input === 'string' && input.length >= 5 && input.length <= 317 && NSID_RE.test(input);
 };
 
-const isRecordKey = (input: unknown): input is RecordKey => {
+const isRecordKey = (input: unknown): input is At.RecordKey => {
 	return typeof input === 'string' && input.length >= 1 && input.length <= 512 && RECORD_KEY_RE.test(input);
 };
 
 export interface AddressedAtUri {
-	repo: Did;
-	collection: Nsid;
-	rkey: string;
+	repo: At.Did;
+	collection: At.Nsid;
+	rkey: At.RecordKey;
 	fragment: string | undefined;
 }
 

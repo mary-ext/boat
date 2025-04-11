@@ -224,7 +224,7 @@ export const asBoolean = createParser({
 export const asDID = createParser({
 	parse(value) {
 		if (typeof value === 'string' && isDid(value)) {
-			return value as At.DID;
+			return value as At.Did;
 		}
 
 		return null;
