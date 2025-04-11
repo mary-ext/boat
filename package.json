@@ -29,15 +29,15 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/forms": "^0.5.10",
-		"@types/node": "^22.13.12",
+		"@types/node": "^22.14.0",
 		"autoprefixer": "^10.4.21",
 		"prettier": "^3.5.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"tailwindcss": "^3.4.17",
 		"terser": "^5.39.0",
-		"typescript": "5.8.2",
-		"vite": "^6.2.2",
+		"typescript": "~5.8.3",
+		"vite": "^6.2.6",
 		"vite-plugin-solid": "^2.11.6",
-		"wrangler": "^4.4.0"
+		"wrangler": "^4.10.0"
 	}
 }
