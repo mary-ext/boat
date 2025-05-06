@@ -1,7 +1,7 @@
 import { FileSystemWritableFileStream, showSaveFilePicker } from 'native-file-system-adapter';
 import { createSignal } from 'solid-js';
 
-import { simpleFetchHandler, XRPC, XRPCError } from '@atcute/client';
+import { Client, ClientResponseError, ok, simpleFetchHandler } from '@atcute/client';
 import { type AtprotoDid, getPdsEndpoint, isAtprotoDid, isHandle } from '@atcute/identity';
 import { writeTarEntry } from '@mary/tar';
 
@@ -65,7 +65,8 @@ const BlobExportPage = () => {
 			service = endpoint;
 		}
 
-		const rpc = new XRPC({ handler: simpleFetchHandler({ service }) });
+		// const rpc = new XRPC({ handler: simpleFetchHandler({ service }) });
+		const client = new Client({ handler: simpleFetchHandler({ service }) });
 
 		// Grab a list of blobs
 		let blobs: string[] = [];
@@ -74,10 +75,12 @@ const BlobExportPage = () => {
 
 			let cursor: string | undefined;
 			do {
-				const { data } = await rpc.get('com.atproto.sync.listBlobs', {
-					signal,
-					params: { did, cursor, limit: 1_000 },
-				});
+				const data = await ok(
+					client.get('com.atproto.sync.listBlobs', {
+						signal,
+						params: { did, cursor, limit: 1_000 },
+					}),
+				);
 
 				cursor = data.cursor;
 				blobs = blobs.concat(data.cids);
@@ -151,36 +154,50 @@ const BlobExportPage = () => {
 							attempts++;
 
 							try {
-								const { data } = await rpc.get('com.atproto.sync.getBlob', {
+								const response = await client.get('com.atproto.sync.getBlob', {
 									signal,
+									as: 'bytes',
 									params: { did, cid },
 								});
 
-								return data;
-							} catch (err) {
-								if (attempts > 3) {
-									throw err;
+								if (response.ok) {
+									return response.data;
 								}
 
-								if (err instanceof XRPCError) {
-									if (err.status === 400) {
-										if (err.message === 'Blob not found') {
-											console.warn(`Blob ${cid} not found`);
-											return;
-										}
-									} else if (err.status === 429) {
-										const reset = err.headers?.['ratelimit-reset'];
+								if (response.status === 400) {
+									// If the PDS says it can't find the blob, stop right here.
+									if (response.data.message === 'Blob not found') {
+										logger.warn(`Blob ${cid} not found`);
+										return undefined;
+									}
+								} else if (response.status === 429) {
+									// Not exposed by CORS, hoping that someday it will
+									const reset = response.headers.get('ratelimit-reset');
 
-										if (reset !== undefined) {
-											logger.warn(`Ratelimit exceeded when downloading ${cid}, waiting`);
+									logger.warn(`Ratelimit exceeded when downloading ${cid}, waiting`);
 
-											const refreshAt = +reset * 1_000;
-											const delta = refreshAt - Date.now();
+									if (reset !== null) {
+										const refreshAt = +reset * 1_000;
+										const delta = refreshAt - Date.now();
 
-											await sleep(delta);
-										}
+										await sleep(delta);
+									} else {
+										await sleep(10_000);
 									}
 								}
+
+								if (attempts < 3) {
+									continue;
+								}
+
+								throw new ClientResponseError(response);
+							} catch (err) {
+								// Network errors, etc
+								if (attempts < 3) {
+									continue;
+								}
+
+								throw err;
 							}
 						}
 					};
