@@ -36,7 +36,7 @@ export class PromiseQueue {
 	#run() {
 		let task: QueueTask | undefined;
 
-		if (this.#current <= this.#max && (task = this.#queue.dequeue()) !== undefined) {
+		if (this.#current < this.#max && (task = this.#queue.dequeue()) !== undefined) {
 			const { deferred, fn } = task;
 			this.#current++;
 
