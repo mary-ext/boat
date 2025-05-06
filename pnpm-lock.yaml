@@ -47,6 +47,9 @@ importers:
       '@mary/array-fns':
         specifier: npm:@jsr/mary__array-fns@^0.1.4
         version: '@jsr/mary__array-fns@0.1.4'
+      '@mary/ds-queue':
+        specifier: npm:@jsr/mary__ds-queue@^0.1.1
+        version: '@jsr/mary__ds-queue@0.1.1'
       '@mary/events':
         specifier: npm:@jsr/mary__events@^0.2.0
         version: '@jsr/mary__events@0.2.0'
@@ -581,6 +584,9 @@ packages:
 
   '@jsr/mary__array-fns@0.1.4':
     resolution: {integrity: sha512-+HbGYR9Ll5blEmAvVAoPejyGj01YeBbVmJ59qxaMDKt5i3F90ohYLA5a78y6AULDlet1IxYB+a/cMN+A0vGnDg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__array-fns/0.1.4.tgz}
+
+  '@jsr/mary__ds-queue@0.1.1':
+    resolution: {integrity: sha512-eypx2HpssmbNM6e3mWUs0ZzyNrt9i2vhWKQtNduu+02AZuVT+1QZIm3doyxENC3cyScFppWPciatfG2rZxBOxQ==, tarball: https://npm.jsr.io/~/11/@jsr/mary__ds-queue/0.1.1.tgz}
 
   '@jsr/mary__events@0.2.0':
     resolution: {integrity: sha512-WcBRbtuTno3zcfXKd7SEeKr1lAJF+CQ8BCv+PEEMmNKNqFurkEksGxRB3UDPZxIxjJ7sAqMVTL26wRuMpAcIeA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.2.0.tgz}
@@ -1993,6 +1999,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@jsr/mary__array-fns@0.1.4': {}
+
+  '@jsr/mary__ds-queue@0.1.1': {}
 
   '@jsr/mary__events@0.2.0': {}
 

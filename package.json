@@ -20,6 +20,7 @@
 		"@atcute/tid": "^1.0.2",
 		"@badrap/valita": "^0.4.4",
 		"@mary/array-fns": "npm:@jsr/mary__array-fns@^0.1.4",
+		"@mary/ds-queue": "npm:@jsr/mary__ds-queue@^0.1.1",
 		"@mary/events": "npm:@jsr/mary__events@^0.2.0",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/tar": "npm:@jsr/mary__tar@^0.2.4",

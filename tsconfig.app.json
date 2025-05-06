@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"useDefineForClassFields": false,
 		"module": "ESNext",
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		"types": [],
@@ -12,8 +11,10 @@
 		"isolatedModules": true,
 		"moduleDetection": "force",
 		"noEmit": true,
+
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
+		"useDefineForClassFields": false,
 
 		"strict": true,
 		"noUnusedLocals": true,
