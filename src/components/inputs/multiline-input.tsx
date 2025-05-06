@@ -39,7 +39,6 @@ const MultilineInput = (props: MultilineInputProps) => {
 				name={props.name}
 				required={props.required}
 				autocomplete={props.autocomplete}
-				// @ts-expect-error
 				autocorrect={props.autocorrect}
 				rows={22}
 				value={props.value}
