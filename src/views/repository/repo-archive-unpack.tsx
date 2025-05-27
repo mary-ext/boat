@@ -16,11 +16,6 @@ const yieldToScheduler: () => Promise<void> = window?.scheduler?.yield
 		window.scheduler.yield.bind(window.scheduler)
 	: undefined;
 
-const yieldToIdle =
-	typeof requestIdleCallback === 'function'
-		? () => new Promise((resolve) => requestIdleCallback(resolve))
-		: () => new Promise((resolve) => setTimeout(resolve, 1));
-
 const UnpackCarPage = () => {
 	const logger = createLogger();
 
