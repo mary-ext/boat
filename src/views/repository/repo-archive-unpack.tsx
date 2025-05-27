@@ -88,9 +88,15 @@ const UnpackCarPage = () => {
 				data: JSON.stringify(record, null, 2),
 			});
 
-			progress.update(`Unpacking records (${count} entries)`);
-			writable.write(entry);
 			count++;
+
+			if (count % 100 !== 0) {
+				writable.write(entry);
+			} else {
+				await writable.write(entry);
+			}
+
+			progress.update(`Unpacking records (${count} entries)`);
 
 			if (yieldToScheduler !== undefined) {
 				await yieldToScheduler();
