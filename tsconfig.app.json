@@ -3,7 +3,7 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
-		"types": [],
+		"types": ["@atcute/atproto", "@atcute/bluesky"],
 		"skipLibCheck": true,
 
 		"moduleResolution": "Bundler",

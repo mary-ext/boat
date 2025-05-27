@@ -1,10 +1,10 @@
 import { createSignal, Match, Show, Switch } from 'solid-js';
 
-import { AtpAccessJwt, CredentialManager, XRPC, XRPCError } from '@atcute/client';
-import { decodeJwt } from '@atcute/client/utils/jwt';
+import { AtpAccessJwt, Client, ClientResponseError, CredentialManager, ok } from '@atcute/client';
 import { getPdsEndpoint } from '@atcute/identity';
 
 import { formatTotpCode, TOTP_RE } from '~/api/utils/auth';
+import { decodeJwt } from '~/api/utils/jwt';
 
 import { createMutation } from '~/lib/utils/mutation';
 
@@ -59,44 +59,41 @@ const Step2_PdsAuthentication = ({
 			setPassword('');
 			setIsTotpRequired(false);
 		},
-		onError(error) {
+		onError(err) {
 			let message: string | undefined;
 
-			if (error instanceof XRPCError) {
-				if (error.kind === 'AuthFactorTokenRequired') {
+			if (err instanceof ClientResponseError) {
+				if (err.error === 'AuthFactorTokenRequired') {
 					setOtp('');
 					setIsTotpRequired(true);
 					return;
 				}
 
-				if (error.kind === 'AuthenticationRequired') {
+				if (err.error === 'AuthenticationRequired') {
 					message = `Invalid identifier or password`;
-				} else if (error.kind === 'AccountTakedown') {
+				} else if (err.error === 'AccountTakedown') {
 					message = `Account has been taken down`;
-				} else if (error.message.includes('Token is invalid')) {
+				} else if (err.description?.includes('Token is invalid')) {
 					message = `Invalid one-time confirmation code`;
 					setIsTotpRequired(true);
 				}
-			} else if (error instanceof InsufficientLoginError) {
-				message = error.message;
+			} else if (err instanceof InsufficientLoginError) {
+				message = err.message;
 			}
 
 			if (message !== undefined) {
 				setError(message);
 			} else {
-				console.error(error);
-				setError(`Something went wrong: ${error}`);
+				console.error(err);
+				setError(`Something went wrong: ${err}`);
 			}
 		},
 	});
 
 	const dispatchMutation = createMutation({
 		async mutationFn({ manager }: { manager: CredentialManager }) {
-			const rpc = new XRPC({ handler: manager });
-			const { data: recommendedDidDoc } = await rpc.get(
-				'com.atproto.identity.getRecommendedDidCredentials',
-				{},
-			);
+			const rpc = new Client({ handler: manager });
+			const recommendedDidDoc = await ok(rpc.get('com.atproto.identity.getRecommendedDidCredentials'));
 
 			return { recommendedDidDoc };
 		},

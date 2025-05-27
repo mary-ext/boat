@@ -1,5 +1,5 @@
-import { type AtprotoDid, type Handle, isHandle } from '@atcute/identity';
 import { XrpcHandleResolver } from '@atcute/identity-resolver';
+import { type AtprotoDid, type Handle, isHandle } from '@atcute/lexicons/syntax';
 
 const handleResolver = new XrpcHandleResolver({
 	serviceUrl: import.meta.env.VITE_APPVIEW_URL,

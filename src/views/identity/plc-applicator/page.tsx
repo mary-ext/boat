@@ -1,10 +1,12 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
+import type { ComAtprotoIdentityGetRecommendedDidCredentials } from '@atcute/atproto';
 import type { CredentialManager } from '@atcute/client';
-import type { ComAtprotoIdentityGetRecommendedDidCredentials } from '@atcute/client/lexicons';
 import type { P256PrivateKey, Secp256k1PrivateKey } from '@atcute/crypto';
 import type { CompatibleOperation, IndexedEntry, IndexedEntryWithSigner } from '@atcute/did-plc';
-import type { Did, DidDocument } from '@atcute/identity';
+import type { DidDocument } from '@atcute/identity';
+import { InferXRPCBodyInput } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons/syntax';
 
 import { UpdatePayload } from '~/api/types/plc';
 
@@ -31,7 +33,7 @@ export interface PlcInformation {
 export interface PdsSigningMethod {
 	type: 'pds';
 	manager: CredentialManager;
-	recommendedDidDoc: ComAtprotoIdentityGetRecommendedDidCredentials.Output;
+	recommendedDidDoc: InferXRPCBodyInput<ComAtprotoIdentityGetRecommendedDidCredentials.mainSchema['output']>;
 }
 
 export type Keypair = P256PrivateKey | Secp256k1PrivateKey;

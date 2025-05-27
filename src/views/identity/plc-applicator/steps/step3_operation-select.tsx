@@ -7,14 +7,14 @@ import {
 	type IndexedEntryWithSigner,
 	normalizeOp,
 } from '@atcute/did-plc';
-import type { Did } from '@atcute/identity';
+import type { Did } from '@atcute/lexicons';
 
 import Button from '~/components/inputs/button';
+import RadioInput from '~/components/inputs/radio-input';
 import SelectInput from '~/components/inputs/select-input';
 import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
 
 import { PlcApplicatorConstraints } from '../page';
-import RadioInput from '~/components/inputs/radio-input';
 
 const Step3_OperationSelect = ({
 	data,

@@ -1,9 +1,10 @@
-import type { AtprotoDid, DidDocument } from '@atcute/identity';
+import type { DidDocument } from '@atcute/identity';
 import {
 	CompositeDidDocumentResolver,
 	PlcDidDocumentResolver,
 	WebDidDocumentResolver,
 } from '@atcute/identity-resolver';
+import type { AtprotoDid } from '@atcute/lexicons/syntax';
 
 const didDocumentResolver = new CompositeDidDocumentResolver({
 	methods: {

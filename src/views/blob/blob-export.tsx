@@ -2,13 +2,13 @@ import { FileSystemWritableFileStream, showSaveFilePicker } from 'native-file-sy
 import { createSignal } from 'solid-js';
 
 import { Client, ClientResponseError, ok, simpleFetchHandler } from '@atcute/client';
-import { type AtprotoDid, getPdsEndpoint, isAtprotoDid, isHandle } from '@atcute/identity';
+import { getPdsEndpoint, isAtprotoDid } from '@atcute/identity';
+import { isHandle, type AtprotoDid } from '@atcute/lexicons/syntax';
 import { writeTarEntry } from '@mary/tar';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView, resolveHandleViaPds } from '~/api/queries/handle';
 import { isServiceUrlString } from '~/api/types/strings';
-import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { useTitle } from '~/lib/navigation/router';
 import { makeAbortable } from '~/lib/utils/abortable';
@@ -284,7 +284,6 @@ const BlobExportPage = () => {
 						type="text"
 						name="ident"
 						autocomplete="username"
-						pattern={/* @once */ DID_OR_HANDLE_RE.source}
 						placeholder="paul.bsky.social"
 						autofocus
 					/>

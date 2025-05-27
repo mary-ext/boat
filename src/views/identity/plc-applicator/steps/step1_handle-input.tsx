@@ -1,13 +1,13 @@
 import { createSignal } from 'solid-js';
 
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError } from '@atcute/client';
 import { processIndexedEntryLog } from '@atcute/did-plc';
-import { type Did, isHandle, isPlcDid } from '@atcute/identity';
+import { isPlcDid } from '@atcute/identity';
+import { isHandle, type Did } from '@atcute/lexicons/syntax';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
 import { getPlcAuditLogs } from '~/api/queries/plc';
-import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { createMutation } from '~/lib/utils/mutation';
 
@@ -16,7 +16,7 @@ import RadioInput from '~/components/inputs/radio-input';
 import TextInput from '~/components/inputs/text-input';
 import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
 
-import { type PlcInformation, PlcApplicatorConstraints } from '../page';
+import { PlcApplicatorConstraints, type PlcInformation } from '../page';
 
 type Method = 'pds' | 'key';
 
@@ -70,21 +70,21 @@ const Step1_HandleInput = ({
 				onNext('Step2_PrivateKeyInput', { info });
 			}
 		},
-		onError(error) {
+		onError(err) {
 			let message: string | undefined;
 
-			if (error instanceof XRPCError) {
-				if (error.kind === 'InvalidRequest' && error.message.includes('resolve handle')) {
+			if (err instanceof ClientResponseError) {
+				if (err.error === 'InvalidRequest' && err.description?.includes('resolve handle')) {
 					message = `Can't seem to resolve handle, is it typed correctly?`;
 				}
-			} else if (error instanceof DidIsNotPlcError) {
-				message = error.message;
+			} else if (err instanceof DidIsNotPlcError) {
+				message = err.message;
 			}
 
 			if (message !== undefined) {
 				setError(message);
 			} else {
-				setError(`Something went wrong: ${error}`);
+				setError(`Something went wrong: ${err}`);
 			}
 		},
 	});
@@ -105,7 +105,6 @@ const Step1_HandleInput = ({
 				placeholder="paul.bsky.social"
 				value={identifier()}
 				required
-				pattern={/* @once */ DID_OR_HANDLE_RE.source}
 				autofocus={isActive()}
 				onChange={setIdentifier}
 			/>

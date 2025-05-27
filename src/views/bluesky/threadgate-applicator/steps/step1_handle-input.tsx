@@ -1,11 +1,12 @@
 import { createSignal } from 'solid-js';
 
-import type { AppBskyFeedThreadgate } from '@atcute/client/lexicons';
-import { type AtprotoDid, isAtprotoDid, isHandle } from '@atcute/identity';
+import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { isAtprotoDid } from '@atcute/identity';
+import { isHandle, type AtprotoDid } from '@atcute/lexicons/syntax';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
-import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { appViewRpc } from '~/globals/rpc';
 
@@ -50,15 +51,17 @@ const Step1_HandleInput = ({
 
 			let cursor: string | undefined;
 			do {
-				const { data } = await appViewRpc.get('app.bsky.feed.getAuthorFeed', {
-					signal,
-					params: {
-						actor: did,
-						filter: 'posts_no_replies',
-						limit: 100,
-						cursor,
-					},
-				});
+				const data = await ok(
+					appViewRpc.get('app.bsky.feed.getAuthorFeed', {
+						signal,
+						params: {
+							actor: did,
+							filter: 'posts_no_replies',
+							limit: 100,
+							cursor,
+						},
+					}),
+				);
 
 				cursor = data.cursor;
 
@@ -83,7 +86,7 @@ const Step1_HandleInput = ({
 					let threadgate: ThreadgateState | null = null;
 
 					if (tg?.record) {
-						const record = tg.record as AppBskyFeedThreadgate.Record;
+						const record = tg.record as AppBskyFeedThreadgate.Main;
 
 						const allow = record?.allow;
 						const hiddenReplies = record?.hiddenReplies;
@@ -153,7 +156,6 @@ const Step1_HandleInput = ({
 				placeholder="paul.bsky.social"
 				value={identifier()}
 				required
-				pattern={/* @once */ DID_OR_HANDLE_RE.source}
 				autofocus={isActive()}
 				onChange={setIdentifier}
 			/>

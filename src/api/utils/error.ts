@@ -1,27 +1,22 @@
-import { XRPCError } from '@atcute/client';
-
-export const formatXRPCError = (err: XRPCError): string => {
-	const name = err.kind;
-	return (name ? name + ': ' : '') + err.message;
-};
+import { ClientResponseError } from '@atcute/client';
 
 export const formatQueryError = (err: unknown) => {
-	if (err instanceof XRPCError) {
-		const kind = err.kind;
+	if (err instanceof ClientResponseError) {
+		const error = err.error;
 
-		if (kind === 'InvalidToken' || kind === 'ExpiredToken') {
+		if (error === 'InvalidToken' || error === 'ExpiredToken') {
 			return `Account session is no longer valid`;
 		}
 
-		if (kind === 'UpstreamFailure') {
+		if (error === 'UpstreamFailure') {
 			return `Server appears to be experiencing issues, try again later`;
 		}
 
-		if (kind === 'InternalServerError') {
+		if (error === 'InternalServerError') {
 			return `Server is having issues processing this request, try again later`;
 		}
 
-		return formatXRPCError(err);
+		return err.message;
 	}
 
 	if (err instanceof Error) {

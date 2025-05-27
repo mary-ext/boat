@@ -1,7 +1,8 @@
 import { batch, createSignal, Match, Show, Switch } from 'solid-js';
 
-import { CredentialManager, XRPCError } from '@atcute/client';
-import { type AtprotoDid, type DidDocument, getPdsEndpoint, isAtprotoDid, isHandle } from '@atcute/identity';
+import { ClientResponseError, CredentialManager } from '@atcute/client';
+import { getPdsEndpoint, isAtprotoDid, type DidDocument } from '@atcute/identity';
+import { isHandle, type AtprotoDid } from '@atcute/lexicons/syntax';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
@@ -88,33 +89,33 @@ const BlueskyLoginStep = (props: BlueskyLoginSectionProps) => {
 				setIsTotpRequired(false);
 			});
 		},
-		onError(error) {
+		onError(err) {
 			let message: string | undefined;
 
-			if (error instanceof XRPCError) {
-				if (error.kind === 'AuthFactorTokenRequired') {
+			if (err instanceof ClientResponseError) {
+				if (err.error === 'AuthFactorTokenRequired') {
 					setOtp('');
 					setIsTotpRequired(true);
 					return;
 				}
 
-				if (error.kind === 'AuthenticationRequired') {
+				if (err.error === 'AuthenticationRequired') {
 					message = `Invalid identifier or password`;
-				} else if (error.kind === 'AccountTakedown') {
+				} else if (err.error === 'AccountTakedown') {
 					message = `Account has been taken down`;
-				} else if (error.message.includes('Token is invalid')) {
+				} else if (err.message.includes('Token is invalid')) {
 					message = `Invalid one-time confirmation code`;
 					setIsTotpRequired(true);
 				}
-			} else if (error instanceof InsufficientLoginError) {
-				message = error.message;
+			} else if (err instanceof InsufficientLoginError) {
+				message = err.message;
 			}
 
 			if (message !== undefined) {
 				setError(message);
 			} else {
-				console.error(error);
-				setError(`Something went wrong: ${error}`);
+				console.error(err);
+				setError(`Something went wrong: ${err}`);
 			}
 		},
 	});

@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 
-import { XRPC, XRPCError } from '@atcute/client';
+import { Client, ClientResponseError, ok } from '@atcute/client';
 
 import { formatTotpCode, TOTP_RE } from '~/api/utils/auth';
 
@@ -27,9 +27,9 @@ export const Step5_PdsConfirmation = ({
 	const requestMutation = createMutation({
 		async mutationFn() {
 			const manager = data.method.manager;
-			const rpc = new XRPC({ handler: manager });
+			const rpc = new Client({ handler: manager });
 
-			await rpc.call('com.atproto.identity.requestPlcOperationSignature', {});
+			await ok(rpc.post('com.atproto.identity.requestPlcOperationSignature', { as: null }));
 		},
 		onMutate() {
 			setRequestError();
@@ -49,25 +49,30 @@ export const Step5_PdsConfirmation = ({
 	const applyMutation = createMutation({
 		async mutationFn({ code }: { code: string }) {
 			const manager = data.method.manager;
-			const rpc = new XRPC({ handler: manager });
+			const client = new Client({ handler: manager });
 
 			const payload = data.payload;
 
-			const { data: signage } = await rpc.call('com.atproto.identity.signPlcOperation', {
-				data: {
-					token: formatTotpCode(code),
-					alsoKnownAs: payload.alsoKnownAs,
-					rotationKeys: payload.rotationKeys,
-					services: payload.services,
-					verificationMethods: payload.verificationMethods,
-				},
-			});
+			const signage = await ok(
+				client.post('com.atproto.identity.signPlcOperation', {
+					input: {
+						token: formatTotpCode(code),
+						alsoKnownAs: payload.alsoKnownAs,
+						rotationKeys: payload.rotationKeys,
+						services: payload.services,
+						verificationMethods: payload.verificationMethods,
+					},
+				}),
+			);
 
-			await rpc.call('com.atproto.identity.submitPlcOperation', {
-				data: {
-					operation: signage.operation,
-				},
-			});
+			await ok(
+				client.post('com.atproto.identity.submitPlcOperation', {
+					as: null,
+					input: {
+						operation: signage.operation,
+					},
+				}),
+			);
 		},
 		onMutate() {
 			setApplyError();
@@ -75,11 +80,11 @@ export const Step5_PdsConfirmation = ({
 		onSuccess() {
 			onNext('Step6_Finished', {});
 		},
-		onError(error) {
+		onError(err) {
 			let message: string | undefined;
 
-			if (error instanceof XRPCError) {
-				if (error.kind === 'InvalidToken' || error.kind === 'ExpiredToken') {
+			if (err instanceof ClientResponseError) {
+				if (err.error === 'InvalidToken' || err.error === 'ExpiredToken') {
 					message = `Confirmation code has expired`;
 				}
 			}
@@ -87,8 +92,8 @@ export const Step5_PdsConfirmation = ({
 			if (message !== undefined) {
 				setApplyError(message);
 			} else {
-				console.error(error);
-				setApplyError(`Something went wrong: ${error}`);
+				console.error(err);
+				setApplyError(`Something went wrong: ${err}`);
 			}
 		},
 	});

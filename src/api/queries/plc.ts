@@ -1,5 +1,5 @@
 import { defs } from '@atcute/did-plc';
-import { Did } from '@atcute/identity';
+import { Did } from '@atcute/lexicons/syntax';
 
 export const getPlcAuditLogs = async ({ did, signal }: { did: Did<'plc'>; signal?: AbortSignal }) => {
 	const origin = import.meta.env.VITE_PLC_DIRECTORY_URL;

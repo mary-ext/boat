@@ -1,8 +1,8 @@
 import { batch, createMemo, createSignal, For, Show } from 'solid-js';
 
-import { AppBskyFeedThreadgate, Brand } from '@atcute/client/lexicons';
-
-import { UnwrapArray } from '~/api/utils/types';
+import { AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { $type } from '@atcute/lexicons';
 
 import { appViewRpc } from '~/globals/rpc';
 
@@ -17,7 +17,7 @@ import CircularProgressView from '~/components/circular-progress-view';
 import Button from '~/components/inputs/button';
 import ToggleInput from '~/components/inputs/toggle-input';
 
-import { ThreadgateApplicatorConstraints } from '../page';
+import { ThreadgateApplicatorConstraints, ThreadgateRule } from '../page';
 import { sortThreadgateAllow } from '../utils';
 
 const enum FilterType {
@@ -31,8 +31,6 @@ const enum ThreadRulePreset {
 	CUSTOM = 'custom',
 }
 
-type ThreadRule = UnwrapArray<AppBskyFeedThreadgate.Record['allow']>;
-
 const Step2_RulesInput = ({
 	data,
 	isActive,
@@ -41,7 +39,7 @@ const Step2_RulesInput = ({
 }: WizardStepProps<ThreadgateApplicatorConstraints, 'Step2_RulesInput'>) => {
 	const [filter, setFilter] = createSignal(FilterType.MISSING_ONLY);
 
-	const [threadRules, _setThreadRules] = createSignal<ThreadRule[] | undefined>([
+	const [threadRules, _setThreadRules] = createSignal<ThreadgateRule[] | undefined>([
 		{ $type: 'app.bsky.feed.threadgate#followingRule' },
 		{ $type: 'app.bsky.feed.threadgate#mentionRule' },
 	]);
@@ -64,14 +62,16 @@ const Step2_RulesInput = ({
 		() => data.profile.didDoc.id,
 		async (did, signal) => {
 			const lists = await accumulate(async (cursor) => {
-				const { data } = await appViewRpc.get('app.bsky.graph.getLists', {
-					signal,
-					params: {
-						actor: did,
-						cursor,
-						limit: 100,
-					},
-				});
+				const data = await ok(
+					appViewRpc.get('app.bsky.graph.getLists', {
+						signal,
+						params: {
+							actor: did,
+							cursor,
+							limit: 100,
+						},
+					}),
+				);
 
 				return {
 					cursor: data.cursor,
@@ -121,11 +121,11 @@ const Step2_RulesInput = ({
 		);
 	});
 
-	const hasThreadRule = (predicate: ThreadRule): boolean => {
+	const hasThreadRule = (predicate: ThreadgateRule): boolean => {
 		return !!threadRules()?.find((rule) => dequal(rule, predicate));
 	};
 
-	const setCustomThreadRules = (next: ThreadRule[] | undefined) => {
+	const setCustomThreadRules = (next: ThreadgateRule[] | undefined) => {
 		batch(() => {
 			_setThreadRules(next);
 			setThreadRulesPreset(ThreadRulePreset.CUSTOM);
@@ -226,7 +226,7 @@ const Step2_RulesInput = ({
 					}
 				>
 					{(list) => {
-						const rule: Brand.Union<AppBskyFeedThreadgate.ListRule> = {
+						const rule: $type.enforce<AppBskyFeedThreadgate.ListRule> = {
 							$type: 'app.bsky.feed.threadgate#listRule',
 							list: list.uri,
 						};

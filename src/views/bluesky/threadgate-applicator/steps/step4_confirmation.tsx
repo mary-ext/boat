@@ -1,10 +1,11 @@
 import { createSignal, Show } from 'solid-js';
 
-import { XRPC, XRPCError } from '@atcute/client';
-import type { AppBskyFeedThreadgate, ComAtprotoRepoApplyWrites } from '@atcute/client/lexicons';
+import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
+import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { Client, ClientResponseError } from '@atcute/client';
+import { InferXRPCBodyInput } from '@atcute/lexicons';
 import { chunked } from '@mary/array-fns';
-
-import { parseAddressedAtUri } from '~/api/utils/at-uri';
+import { parseCanonicalResourceUri } from '@atcute/lexicons';
 
 import { dequal } from '~/lib/utils/dequal';
 import { createMutation } from '~/lib/utils/mutation';
@@ -34,15 +35,18 @@ const Step4_Confirmation = ({
 			logger.log(`Preparing writes`);
 
 			const rules = data.rules;
-			const writes: ComAtprotoRepoApplyWrites.Input['writes'] = [];
+			const writes: InferXRPCBodyInput<ComAtprotoRepoApplyWrites.mainSchema['input']>['writes'] = [];
 
 			const now = new Date().toISOString();
 			for (const { post, threadgate } of data.threads) {
 				if (threadgate === null) {
 					if (rules !== undefined) {
-						const { rkey } = parseAddressedAtUri(post.uri);
+						const postUri = parseCanonicalResourceUri(post.uri);
+						if (!postUri.ok) {
+							throw new Error(`failed to parse ${post.uri}`);
+						}
 
-						const record: AppBskyFeedThreadgate.Record = {
+						const record: AppBskyFeedThreadgate.Main = {
 							$type: 'app.bsky.feed.threadgate',
 							createdAt: now,
 							post: post.uri,
@@ -53,23 +57,29 @@ const Step4_Confirmation = ({
 						writes.push({
 							$type: 'com.atproto.repo.applyWrites#create',
 							collection: 'app.bsky.feed.threadgate',
-							rkey: rkey,
+							rkey: postUri.value.rkey,
 							value: record,
 						});
 					}
 				} else {
 					if (rules === undefined && !threadgate.hiddenReplies?.length) {
-						const { rkey } = parseAddressedAtUri(threadgate.uri);
+						const threadgateUri = parseCanonicalResourceUri(threadgate.uri);
+						if (!threadgateUri.ok) {
+							throw new Error(`failed to parse ${threadgate.uri}`);
+						}
 
 						writes.push({
 							$type: 'com.atproto.repo.applyWrites#delete',
 							collection: 'app.bsky.feed.threadgate',
-							rkey: rkey,
+							rkey: threadgateUri.value.rkey,
 						});
 					} else if (!dequal(threadgate.allow, rules)) {
-						const { rkey } = parseAddressedAtUri(threadgate.uri);
+						const threadgateUri = parseCanonicalResourceUri(threadgate.uri);
+						if (!threadgateUri.ok) {
+							throw new Error(`failed to parse ${threadgate.uri}`);
+						}
 
-						const record: AppBskyFeedThreadgate.Record = {
+						const record: AppBskyFeedThreadgate.Main = {
 							$type: 'app.bsky.feed.threadgate',
 							createdAt: threadgate.createdAt,
 							post: post.uri,
@@ -80,7 +90,7 @@ const Step4_Confirmation = ({
 						writes.push({
 							$type: 'com.atproto.repo.applyWrites#update',
 							collection: 'app.bsky.feed.threadgate',
-							rkey: rkey,
+							rkey: threadgateUri.value.rkey,
 							value: record,
 						});
 					}
@@ -90,59 +100,64 @@ const Step4_Confirmation = ({
 			logger.log(`${writes.length} write operations to apply`);
 
 			const did = data.profile.didDoc.id;
-			const rpc = new XRPC({ handler: data.manager });
-
-			const RATELIMIT_POINT_LIMIT = 150 * 3;
+			const client = new Client({ handler: data.manager });
 
 			{
 				using progress = logger.progress(`Applying writes`);
 
 				let written = 0;
 				for (const chunk of chunked(writes, 200)) {
-					try {
-						const { headers } = await rpc.call('com.atproto.repo.applyWrites', {
-							data: {
-								repo: did,
-								writes: chunk,
-							},
-						});
+					let attempts = 0;
 
-						written += chunk.length;
-						progress.update(`Applying writes (${written} applied)`);
-
-						if ('ratelimit-remaining' in headers) {
-							const remaining = +headers['ratelimit-remaining'];
-							const reset = +headers['ratelimit-reset'] * 1_000;
-
-							if (remaining < RATELIMIT_POINT_LIMIT) {
-								// add some delay to be sure
-								const delta = reset - Date.now() + 5_000;
-								using _progress = logger.progress(`Reached ratelimit, waiting ${delta}ms`);
-
-								await new Promise((resolve) => setTimeout(resolve, delta));
-							}
+					while (true) {
+						if (attempts > 0) {
+							await sleep(2_000);
 						}
-					} catch (err) {
-						if (!(err instanceof XRPCError) || err.kind !== 'RateLimitExceeded') {
+
+						attempts++;
+
+						try {
+							const response = await client.post('com.atproto.repo.applyWrites', {
+								input: {
+									repo: did,
+									writes: chunk,
+								},
+							});
+
+							if (response.ok) {
+								written += chunk.length;
+								progress.update(`Applying writes (${written} applied)`);
+								break;
+							}
+
+							if (response.status === 429) {
+								// not exposed by CORS, hoping that someday it will
+								const reset = response.headers.get('ratelimit-reset');
+
+								using _progress = logger.progress(`Ratelimited, waiting`);
+
+								if (reset !== null) {
+									const refreshAt = +reset * 1_000;
+									const delta = refreshAt - Date.now();
+
+									await sleep(delta);
+								} else {
+									await sleep(10_000);
+								}
+							}
+
+							if (attempts < 3) {
+								continue;
+							}
+
+							throw new ClientResponseError(response);
+						} catch (err) {
+							// Network errors, etc
+							if (attempts < 3) {
+								continue;
+							}
+
 							throw err;
-						}
-
-						const headers = err.headers;
-						if ('ratelimit-remaining' in headers) {
-							const remaining = +headers['ratelimit-remaining'];
-							const reset = +headers['ratelimit-reset'] * 1_000;
-
-							if (remaining < RATELIMIT_POINT_LIMIT) {
-								// add some delay to be sure
-								const delta = reset - Date.now() + 5_000;
-								using _progress = logger.progress(`Ratelimited, waiting ${delta}ms`);
-
-								await new Promise((resolve) => setTimeout(resolve, delta));
-							}
-						} else {
-							using _progress = logger.progress(`Ratelimited, waiting`);
-
-							await new Promise((resolve) => setTimeout(resolve, 60 * 1_000));
 						}
 					}
 				}
@@ -202,3 +217,7 @@ const Step4_Confirmation = ({
 };
 
 export default Step4_Confirmation;
+
+const sleep = (ms: number): Promise<void> => {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+};

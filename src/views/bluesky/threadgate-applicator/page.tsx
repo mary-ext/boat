@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
+import { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { CredentialManager } from '@atcute/client';
-import { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
 import { DidDocument } from '@atcute/identity';
 
 import { UnwrapArray } from '~/api/utils/types';
@@ -19,11 +19,11 @@ import Step4_Confirmation from './steps/step4_confirmation';
 import Step5_Finished from './steps/step5_finished';
 
 export interface ThreadgateState
-	extends Pick<AppBskyFeedThreadgate.Record, 'allow' | 'hiddenReplies' | 'createdAt'> {
+	extends Pick<AppBskyFeedThreadgate.Main, 'allow' | 'hiddenReplies' | 'createdAt'> {
 	uri: string;
 }
 
-export type ThreadgateRule = UnwrapArray<AppBskyFeedThreadgate.Record['allow']>;
+export type ThreadgateRule = UnwrapArray<AppBskyFeedThreadgate.Main['allow']>;
 
 export interface ThreadItem {
 	post: AppBskyFeedDefs.PostView;

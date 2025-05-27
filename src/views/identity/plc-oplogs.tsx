@@ -1,10 +1,10 @@
 import { createSignal, JSX, Match, onCleanup, Switch } from 'solid-js';
 
 import type { IndexedEntry, Service } from '@atcute/did-plc';
-import { type Did, type Handle, isHandle, isPlcDid } from '@atcute/identity';
+import { isPlcDid } from '@atcute/identity';
+import { isHandle, type Did, type Handle } from '@atcute/lexicons/syntax';
 
 import { resolveHandleViaAppView } from '~/api/queries/handle';
-import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { getPlcAuditLogs } from '~/api/queries/plc';
 import { useTitle } from '~/lib/navigation/router';
@@ -76,7 +76,6 @@ const PlcOperationLogPage = () => {
 					type="text"
 					name="ident"
 					autocomplete="username"
-					pattern={/* @once */ DID_OR_HANDLE_RE.source}
 					placeholder="paul.bsky.social"
 					autofocus
 				/>

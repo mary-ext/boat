@@ -1,11 +1,11 @@
 import { Match, Switch } from 'solid-js';
 
-import { isAtprotoDid, isHandle, type AtprotoDid, type Did, type Handle } from '@atcute/identity';
+import { isAtprotoDid } from '@atcute/identity';
+import { isHandle, type AtprotoDid, type Did, type Handle } from '@atcute/lexicons/syntax';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView } from '~/api/queries/handle';
 import { isServiceUrlString } from '~/api/types/strings';
-import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { useTitle } from '~/lib/navigation/router';
 import { createQuery } from '~/lib/utils/query';
@@ -67,7 +67,6 @@ const DidLookupPage = () => {
 					type="text"
 					name="ident"
 					autocomplete="username"
-					pattern={/* @once */ DID_OR_HANDLE_RE.source}
 					placeholder="paul.bsky.social"
 					autofocus
 				/>

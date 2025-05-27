@@ -1,12 +1,12 @@
 import { type FileSystemFileHandle, showSaveFilePicker } from 'native-file-system-adapter';
 import { createSignal } from 'solid-js';
 
-import { type AtprotoDid, getPdsEndpoint, isAtprotoDid, isHandle } from '@atcute/identity';
+import { getPdsEndpoint, isAtprotoDid } from '@atcute/identity';
+import { type AtprotoDid, isHandle } from '@atcute/lexicons/syntax';
 
 import { getDidDocument } from '~/api/queries/did-doc';
 import { resolveHandleViaAppView, resolveHandleViaPds } from '~/api/queries/handle';
 import { isServiceUrlString } from '~/api/types/strings';
-import { DID_OR_HANDLE_RE } from '~/api/utils/strings';
 
 import { useTitle } from '~/lib/navigation/router';
 import { makeAbortable } from '~/lib/utils/abortable';
@@ -190,7 +190,6 @@ const RepoExportPage = () => {
 						type="text"
 						name="ident"
 						autocomplete="username"
-						pattern={/* @once */ DID_OR_HANDLE_RE.source}
 						placeholder="paul.bsky.social"
 						autofocus
 					/>
