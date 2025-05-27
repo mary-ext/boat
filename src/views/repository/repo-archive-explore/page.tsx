@@ -1,6 +1,6 @@
 import { Match, Switch } from 'solid-js';
 
-import { iterateAtpRepo } from '@atcute/car';
+import { RepoReader } from '@atcute/car/v4';
 
 import { createMutation } from '~/lib/utils/mutation';
 
@@ -12,7 +12,8 @@ import ExploreView from './views/explore';
 const ArchiveExplorePage = () => {
 	const mutation = createMutation({
 		async mutationFn({ file }: { file: File }): Promise<Archive> {
-			const buffer = new Uint8Array(await file.arrayBuffer());
+			const stream = file.stream();
+			await using repo = RepoReader.fromStream(stream);
 
 			const collections = new Map<string, RecordEntry[]>();
 			const archive: Archive = {
@@ -20,7 +21,7 @@ const ArchiveExplorePage = () => {
 				entries: [],
 			};
 
-			for (const entry of iterateAtpRepo(buffer)) {
+			for await (const entry of repo) {
 				let list = collections.get(entry.collection);
 				if (list === undefined) {
 					collections.set(entry.collection, (list = []));
@@ -41,6 +42,9 @@ const ArchiveExplorePage = () => {
 			}
 
 			return archive;
+		},
+		onError(err) {
+			console.error(err);
 		},
 	});
 

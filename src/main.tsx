@@ -22,5 +22,8 @@ const App = () => {
 if (Symbol.dispose === undefined) {
 	Object.defineProperty(Symbol, 'dispose', { value: Symbol.for(`Symbol.dispose`) });
 }
+if (Symbol.asyncDispose === undefined) {
+	Object.defineProperty(Symbol, 'asyncDispose', { value: Symbol.for(`Symbol.asyncDispose`) });
+}
 
 render(App, document.body);

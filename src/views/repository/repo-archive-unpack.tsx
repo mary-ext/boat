@@ -1,7 +1,7 @@
 import { FileSystemWritableFileStream, showSaveFilePicker } from 'native-file-system-adapter';
 import { createSignal } from 'solid-js';
 
-import { iterateAtpRepo } from '@atcute/car';
+import { RepoReader } from '@atcute/car/v4';
 import { writeTarEntry } from '@mary/tar';
 
 import { createDropZone } from '~/lib/hooks/dropzone';
@@ -39,17 +39,18 @@ const UnpackCarPage = () => {
 	});
 
 	const mutate = async (file: File, signal: AbortSignal) => {
-		logger.info(`Starting extraction for ${file.name}`);
+		logger.log(`Starting extraction`);
 
-		const buf = await file.arrayBuffer();
-		const ui8 = new Uint8Array(buf);
+		const stream = file.stream();
+		await using repo = RepoReader.fromStream(stream);
 
-		let currentCollection: string | undefined;
 		let count = 0;
 
 		let writable: FileSystemWritableFileStream | undefined;
 
-		for (const { collection, rkey, record } of iterateAtpRepo(ui8)) {
+		using progress = logger.progress(`Unpacking records (${count} entries)`);
+
+		for await (const { collection, rkey, record } of repo) {
 			if (writable === undefined) {
 				using _progress = logger.progress(`Waiting for the user`);
 
@@ -87,20 +88,12 @@ const UnpackCarPage = () => {
 
 			signal.throwIfAborted();
 
-			if (currentCollection !== collection) {
-				logger.log(`Current progress: ${collection}`);
-				currentCollection = collection;
-
-				if (yieldToScheduler === undefined) {
-					await yieldToIdle();
-				}
-			}
-
 			const entry = writeTarEntry({
 				filename: `${collection}/${filenamify(rkey)}.json`,
 				data: JSON.stringify(record, null, 2),
 			});
 
+			progress.update(`Unpacking records (${count} entries)`);
 			writable.write(entry);
 			count++;
 
