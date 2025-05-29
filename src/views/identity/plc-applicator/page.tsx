@@ -5,7 +5,6 @@ import type { CredentialManager } from '@atcute/client';
 import type { P256PrivateKey, Secp256k1PrivateKey } from '@atcute/crypto';
 import type { CompatibleOperation, IndexedEntry, IndexedEntryWithSigner } from '@atcute/did-plc';
 import type { DidDocument } from '@atcute/identity';
-import { InferXRPCBodyInput } from '@atcute/lexicons';
 import type { Did } from '@atcute/lexicons/syntax';
 
 import { UpdatePayload } from '~/api/types/plc';
@@ -33,7 +32,7 @@ export interface PlcInformation {
 export interface PdsSigningMethod {
 	type: 'pds';
 	manager: CredentialManager;
-	recommendedDidDoc: InferXRPCBodyInput<ComAtprotoIdentityGetRecommendedDidCredentials.mainSchema['output']>;
+	recommendedDidDoc: ComAtprotoIdentityGetRecommendedDidCredentials.$output;
 }
 
 export type Keypair = P256PrivateKey | Secp256k1PrivateKey;

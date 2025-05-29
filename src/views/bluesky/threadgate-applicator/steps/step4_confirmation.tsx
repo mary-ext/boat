@@ -3,9 +3,8 @@ import { createSignal, Show } from 'solid-js';
 import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
 import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { Client, ClientResponseError } from '@atcute/client';
-import { InferXRPCBodyInput } from '@atcute/lexicons';
-import { chunked } from '@mary/array-fns';
 import { parseCanonicalResourceUri } from '@atcute/lexicons';
+import { chunked } from '@mary/array-fns';
 
 import { dequal } from '~/lib/utils/dequal';
 import { createMutation } from '~/lib/utils/mutation';
@@ -35,7 +34,7 @@ const Step4_Confirmation = ({
 			logger.log(`Preparing writes`);
 
 			const rules = data.rules;
-			const writes: InferXRPCBodyInput<ComAtprotoRepoApplyWrites.mainSchema['input']>['writes'] = [];
+			const writes: ComAtprotoRepoApplyWrites.$input['writes'] = [];
 
 			const now = new Date().toISOString();
 			for (const { post, threadgate } of data.threads) {
