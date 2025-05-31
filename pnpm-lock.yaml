@@ -51,20 +51,20 @@ importers:
         specifier: ^0.4.5
         version: 0.4.5
       '@mary/array-fns':
-        specifier: npm:@jsr/mary__array-fns@^0.1.4
+        specifier: jsr:^0.1.4
         version: '@jsr/mary__array-fns@0.1.4'
       '@mary/ds-queue':
-        specifier: npm:@jsr/mary__ds-queue@^0.1.2
+        specifier: jsr:^0.1.2
         version: '@jsr/mary__ds-queue@0.1.2'
       '@mary/events':
-        specifier: npm:@jsr/mary__events@^0.2.0
+        specifier: jsr:^0.2.0
         version: '@jsr/mary__events@0.2.0'
       '@mary/solid-freeze':
         specifier: npm:@externdefs/solid-freeze@^0.1.1
         version: '@externdefs/solid-freeze@0.1.1(solid-js@1.9.7)'
       '@mary/tar':
-        specifier: npm:@jsr/mary__tar@^0.2.4
-        version: '@jsr/mary__tar@0.2.4'
+        specifier: jsr:^0.3.1
+        version: '@jsr/mary__tar@0.3.1'
       nanoid:
         specifier: ^5.1.5
         version: 5.1.5
@@ -751,8 +751,8 @@ packages:
   '@jsr/mary__events@0.2.0':
     resolution: {integrity: sha512-WcBRbtuTno3zcfXKd7SEeKr1lAJF+CQ8BCv+PEEMmNKNqFurkEksGxRB3UDPZxIxjJ7sAqMVTL26wRuMpAcIeA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.2.0.tgz}
 
-  '@jsr/mary__tar@0.2.4':
-    resolution: {integrity: sha512-jFjPcZj8DRSukPLZOt6+h74cVFdfdTMG9gzbW67YByCJTD52PEpe2sNcfCSw4mQ8hZBNgwiufCPyYL8hR9yicA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__tar/0.2.4.tgz}
+  '@jsr/mary__tar@0.3.1':
+    resolution: {integrity: sha512-T803kucwCLVOXFJGzVbpkT5vRK6fARy5HL6xMiLK5hJFck72bsAeluENlRnvD0kFPSlFNp/5EJWfTHnpDK0qYA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__tar/0.3.1.tgz}
 
   '@noble/secp256k1@2.2.3':
     resolution: {integrity: sha512-l7r5oEQym9Us7EAigzg30/PQAvynhMt2uoYtT3t26eGDVm9Yii5mZ5jWSWmZ/oSIR2Et0xfc6DXrG0bZ787V3w==}
@@ -2268,7 +2268,7 @@ snapshots:
 
   '@jsr/mary__events@0.2.0': {}
 
-  '@jsr/mary__tar@0.2.4': {}
+  '@jsr/mary__tar@0.3.1': {}
 
   '@noble/secp256k1@2.2.3': {}
 
