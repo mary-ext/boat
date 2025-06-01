@@ -2,7 +2,7 @@ import { createEffect } from 'solid-js';
 
 import { createId } from '~/lib/hooks/id';
 
-import { BoundInputEvent } from './_types';
+import type { BoundInputEvent } from './_types';
 
 export interface ToggleInputProps {
 	label: string;

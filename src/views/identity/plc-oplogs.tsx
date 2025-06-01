@@ -1,4 +1,4 @@
-import { createSignal, JSX, Match, onCleanup, Switch } from 'solid-js';
+import { createSignal, Match, onCleanup, Switch, type JSX } from 'solid-js';
 
 import type { IndexedEntry, Service } from '@atcute/did-plc';
 import { isPlcDid } from '@atcute/identity';

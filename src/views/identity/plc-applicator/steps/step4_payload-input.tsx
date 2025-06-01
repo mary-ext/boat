@@ -4,9 +4,9 @@ import { updatePayload } from '~/api/types/plc';
 
 import Button from '~/components/inputs/button';
 import MultilineInput from '~/components/inputs/multiline-input';
-import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, StageErrorView, type WizardStepProps } from '~/components/wizard';
 
-import { PlcApplicatorConstraints } from '../page';
+import type { PlcApplicatorConstraints } from '../page';
 import { getPlcPayload } from '../plc-utils';
 
 export const Step4_PayloadInput = ({

@@ -1,6 +1,6 @@
-import { Stage, WizardStepProps } from '~/components/wizard';
+import { Stage, type WizardStepProps } from '~/components/wizard';
 
-import { ThreadgateApplicatorConstraints } from '../page';
+import type { ThreadgateApplicatorConstraints } from '../page';
 
 export const Step5_Finished = ({}: WizardStepProps<ThreadgateApplicatorConstraints, 'Step5_Finished'>) => {
 	return (

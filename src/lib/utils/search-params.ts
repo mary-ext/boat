@@ -2,7 +2,7 @@ import { batch, createSignal } from 'solid-js';
 
 import { isDid, isHandle } from '@atcute/lexicons/syntax';
 
-import { UnwrapArray } from '~/api/utils/types';
+import type { UnwrapArray } from '~/api/utils/types';
 
 export interface ParamParser<T> {
 	parse: (value: string | string[] | null) => T | null;

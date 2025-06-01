@@ -8,7 +8,7 @@ import { createMutation } from '~/lib/utils/mutation';
 import Button from '~/components/inputs/button';
 import RadioInput from '~/components/inputs/radio-input';
 import TextInput from '~/components/inputs/text-input';
-import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, StageErrorView, type WizardStepProps } from '~/components/wizard';
 
 import type { Keypair, PlcApplicatorConstraints, PrivateKeySigningMethod } from '../page';
 

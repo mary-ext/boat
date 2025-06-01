@@ -4,7 +4,7 @@ import * as CBOR from '@atcute/cbor';
 
 import { createQuery } from '~/lib/utils/query';
 
-import { Archive, RecordEntry } from '../../types';
+import type { Archive, RecordEntry } from '../../types';
 
 interface RecordSubviewProps {
 	archive: Archive;

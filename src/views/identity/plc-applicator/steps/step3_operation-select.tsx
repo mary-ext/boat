@@ -12,9 +12,9 @@ import type { Did } from '@atcute/lexicons';
 import Button from '~/components/inputs/button';
 import RadioInput from '~/components/inputs/radio-input';
 import SelectInput from '~/components/inputs/select-input';
-import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, StageErrorView, type WizardStepProps } from '~/components/wizard';
 
-import { PlcApplicatorConstraints } from '../page';
+import type { PlcApplicatorConstraints } from '../page';
 
 const Step3_OperationSelect = ({
 	data,

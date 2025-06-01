@@ -1,8 +1,8 @@
 import * as v from '@badrap/valita';
 
-import { defs, UnsignedOperation } from '@atcute/did-plc';
+import { defs, type UnsignedOperation } from '@atcute/did-plc';
 
-import { ToValidator } from '../utils/valita';
+import type { ToValidator } from '../utils/valita';
 import { serviceUrlString } from './strings';
 
 const _unsignedOperation = defs.unsignedOperation as ToValidator<UnsignedOperation>;

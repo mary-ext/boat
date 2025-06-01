@@ -2,10 +2,10 @@ import { batch, createSignal } from 'solid-js';
 
 import { CredentialManager } from '@atcute/client';
 
-import { WizardStepProps } from '~/components/wizard';
+import type { WizardStepProps } from '~/components/wizard';
 import BlueskyLoginStep from '~/components/wizards/bluesky-login-step';
 
-import { ThreadgateApplicatorConstraints } from '../page';
+import type { ThreadgateApplicatorConstraints } from '../page';
 
 const Step3_Authentication = ({
 	data,

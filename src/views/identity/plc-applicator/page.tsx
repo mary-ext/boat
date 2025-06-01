@@ -7,7 +7,7 @@ import type { CompatibleOperation, IndexedEntry, IndexedEntryWithSigner } from '
 import type { DidDocument } from '@atcute/identity';
 import type { Did } from '@atcute/lexicons/syntax';
 
-import { UpdatePayload } from '~/api/types/plc';
+import type { UpdatePayload } from '~/api/types/plc';
 
 import { history } from '~/globals/navigation';
 

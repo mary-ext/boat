@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal, For, JSX } from 'solid-js';
+import { type Component, createMemo, createSignal, For, type JSX } from 'solid-js';
 
 type EmptyObjectKeys<T> = {
 	[K in keyof T]: T[K] extends Record<string, never> ? K : never;

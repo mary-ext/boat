@@ -1,6 +1,6 @@
 import type { IndexedEntry } from '@atcute/did-plc';
 
-import { UpdatePayload } from '~/api/types/plc';
+import type { UpdatePayload } from '~/api/types/plc';
 
 import { assert } from '~/lib/utils/invariant';
 

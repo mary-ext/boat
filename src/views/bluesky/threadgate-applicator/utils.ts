@@ -1,4 +1,4 @@
-import { ThreadgateState } from './page';
+import type { ThreadgateState } from './page';
 
 const collator = new Intl.Collator('en');
 

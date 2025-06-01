@@ -1,6 +1,6 @@
 import { createSignal, Match, Show, Switch } from 'solid-js';
 
-import { AtpAccessJwt, Client, ClientResponseError, CredentialManager, ok } from '@atcute/client';
+import { type AtpAccessJwt, Client, ClientResponseError, CredentialManager, ok } from '@atcute/client';
 import { getPdsEndpoint } from '@atcute/identity';
 
 import { formatTotpCode, TOTP_RE } from '~/api/utils/auth';
@@ -10,9 +10,9 @@ import { createMutation } from '~/lib/utils/mutation';
 
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
-import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, StageErrorView, type WizardStepProps } from '~/components/wizard';
 
-import { PlcApplicatorConstraints } from '../page';
+import type { PlcApplicatorConstraints } from '../page';
 
 class InsufficientLoginError extends Error {}
 

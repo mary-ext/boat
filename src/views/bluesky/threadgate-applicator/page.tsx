@@ -2,9 +2,9 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { CredentialManager } from '@atcute/client';
-import { DidDocument } from '@atcute/identity';
+import type { DidDocument } from '@atcute/identity';
 
-import { UnwrapArray } from '~/api/utils/types';
+import type { UnwrapArray } from '~/api/utils/types';
 
 import { history } from '~/globals/navigation';
 

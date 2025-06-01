@@ -2,7 +2,7 @@ import { batch, createMemo, createSignal, For, Show } from 'solid-js';
 
 import { AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { $type } from '@atcute/lexicons';
+import type { $type } from '@atcute/lexicons';
 
 import { appViewRpc } from '~/globals/rpc';
 
@@ -11,13 +11,13 @@ import { dequal } from '~/lib/utils/dequal';
 import { createQuery } from '~/lib/utils/query';
 
 import RadioInput from '~/components/inputs/radio-input';
-import { Stage, StageActions, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, type WizardStepProps } from '~/components/wizard';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import Button from '~/components/inputs/button';
 import ToggleInput from '~/components/inputs/toggle-input';
 
-import { ThreadgateApplicatorConstraints, ThreadgateRule } from '../page';
+import type { ThreadgateApplicatorConstraints, ThreadgateRule } from '../page';
 import { sortThreadgateAllow } from '../utils';
 
 const enum FilterType {

@@ -1,6 +1,6 @@
-import { Stage, WizardStepProps } from '~/components/wizard';
+import { Stage, type WizardStepProps } from '~/components/wizard';
 
-import { PlcApplicatorConstraints } from '../page';
+import type { PlcApplicatorConstraints } from '../page';
 
 export const Step6_Finished = ({}: WizardStepProps<PlcApplicatorConstraints, 'Step6_Finished'>) => {
 	return (

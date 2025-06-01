@@ -4,10 +4,9 @@ import { RepoReader } from '@atcute/car/v4';
 
 import { createMutation } from '~/lib/utils/mutation';
 
-import WelcomeView from './views/welcome';
-
-import { Archive, RecordEntry } from './types';
+import type { Archive, RecordEntry } from './types';
 import ExploreView from './views/explore';
+import WelcomeView from './views/welcome';
 
 const ArchiveExplorePage = () => {
 	const mutation = createMutation({

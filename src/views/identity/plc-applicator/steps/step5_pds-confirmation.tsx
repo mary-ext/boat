@@ -9,9 +9,9 @@ import { createMutation } from '~/lib/utils/mutation';
 import CheckIcon from '~/components/ic-icons/baseline-check';
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
-import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, StageErrorView, type WizardStepProps } from '~/components/wizard';
 
-import { PlcApplicatorConstraints } from '../page';
+import type { PlcApplicatorConstraints } from '../page';
 
 export const Step5_PdsConfirmation = ({
 	data,

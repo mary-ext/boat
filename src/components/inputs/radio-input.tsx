@@ -1,8 +1,8 @@
-import { JSX } from 'solid-js';
+import type { JSX } from 'solid-js';
 
 import { createId } from '~/lib/hooks/id';
 
-import { BoundInputEvent } from './_types';
+import type { BoundInputEvent } from './_types';
 
 interface RadioInputProps<T extends string> {
 	label: JSX.Element;

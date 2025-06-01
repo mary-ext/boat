@@ -1,4 +1,4 @@
-import { Component, ComponentProps } from 'solid-js';
+import type { Component, ComponentProps } from 'solid-js';
 
 import { useTitle } from '~/lib/navigation/router';
 

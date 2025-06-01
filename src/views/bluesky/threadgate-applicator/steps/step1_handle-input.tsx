@@ -14,9 +14,9 @@ import { createMutation } from '~/lib/utils/mutation';
 
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
-import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, StageErrorView, type WizardStepProps } from '~/components/wizard';
 
-import { ThreadgateApplicatorConstraints, ThreadgateState, ThreadItem } from '../page';
+import type { ThreadgateApplicatorConstraints, ThreadgateState, ThreadItem } from '../page';
 import { sortThreadgateState } from '../utils';
 
 class NoThreadsError extends Error {}

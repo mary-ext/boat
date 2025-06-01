@@ -3,9 +3,9 @@ import { Show } from 'solid-js';
 import type { MutationReturn } from '~/lib/utils/mutation';
 
 import CircularProgress from '~/components/circular-progress';
-
-import { Archive } from '../types';
 import { createDropZone } from '~/lib/hooks/dropzone';
+
+import type { Archive } from '../types';
 
 interface WelcomeViewProps {
 	mutation: MutationReturn<Archive, { file: File }>;

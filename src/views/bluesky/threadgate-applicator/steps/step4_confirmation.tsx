@@ -12,9 +12,9 @@ import { createMutation } from '~/lib/utils/mutation';
 import Button from '~/components/inputs/button';
 import ToggleInput from '~/components/inputs/toggle-input';
 import Logger, { createLogger } from '~/components/logger';
-import { Stage, StageActions, StageErrorView, WizardStepProps } from '~/components/wizard';
+import { Stage, StageActions, StageErrorView, type WizardStepProps } from '~/components/wizard';
 
-import { ThreadgateApplicatorConstraints } from '../page';
+import type { ThreadgateApplicatorConstraints } from '../page';
 
 const Step4_Confirmation = ({
 	data,
