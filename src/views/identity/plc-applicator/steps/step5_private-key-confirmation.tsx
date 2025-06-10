@@ -78,18 +78,17 @@ const Step5_PrivateKeyConfirmation = ({
 			}}
 		>
 			<p class="text-pretty">
-				To continue with this submission, type in the following code{' '}
-				<code class="whitespace-nowrap font-bold">{code}</code> to the confirmation box below.
+				To continue with this submission, type in <code class="whitespace-nowrap font-bold">{code}</code> to
+				the confirmation box below.
 			</p>
 
 			<TextInput
-				label="Confirmation code"
+				label="Confirmation"
 				type="text"
 				autocomplete="one-time-code"
 				autocorrect="off"
 				required
 				pattern={code}
-				placeholder="AAAAA-BBBBB"
 				autofocus={isActive()}
 				monospace
 			/>
