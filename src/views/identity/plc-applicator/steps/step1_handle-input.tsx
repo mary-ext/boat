@@ -55,6 +55,7 @@ const Step1_HandleInput = ({
 			const [didDoc, logs] = await Promise.all([getDidDocument({ did }), getPlcAuditLogs({ did })]);
 			const { canonical } = await processIndexedEntryLog(did, logs);
 
+
 			return {
 				didDoc: didDoc,
 				logs: canonical,
@@ -84,6 +85,8 @@ const Step1_HandleInput = ({
 			if (message !== undefined) {
 				setError(message);
 			} else {
+				console.error(err);
+
 				setError(`Something went wrong: ${err}`);
 			}
 		},
