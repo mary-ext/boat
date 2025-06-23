@@ -100,7 +100,11 @@ const DidLookupPage = () => {
 
 									<div>
 										<p class="font-semibold text-gray-600">Identifies as</p>
-										<ol class="list-disc pl-4">{doc.alsoKnownAs?.map((ident) => <li>{ident}</li>)}</ol>
+										<ol class="list-disc pl-4">
+											{doc.alsoKnownAs?.map((ident) => (
+												<li>{ident}</li>
+											))}
+										</ol>
 									</div>
 
 									<div>
