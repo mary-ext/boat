@@ -4,7 +4,7 @@
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"preview": "vite preview",
-		"fmt": "prettier --cache --write ."
+		"fmt": "PRETTIER_EXPERIMENTAL_CLI=1 prettier --cache --write ."
 	},
 	"dependencies": {
 		"@atcute/atproto": "^3.1.0",
