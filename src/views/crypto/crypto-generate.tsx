@@ -1,4 +1,4 @@
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Show, createEffect } from 'solid-js';
 
 import { type DidKeyString, P256PrivateKeyExportable, Secp256k1PrivateKeyExportable } from '@atcute/crypto';
 
@@ -21,8 +21,18 @@ interface KeypairResult {
 const CryptoGeneratePage = () => {
 	const [type, setType] = createSignal<KeyType>('secp256k1');
 	const [result, setResult] = createSignal<KeypairResult>();
+	const [downloadUrl, setDownloadUrl] = createSignal<string | null>(null);
+	let downloadAnchorRef: HTMLAnchorElement | undefined;
 
 	useTitle(() => `Generate secret keys — boat`);
+
+	createEffect(() => {
+		// Cleanup blob URL when component unmounts or url changes
+		return () => {
+			const url = downloadUrl();
+			if (url) URL.revokeObjectURL(url);
+		};
+	});
 
 	return (
 		<>
@@ -104,6 +114,27 @@ const CryptoGeneratePage = () => {
 							<p class="font-semibold text-gray-600">Private key (multikey)</p>
 							<span class="font-mono">{/* @once */ keypair.privateMultikey}</span>
 						</div>
+					</div>
+				)}
+			</Show>
+			<Show when={result()} keyed>
+				{(keypair) => (
+					<div class="p-4">
+						<Button
+							type="button"
+							onClick={() => {
+								const dataStr = JSON.stringify(keypair, null, 2);
+								const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+								const link = document.createElement('a');
+								link.href = dataUri;
+								link.download = 'file.json';
+								document.body.appendChild(link);
+								link.click();
+								document.body.removeChild(link);
+							}}
+						>
+							Export as JSON
+						</Button>
 					</div>
 				)}
 			</Show>
