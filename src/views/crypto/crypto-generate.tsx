@@ -127,7 +127,7 @@ const CryptoGeneratePage = () => {
 								const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
 								const link = document.createElement('a');
 								link.href = dataUri;
-								link.download = 'file.json';
+								link.download = 'secret_keys.json';
 								document.body.appendChild(link);
 								link.click();
 								document.body.removeChild(link);
