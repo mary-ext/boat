@@ -1,6 +1,8 @@
 node_modules/
 dist/
 
+/.wrangler/
+
 *.local
 *.local.ts
 
