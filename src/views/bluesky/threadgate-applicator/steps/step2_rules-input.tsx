@@ -255,13 +255,6 @@ const Step2_RulesInput = ({
 				blurb={
 					<>
 						<span>This will apply to {filteredThreads().length} threads. </span>
-						{/* <button
-							type="button"
-							hidden={filteredThreads().length < 1}
-							class="font-medium text-purple-800 hover:underline"
-						>
-							View
-						</button> */}
 					</>
 				}
 				value={filter()}

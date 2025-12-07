@@ -97,14 +97,8 @@ const Step2_PrivateKeyInput = ({
 			});
 		},
 		onError(error) {
-			let message: string | undefined;
-
-			if (message !== undefined) {
-				setError(message);
-			} else {
-				console.error(error);
-				setError(`Something went wrong: ${error}`);
-			}
+			console.error(error);
+			setError(`Something went wrong: ${error}`);
 		},
 	});
 
