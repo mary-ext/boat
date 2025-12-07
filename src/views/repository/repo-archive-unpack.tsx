@@ -1,7 +1,7 @@
 import { FileSystemWritableFileStream, showSaveFilePicker } from 'native-file-system-adapter';
 import { createSignal } from 'solid-js';
 
-import { RepoReader } from '@atcute/car/v4';
+import { fromStream } from '@atcute/repo';
 import { writeTarEntry } from '@mary/tar';
 
 import { createDropZone } from '~/lib/hooks/dropzone';
@@ -37,7 +37,7 @@ const UnpackCarPage = () => {
 		logger.log(`Starting extraction`);
 
 		const stream = file.stream();
-		await using repo = RepoReader.fromStream(stream);
+		await using repo = fromStream(stream);
 
 		let count = 0;
 

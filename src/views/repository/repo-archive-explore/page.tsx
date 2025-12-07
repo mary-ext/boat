@@ -1,6 +1,6 @@
 import { Match, Switch } from 'solid-js';
 
-import { RepoReader } from '@atcute/car/v4';
+import { fromStream } from '@atcute/repo';
 
 import { createMutation } from '~/lib/utils/mutation';
 
@@ -12,7 +12,7 @@ const ArchiveExplorePage = () => {
 	const mutation = createMutation({
 		async mutationFn({ file }: { file: File }): Promise<Archive> {
 			const stream = file.stream();
-			await using repo = RepoReader.fromStream(stream);
+			await using repo = fromStream(stream);
 
 			const collections = new Map<string, RecordEntry[]>();
 			const archive: Archive = {
