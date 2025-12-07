@@ -18,8 +18,10 @@ import Step3_Authentication from './steps/step3_authentication';
 import Step4_Confirmation from './steps/step4_confirmation';
 import Step5_Finished from './steps/step5_finished';
 
-export interface ThreadgateState
-	extends Pick<AppBskyFeedThreadgate.Main, 'allow' | 'hiddenReplies' | 'createdAt'> {
+export interface ThreadgateState extends Pick<
+	AppBskyFeedThreadgate.Main,
+	'allow' | 'hiddenReplies' | 'createdAt'
+> {
 	uri: string;
 }
 
