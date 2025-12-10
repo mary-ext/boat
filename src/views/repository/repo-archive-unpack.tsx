@@ -4,11 +4,12 @@ import { createSignal } from 'solid-js';
 import { fromStream } from '@atcute/repo';
 import { writeTarEntry } from '@mary/tar';
 
-import { createDropZone } from '~/lib/hooks/dropzone';
 import { useTitle } from '~/lib/navigation/router';
 import { makeAbortable } from '~/lib/utils/abortable';
 
+import FileDropZone from '~/components/file-drop-zone';
 import Logger, { createLogger } from '~/components/logger';
+import PageHeader from '~/components/page-header';
 
 // @ts-expect-error: new API
 const yieldToScheduler: () => Promise<void> = window?.scheduler?.yield
@@ -21,17 +22,6 @@ const UnpackCarPage = () => {
 
 	const [getSignal, cleanup] = makeAbortable();
 	const [pending, setPending] = createSignal(false);
-
-	const { ref: dropRef, isDropping } = createDropZone({
-		// Checked, the mime type for CAR files is blank.
-		dataTypes: [''],
-		multiple: false,
-		onDrop(files) {
-			if (files) {
-				onFileDrop(files);
-			}
-		},
-	});
 
 	const mutate = async (file: File, signal: AbortSignal) => {
 		logger.log(`Starting extraction`);
@@ -155,38 +145,15 @@ const UnpackCarPage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">Unpack archive</h1>
-				<p class="text-gray-600">Extract a repository archive into a tarball</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="Unpack archive" subtitle="Extract a repository archive into a tarball" />
 
 			<div class="p-4">
-				<fieldset
-					ref={dropRef}
+				<FileDropZone
+					accept=".car,application/vnd.ipld.car"
+					dataTypes={['']}
 					disabled={pending()}
-					class={
-						`grid place-items-center rounded border border-gray-300 px-6 py-12 disabled:opacity-50` +
-						(pending() || !isDropping() ? ` bg-gray-100` : ` bg-green-100`)
-					}
-				>
-					<div class="flex flex-col items-center gap-4">
-						<button
-							onClick={() => {
-								const input = document.createElement('input');
-								input.type = 'file';
-								input.accept = '.car,application/vnd.ipld.car';
-								input.oninput = () => onFileDrop(Array.from(input.files!));
-
-								input.click();
-							}}
-							class="flex h-9 select-none items-center rounded border border-gray-400 px-4 text-sm font-semibold text-gray-800 hover:bg-gray-200 active:bg-gray-200 disabled:pointer-events-none"
-						>
-							Browse files
-						</button>
-						<p class="select-none font-medium text-gray-600">or drop your file here</p>
-					</div>
-				</fieldset>
+					onFiles={onFileDrop}
+				/>
 			</div>
 			<hr class="mx-4 border-gray-300" />
 

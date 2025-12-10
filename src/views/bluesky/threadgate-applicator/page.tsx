@@ -10,6 +10,7 @@ import { history } from '~/globals/navigation';
 
 import { useTitle } from '~/lib/navigation/router';
 
+import PageHeader from '~/components/page-header';
 import { Wizard } from '~/components/wizard';
 
 import Step1_HandleInput from './steps/step1_handle-input';
@@ -80,11 +81,7 @@ const ThreadgateApplicatorPage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">Retroactive thread gating</h1>
-				<p class="text-gray-600">Set reply permissions on all of your past Bluesky posts</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="Retroactive thread gating" subtitle="Set reply permissions on all of your past Bluesky posts" />
 
 			<Wizard<ThreadgateApplicatorConstraints>
 				initialStep="Step1_HandleInput"

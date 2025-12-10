@@ -1,10 +1,11 @@
-import type { JSX } from 'solid-js';
+import { createMemo, type JSX } from 'solid-js';
 
 interface ButtonProps {
 	children?: JSX.Element;
 	disabled?: boolean;
-	variant?: 'primary' | 'secondary';
+	variant?: 'primary' | 'secondary' | 'outline';
 	type?: 'button' | 'submit';
+	href?: string;
 	onClick?: JSX.EventHandlerUnion<HTMLButtonElement, MouseEvent>;
 }
 
@@ -15,6 +16,8 @@ const buttonStyles = ({ variant = 'primary', disabled = false }: ButtonProps): s
 		cn += ` bg-purple-800 text-white hover:bg-purple-700 active:bg-purple-700`;
 	} else if (variant === 'secondary') {
 		cn += ` bg-gray-200 text-black hover:bg-gray-300 active:bg-gray-300`;
+	} else if (variant === 'outline') {
+		cn += ` border border-gray-300 text-gray-800 hover:bg-gray-100 active:bg-gray-100`;
 	}
 
 	if (disabled) {
@@ -25,16 +28,28 @@ const buttonStyles = ({ variant = 'primary', disabled = false }: ButtonProps): s
 };
 
 const Button = (props: ButtonProps) => {
-	return (
-		<button
-			type={props.type ?? 'button'}
-			disabled={props.disabled}
-			class={buttonStyles(props)}
-			onClick={props.onClick}
-		>
-			{props.children}
-		</button>
-	);
+	const hasLink = createMemo(() => props.href !== undefined);
+
+	return (() => {
+		if (hasLink()) {
+			return (
+				<a href={!props.disabled ? props.href : undefined} class={buttonStyles(props)}>
+					{props.children}
+				</a>
+			);
+		}
+
+		return (
+			<button
+				type={props.type ?? 'button'}
+				disabled={props.disabled}
+				class={buttonStyles(props)}
+				onClick={props.onClick}
+			>
+				{props.children}
+			</button>
+		);
+	}) as unknown as JSX.Element;
 };
 
 export default Button;

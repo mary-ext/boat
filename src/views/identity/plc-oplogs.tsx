@@ -20,6 +20,7 @@ import CheckIcon from '~/components/ic-icons/baseline-check';
 import ContentCopyIcon from '~/components/ic-icons/baseline-content-copy';
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
+import PageHeader from '~/components/page-header';
 
 const PlcOperationLogPage = () => {
 	const [params, setParams] = useSearchParams({
@@ -55,11 +56,7 @@ const PlcOperationLogPage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">View PLC operation logs</h1>
-				<p class="text-gray-600">Show history of a did:plc identity</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="View PLC operation logs" subtitle="Show history of a did:plc identity" />
 
 			<form
 				onSubmit={(ev) => {

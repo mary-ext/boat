@@ -17,6 +17,7 @@ import { PromiseQueue } from '~/lib/utils/promise-queue';
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
 import Logger, { createLogger } from '~/components/logger';
+import PageHeader from '~/components/page-header';
 
 const BlobExportPage = () => {
 	const logger = createLogger();
@@ -229,11 +230,7 @@ const BlobExportPage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">Export blobs</h1>
-				<p class="text-gray-600">Download all blobs from an account into a tarball</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="Export blobs" subtitle="Download all blobs from an account into a tarball" />
 
 			<form
 				onSubmit={(ev) => {

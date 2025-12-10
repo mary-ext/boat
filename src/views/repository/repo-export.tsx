@@ -15,6 +15,7 @@ import { formatBytes } from '~/lib/utils/intl/bytes';
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
 import Logger, { createLogger } from '~/components/logger';
+import PageHeader from '~/components/page-header';
 
 const RepoExportPage = () => {
 	const logger = createLogger();
@@ -135,11 +136,7 @@ const RepoExportPage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">Export repository</h1>
-				<p class="text-gray-600">Download an archive of an account's repository</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="Export repository" subtitle="Download an archive of an account's repository" />
 
 			<form
 				onSubmit={(ev) => {

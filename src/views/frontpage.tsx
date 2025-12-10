@@ -2,6 +2,8 @@ import type { Component, ComponentProps } from 'solid-js';
 
 import { useTitle } from '~/lib/navigation/router';
 
+import PageHeader from '~/components/page-header';
+
 import HistoryIcon from '~/components/ic-icons/baseline-history';
 import KeyIcon from '~/components/ic-icons/baseline-key';
 import KeyVisualizerIcon from '~/components/ic-icons/baseline-key-visualizer';
@@ -170,11 +172,7 @@ const Frontpage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">boat</h1>
-				<p class="text-gray-600">handy online tools for AT Protocol</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="boat" subtitle="handy online tools for AT Protocol" />
 
 			<div class="flex grow flex-col pb-2">{nodes}</div>
 

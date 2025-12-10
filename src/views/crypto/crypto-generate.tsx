@@ -6,6 +6,7 @@ import { useTitle } from '~/lib/navigation/router';
 
 import Button from '~/components/inputs/button';
 import RadioInput from '~/components/inputs/radio-input';
+import PageHeader from '~/components/page-header';
 
 type KeyType = 'p256' | 'secp256k1';
 
@@ -26,11 +27,7 @@ const CryptoGeneratePage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">Generate secret keys</h1>
-				<p class="text-gray-600">Create a new secp256k1/nistp256 keypair</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="Generate secret keys" subtitle="Create a new secp256k1/nistp256 keypair" />
 
 			<form
 				onSubmit={async (ev) => {

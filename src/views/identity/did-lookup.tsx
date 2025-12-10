@@ -15,6 +15,7 @@ import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
+import PageHeader from '~/components/page-header';
 
 const DidLookupPage = () => {
 	const [params, setParams] = useSearchParams({
@@ -46,11 +47,7 @@ const DidLookupPage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">View identity info</h1>
-				<p class="text-gray-600">Look up an account's DID document</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="View identity info" subtitle="Look up an account's DID document" />
 
 			<form
 				onSubmit={(ev) => {
@@ -133,30 +130,21 @@ const DidLookupPage = () => {
 
 														<div class="mt-2 flex flex-wrap gap-2 empty:hidden">
 															{isPDS && isServiceUrl && (
-																<button
-																	disabled
-																	class="flex h-9 select-none items-center rounded border border-gray-300 px-4 text-sm font-semibold text-gray-800 hover:bg-gray-100 active:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
-																>
+																<Button variant="outline" disabled>
 																	View PDS info
-																</button>
+																</Button>
 															)}
 
 															{isPDS && isServiceUrl && (
-																<button
-																	disabled
-																	class="flex h-9 select-none items-center rounded border border-gray-300 px-4 text-sm font-semibold text-gray-800 hover:bg-gray-100 active:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
-																>
+																<Button variant="outline" disabled>
 																	Explore account repository
-																</button>
+																</Button>
 															)}
 
 															{isLabeler && isServiceUrl && (
-																<button
-																	disabled
-																	class="flex h-9 select-none items-center rounded border border-gray-300 px-4 text-sm font-semibold text-gray-800 hover:bg-gray-100 active:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
-																>
+																<Button variant="outline" disabled>
 																	View emitted labels
-																</button>
+																</Button>
 															)}
 														</div>
 													</li>
@@ -185,22 +173,19 @@ const DidLookupPage = () => {
 								</div>
 
 								<div class="flex flex-wrap gap-4 p-4 pt-2">
-									<button
+									<Button
+										variant="outline"
 										onClick={() => {
 											navigator.clipboard.writeText(JSON.stringify(doc, null, 2));
 										}}
-										class="flex h-9 select-none items-center rounded border border-gray-300 px-4 text-sm font-semibold text-gray-800 hover:bg-gray-100 active:bg-gray-100"
 									>
 										Copy DID document
-									</button>
+									</Button>
 
 									{isDidPlc && (
-										<a
-											href={`/plc-oplogs?q=${params.q!}`}
-											class="flex h-9 select-none items-center rounded border border-gray-300 px-4 text-sm font-semibold text-gray-800 hover:bg-gray-100 active:bg-gray-100"
-										>
+										<Button variant="outline" href={`/plc-oplogs?q=${params.q!}`}>
 											View PLC operation logs
-										</a>
+										</Button>
 									)}
 								</div>
 							</>

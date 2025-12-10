@@ -13,6 +13,7 @@ import { history } from '~/globals/navigation';
 
 import { useTitle } from '~/lib/navigation/router';
 
+import PageHeader from '~/components/page-header';
 import { Wizard } from '~/components/wizard';
 
 import Step1_HandleInput from './steps/step1_handle-input';
@@ -101,11 +102,7 @@ const PlcApplicatorPage = () => {
 
 	return (
 		<>
-			<div class="p-4">
-				<h1 class="text-lg font-bold text-purple-800">Apply PLC operations</h1>
-				<p class="text-gray-600">Submit operations to your did:plc identity</p>
-			</div>
-			<hr class="mx-4 border-gray-300" />
+			<PageHeader title="Apply PLC operations" subtitle="Submit operations to your did:plc identity" />
 
 			<Wizard<PlcApplicatorConstraints>
 				initialStep="Step1_HandleInput"
