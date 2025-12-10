@@ -51,7 +51,7 @@ const CryptoGeneratePage = () => {
 					]);
 
 					const result: KeypairResult = {
-						type: keypair.type,
+						type: keypair.type as KeyType,
 						publicDidKey,
 						privateHex,
 						privateMultikey,

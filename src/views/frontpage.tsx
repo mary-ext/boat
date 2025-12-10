@@ -121,7 +121,7 @@ const Frontpage = () => {
 				{
 					name: `View crypto key info`,
 					description: `Show basic metadata about a public or private key`,
-					href: null,
+					href: `/crypto-info`,
 					icon: KeyVisualizerIcon,
 				},
 			],
