@@ -172,8 +172,10 @@ const BlobsSection = () => {
 				try {
 					const data = await entry.bytes();
 					await destClient.post('com.atproto.repo.uploadBlob', {
-						encoding: 'application/octet-stream',
 						input: data,
+						headers: {
+							'content-type': 'application/octet-stream',
+						},
 					});
 					uploaded++;
 				} catch (err) {
@@ -228,8 +230,10 @@ const BlobsSection = () => {
 						const contentType = response.headers.get('content-type') || 'application/octet-stream';
 
 						await destClient.post('com.atproto.repo.uploadBlob', {
-							encoding: contentType,
 							input: response.data,
+							headers: {
+								'content-type': contentType,
+							},
 						});
 
 						uploaded++;
@@ -297,11 +301,16 @@ const BlobsSection = () => {
 		const sourceData = importFromSourceMutation.data;
 
 		if (fileData && !fileData.cancelled) {
-			return `Uploaded ${fileData.uploaded} blobs` + (fileData.failed > 0 ? ` (${fileData.failed} failed)` : '');
+			return (
+				`Uploaded ${fileData.uploaded} blobs` + (fileData.failed > 0 ? ` (${fileData.failed} failed)` : '')
+			);
 		}
 		if (sourceData) {
 			if (sourceData.uploaded === 0 && sourceData.failed === 0) return 'No missing blobs';
-			return `Uploaded ${sourceData.uploaded} blobs` + (sourceData.failed > 0 ? ` (${sourceData.failed} failed)` : '');
+			return (
+				`Uploaded ${sourceData.uploaded} blobs` +
+				(sourceData.failed > 0 ? ` (${sourceData.failed} failed)` : '')
+			);
 		}
 		return importProgress();
 	};
@@ -311,9 +320,7 @@ const BlobsSection = () => {
 	return (
 		<Accordion title="Blobs">
 			<Subsection title="Export from source">
-				<p class="text-sm text-gray-600">
-					Download all blobs as a tarball for backup or manual import.
-				</p>
+				<p class="text-sm text-gray-600">Download all blobs as a tarball for backup or manual import.</p>
 
 				<Show when={source()} fallback={<p class="text-sm text-gray-500">Resolve source account first.</p>}>
 					{(src) => (
@@ -339,9 +346,7 @@ const BlobsSection = () => {
 			</Subsection>
 
 			<Subsection title="Import to destination">
-				<p class="text-sm text-gray-600">
-					Upload blobs from a tarball or transfer directly from source.
-				</p>
+				<p class="text-sm text-gray-600">Upload blobs from a tarball or transfer directly from source.</p>
 
 				<Show
 					when={destination()?.manager}
@@ -376,9 +381,7 @@ const BlobsSection = () => {
 								{(text) => <span class="text-sm text-gray-600">{text()}</span>}
 							</Show>
 
-							<Show when={getImportError()}>
-								{(err) => <p class="text-sm text-red-600">{`${err()}`}</p>}
-							</Show>
+							<Show when={getImportError()}>{(err) => <p class="text-sm text-red-600">{`${err()}`}</p>}</Show>
 						</>
 					)}
 				</Show>
@@ -403,9 +406,7 @@ const BlobsSection = () => {
 								<Show when={checkStatusMutation.data}>
 									{(status) => (
 										<span class="text-sm">
-											<StatusBadge
-												variant={status().imported === status().expected ? 'success' : 'pending'}
-											>
+											<StatusBadge variant={status().imported === status().expected ? 'success' : 'pending'}>
 												{status().imported}/{status().expected} blobs
 											</StatusBadge>
 										</span>

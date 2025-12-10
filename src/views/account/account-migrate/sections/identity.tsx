@@ -2,7 +2,9 @@ import { createSignal, For, Index, Show } from 'solid-js';
 
 import { Client, ClientResponseError, type CredentialManager, ok } from '@atcute/client';
 import { type DidKeyString, Secp256k1PrivateKeyExportable } from '@atcute/crypto';
+import type { Did } from '@atcute/lexicons/syntax';
 
+import { getPlcAuditLogs } from '~/api/queries/plc';
 import { formatTotpCode, TOTP_RE } from '~/api/utils/auth';
 
 import { createMutation } from '~/lib/utils/mutation';
@@ -11,6 +13,8 @@ import { Accordion, StatusBadge, Subsection } from '~/components/accordion';
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
 import ToggleInput from '~/components/inputs/toggle-input';
+
+import { getPlcPayload } from '~/views/identity/plc-applicator/plc-utils';
 
 import { useMigration } from '../context';
 
@@ -48,7 +52,45 @@ const IdentitySection = () => {
 	const loadCredentialsMutation = createMutation({
 		async mutationFn({ manager }: { manager: CredentialManager }) {
 			const client = new Client({ handler: manager });
-			return (await ok(client.get('com.atproto.identity.getRecommendedDidCredentials', {}))) as RecommendedCredentials;
+			return (await ok(
+				client.get('com.atproto.identity.getRecommendedDidCredentials', {}),
+			)) as RecommendedCredentials;
+		},
+		onError(err) {
+			console.error(err);
+		},
+	});
+
+	// Analyze current rotation keys to find user-controlled keys that should be preserved
+	const analyzeRotationKeysMutation = createMutation({
+		async mutationFn({ did, sourceManager }: { did: Did<'plc'>; sourceManager: CredentialManager }, signal) {
+			// Get current rotation keys from PLC audit log
+			const auditLogs = await getPlcAuditLogs({ did, signal });
+			const latestEntry = auditLogs[auditLogs.length - 1];
+			const currentPayload = getPlcPayload(latestEntry);
+			const currentRotationKeys = currentPayload.rotationKeys ?? [];
+
+			// Get source PDS's recommended credentials to identify PDS-controlled keys
+			const sourceClient = new Client({ handler: sourceManager });
+			const sourcePdsCredentials = (await ok(
+				sourceClient.get('com.atproto.identity.getRecommendedDidCredentials', {}),
+			)) as RecommendedCredentials;
+			const sourcePdsKeys = new Set(sourcePdsCredentials.rotationKeys ?? []);
+
+			// Keys in current doc that aren't from source PDS are user-controlled
+			const userControlledKeys = currentRotationKeys.filter((key) => !sourcePdsKeys.has(key));
+
+			return {
+				currentRotationKeys,
+				sourcePdsKeys: sourcePdsCredentials.rotationKeys ?? [],
+				userControlledKeys,
+			};
+		},
+		onSuccess(data) {
+			// Pre-populate custom keys with user-controlled keys
+			if (data.userControlledKeys.length > 0) {
+				setCustomKeys(data.userControlledKeys);
+			}
 		},
 		onError(err) {
 			console.error(err);
@@ -199,41 +241,7 @@ const IdentitySection = () => {
 				</p>
 			</div>
 
-			<Subsection title="1. Request operation signature">
-				<p class="text-sm text-gray-600">Request a confirmation token via email from your source PDS.</p>
-
-				<Show
-					when={source()?.manager}
-					fallback={<p class="text-sm text-gray-500">Sign in to source account first.</p>}
-				>
-					{(manager) => (
-						<>
-							<div class="flex items-center gap-3">
-								<Button
-									onClick={() => requestTokenMutation.mutate({ manager: manager() })}
-									disabled={requestTokenMutation.isPending}
-								>
-									{requestTokenMutation.isPending ? 'Requesting...' : 'Request token'}
-								</Button>
-
-								<Show when={requestTokenMutation.isSuccess}>
-									<StatusBadge variant="success">Email sent</StatusBadge>
-								</Show>
-							</div>
-
-							<Show when={requestTokenMutation.isError}>
-								<p class="text-sm text-red-600">{`${requestTokenMutation.error}`}</p>
-							</Show>
-
-							<Show when={requestTokenMutation.isSuccess}>
-								<p class="text-sm text-gray-600">Check your email inbox for the confirmation code.</p>
-							</Show>
-						</>
-					)}
-				</Show>
-			</Subsection>
-
-			<Subsection title="2. Preview new credentials">
+			<Subsection title="1. Preview new credentials">
 				<p class="text-sm text-gray-600">View what your DID document will look like after the migration.</p>
 
 				<Show
@@ -265,21 +273,78 @@ const IdentitySection = () => {
 									<>
 										<div class="mt-2 text-sm">
 											<p class="text-gray-500">
-												PDS rotation keys ({creds().rotationKeys?.length ?? 0}/5):
+												Destination PDS rotation keys ({creds().rotationKeys?.length ?? 0}/5):
 											</p>
 											<div class="mt-1 flex flex-col gap-1">
 												<For each={creds().rotationKeys ?? []}>
-													{(key) => (
-														<code class="block truncate text-xs text-gray-700">{key}</code>
-													)}
+													{(key) => <code class="block truncate text-xs text-gray-700">{key}</code>}
 												</For>
 											</div>
 										</div>
 
+										<Show when={source()?.manager && source()}>
+											{(src) => (
+												<div class="mt-3 rounded border border-blue-200 bg-blue-50 p-3">
+													<div class="flex items-center justify-between">
+														<p class="text-sm font-medium text-blue-800">Analyze existing rotation keys</p>
+														<Button
+															variant="outline"
+															onClick={() =>
+																analyzeRotationKeysMutation.mutate({
+																	did: src().did as Did<'plc'>,
+																	sourceManager: src().manager!,
+																})
+															}
+															disabled={analyzeRotationKeysMutation.isPending}
+														>
+															{analyzeRotationKeysMutation.isPending ? 'Analyzing...' : 'Analyze'}
+														</Button>
+													</div>
+													<p class="mt-1 text-xs text-blue-600">
+														Check if you have any user-controlled rotation keys that should be preserved
+														during migration.
+													</p>
+
+													<Show when={analyzeRotationKeysMutation.error}>
+														<p class="mt-2 text-sm text-red-600">{`${analyzeRotationKeysMutation.error}`}</p>
+													</Show>
+
+													<Show when={analyzeRotationKeysMutation.data}>
+														{(analysis) => (
+															<div class="mt-2 text-sm">
+																<Show
+																	when={analysis().userControlledKeys.length > 0}
+																	fallback={
+																		<p class="text-blue-700">
+																			No user-controlled rotation keys found. Your current keys are all
+																			managed by your source PDS.
+																		</p>
+																	}
+																>
+																	<p class="font-medium text-blue-800">
+																		Found {analysis().userControlledKeys.length} user-controlled key(s) to
+																		preserve:
+																	</p>
+																	<div class="mt-1 flex flex-col gap-1">
+																		<For each={analysis().userControlledKeys}>
+																			{(key) => (
+																				<code class="block truncate text-xs text-blue-700">{key}</code>
+																			)}
+																		</For>
+																	</div>
+																	<p class="mt-2 text-xs text-blue-600">
+																		These keys have been added to the custom keys section below.
+																	</p>
+																</Show>
+															</div>
+														)}
+													</Show>
+												</div>
+											)}
+										</Show>
+
 										<details class="mt-2">
-											<summary class="cursor-pointer text-sm text-gray-600">
-												View full credentials
-											</summary>
+											<summary class="cursor-pointer text-sm text-gray-600">View full credentials</summary>
 											<pre class="mt-2 max-h-48 overflow-auto rounded border border-gray-200 bg-gray-50 p-2 font-mono text-xs">
 												{JSON.stringify(creds(), null, 2)}
 											</pre>
@@ -292,10 +357,10 @@ const IdentitySection = () => {
 				</Show>
 			</Subsection>
 
-			<Subsection title="3. Rotation keys (optional)">
+			<Subsection title="2. Rotation keys (optional)">
 				<p class="text-sm text-gray-600">
-					Add a rotation key to recover your account if your new PDS goes rogue. This will be prepended to
-					the PDS rotation keys shown above.
+					Add a rotation key to recover your account if your new PDS goes rogue. This will be prepended to the
+					PDS rotation keys shown above.
 				</p>
 
 				<ToggleInput
@@ -323,8 +388,8 @@ const IdentitySection = () => {
 						<div class="rounded border border-green-300 bg-green-50 p-3">
 							<p class="mb-2 text-sm font-semibold text-green-800">Save your rotation key private key!</p>
 							<p class="mb-3 text-xs text-green-700">
-								Store this securely. You'll need it to recover your account if your PDS becomes
-								unavailable or malicious.
+								Store this securely. You'll need it to recover your account if your PDS becomes unavailable or
+								malicious.
 							</p>
 
 							<div class="flex flex-col gap-2 text-sm">
@@ -345,7 +410,7 @@ const IdentitySection = () => {
 					)}
 				</Show>
 
-				<div class="mt-4 border-t border-gray-200 pt-4">
+				<div class="rounded border border-gray-200 bg-gray-50 p-3">
 					<p class="mb-2 text-sm font-medium text-gray-700">Custom rotation keys</p>
 					<p class="mb-3 text-xs text-gray-500">
 						Add existing rotation keys (did:key format) you already control.
@@ -394,6 +459,40 @@ const IdentitySection = () => {
 				</div>
 			</Subsection>
 
+			<Subsection title="3. Request operation signature">
+				<p class="text-sm text-gray-600">Request a confirmation token via email from your source PDS.</p>
+
+				<Show
+					when={source()?.manager}
+					fallback={<p class="text-sm text-gray-500">Sign in to source account first.</p>}
+				>
+					{(manager) => (
+						<>
+							<div class="flex items-center gap-3">
+								<Button
+									onClick={() => requestTokenMutation.mutate({ manager: manager() })}
+									disabled={requestTokenMutation.isPending}
+								>
+									{requestTokenMutation.isPending ? 'Requesting...' : 'Request token'}
+								</Button>
+
+								<Show when={requestTokenMutation.isSuccess}>
+									<StatusBadge variant="success">Email sent</StatusBadge>
+								</Show>
+							</div>
+
+							<Show when={requestTokenMutation.isError}>
+								<p class="text-sm text-red-600">{`${requestTokenMutation.error}`}</p>
+							</Show>
+
+							<Show when={requestTokenMutation.isSuccess}>
+								<p class="text-sm text-gray-600">Check your email inbox for the confirmation code.</p>
+							</Show>
+						</>
+					)}
+				</Show>
+			</Subsection>
+
 			<Subsection title="4. Sign and submit">
 				<p class="text-sm text-gray-600">Enter the confirmation code and submit the PLC operation.</p>
 
@@ -422,7 +521,10 @@ const IdentitySection = () => {
 					/>
 
 					<div class="flex items-center gap-3">
-						<Button onClick={handleSignAndSubmit} disabled={signAndSubmitMutation.isPending || !canSignAndSubmit()}>
+						<Button
+							onClick={handleSignAndSubmit}
+							disabled={signAndSubmitMutation.isPending || !canSignAndSubmit()}
+						>
 							{signAndSubmitMutation.isPending ? 'Submitting...' : 'Sign and submit'}
 						</Button>
 

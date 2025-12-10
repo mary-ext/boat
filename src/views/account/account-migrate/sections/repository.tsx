@@ -109,17 +109,17 @@ const RepositorySection = () => {
 				return null;
 			}
 
-			setImportStatus('Reading file...');
 			const file = await fd.getFile();
-			const data = new Uint8Array(await file.arrayBuffer());
 
-			setImportStatus(`Uploading repository (${formatBytes(data.length)})...`);
+			setImportStatus(`Uploading repository (${formatBytes(file.size)})...`);
 
 			const destClient = new Client({ handler: manager });
 			const importResp = await destClient.post('com.atproto.repo.importRepo', {
 				as: null,
-				encoding: 'application/vnd.ipld.car',
-				input: data,
+				input: file,
+				headers: {
+					'content-type': 'application/vnd.ipld.car',
+				},
 			});
 
 			if (!importResp.ok) {
@@ -170,8 +170,10 @@ const RepositorySection = () => {
 			const destClient = new Client({ handler: destManager });
 			const importResp = await destClient.post('com.atproto.repo.importRepo', {
 				as: null,
-				encoding: 'application/vnd.ipld.car',
 				input: response.data,
+				headers: {
+					'content-type': 'application/vnd.ipld.car',
+				},
 			});
 
 			if (!importResp.ok) {
@@ -229,9 +231,7 @@ const RepositorySection = () => {
 			</Subsection>
 
 			<Subsection title="Import to destination">
-				<p class="text-sm text-gray-600">
-					Upload a repository CAR file or transfer directly from source.
-				</p>
+				<p class="text-sm text-gray-600">Upload a repository CAR file or transfer directly from source.</p>
 
 				<Show
 					when={destination()?.manager}
