@@ -12,8 +12,8 @@ importers:
         specifier: ^3.1.9
         version: 3.1.9
       '@atcute/bluesky':
-        specifier: ^3.2.12
-        version: 3.2.12
+        specifier: ^3.2.13
+        version: 3.2.13
       '@atcute/car':
         specifier: ^5.0.0
         version: 5.0.0
@@ -24,11 +24,11 @@ importers:
         specifier: ^2.2.6
         version: 2.2.6
       '@atcute/client':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.1.1
+        version: 4.1.1
       '@atcute/crypto':
-        specifier: ^2.2.6
-        version: 2.2.6
+        specifier: ^2.3.0
+        version: 2.3.0
       '@atcute/did-plc':
         specifier: ^0.2.0
         version: 0.2.0
@@ -82,8 +82,8 @@ importers:
         specifier: ^0.5.10
         version: 0.5.10(tailwindcss@3.4.18)
       '@types/node':
-        specifier: ^22.19.1
-        version: 22.19.1
+        specifier: ^22.19.2
+        version: 22.19.2
       autoprefixer:
         specifier: ^10.4.22
         version: 10.4.22(postcss@8.5.6)
@@ -103,11 +103,11 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
       vite:
-        specifier: ^7.2.6
-        version: 7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1)
+        specifier: ^7.2.7
+        version: 7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1)
       vite-plugin-solid:
         specifier: ^2.11.10
-        version: 2.11.10(solid-js@1.9.10)(vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1))
+        version: 2.11.10(solid-js@1.9.10)(vite@7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1))
       wrangler:
         specifier: ^4.53.0
         version: 4.53.0
@@ -121,8 +121,8 @@ packages:
   '@atcute/atproto@3.1.9':
     resolution: {integrity: sha512-DyWwHCTdR4hY2BPNbLXgVmm7lI+fceOwWbE4LXbGvbvVtSn+ejSVFaAv01Ra3kWDha0whsOmbJL8JP0QPpf1+w==}
 
-  '@atcute/bluesky@3.2.12':
-    resolution: {integrity: sha512-hVhAO7b4bxu9iwl/UdqugWDvUtSrf0VDN+dTalKxpJrJ3RrZb+jL1CB1AmdWOCZgHrOxXsgAJF4mpnzqd2D3oA==}
+  '@atcute/bluesky@3.2.13':
+    resolution: {integrity: sha512-ZG/mqsCjVU6zvH6XsRw+oQglrsdu5R7mnncMO+Ux0KWbX2xJw4ZMFHfs7ZTC69dVPK9r/yle7YbpygZTOWDM9A==}
 
   '@atcute/car@5.0.0':
     resolution: {integrity: sha512-OIY2xTXv8lSpZsDSn/UYQtJSMvDw5Hi4Q+uyvmiqSM+fht08QRAEq/nxa5YFciPZ3nfDFnZ3//EgJw7QhkSXLQ==}
@@ -133,11 +133,11 @@ packages:
   '@atcute/cid@2.2.6':
     resolution: {integrity: sha512-bTAHHbJ24p+E//V4KCS4xdmd39o211jJswvqQOevj7vk+5IYcgDLx1ryZWZ1sEPOo9x875li/kj5gpKL14RDwQ==}
 
-  '@atcute/client@4.1.0':
-    resolution: {integrity: sha512-AYhSu3RSDA2VDkVGOmad320NRbUUUf5pCFWJcOzlk25YC/4kyzmMFfpzhf1jjjEcY+anNBXGGhav/kKB1evggQ==}
+  '@atcute/client@4.1.1':
+    resolution: {integrity: sha512-FROCbTTCeL5u4tO/n72jDEKyKqjdlXMB56Ehve3W/gnnLGCYWvN42sS7tvL1Mgu6sbO3yZwsXKDrmM2No4XpjA==}
 
-  '@atcute/crypto@2.2.6':
-    resolution: {integrity: sha512-vkuexF+kmrKE1/Uqzub99Qi4QpnxA2jbu60E6PTgL4XypELQ6rb59MB/J1VbY2gs0kd3ET7+L3+NWpKD5nXyfA==}
+  '@atcute/crypto@2.3.0':
+    resolution: {integrity: sha512-w5pkJKCjbNMQu+F4JRHbR3ROQyhi1wbn+GSC6WDQamcYHkZmEZk1/eoI354bIQOOfkEM6aFLv718iskrkon4GQ==}
 
   '@atcute/did-plc@0.2.0':
     resolution: {integrity: sha512-1sGek8GRM/Ph7nLVRREm8FqM7g4shGckItvdVwJcRbUa8Rh0zOsXQa0QyYWAC0k40BhkqO9FwKXhJEaXCmF5oQ==}
@@ -929,8 +929,8 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  '@types/node@22.19.1':
-    resolution: {integrity: sha512-LCCV0HdSZZZb34qifBsyWlUmok6W7ouER+oQIGBScS8EsZsQbrtFTUrDX4hOl+CS6p7cnNC4td+qrSVGSCTUfQ==}
+  '@types/node@22.19.2':
+    resolution: {integrity: sha512-LPM2G3Syo1GLzXLGJAKdqoU35XvrWzGJ21/7sgZTUpbkBaOasTj8tjwn6w+hCkqaa1TfJ/w67rJSwYItlJ2mYw==}
 
   acorn-walk@8.3.2:
     resolution: {integrity: sha512-cjkyv4OtNCIeqhHrfS81QWXoCBPExR/J62oyEqepVw8WaQeSqpW2uhuLPh1m9eWhDuOo/jUXVTlifvesOWp/4A==}
@@ -977,8 +977,8 @@ packages:
       solid-js:
         optional: true
 
-  baseline-browser-mapping@2.9.4:
-    resolution: {integrity: sha512-ZCQ9GEWl73BVm8bu5Fts8nt7MHdbt5vY9bP6WGnUh+r3l8M7CgfyTlwsgCbMC66BNxPr6Xoce3j66Ms5YUQTNA==}
+  baseline-browser-mapping@2.9.5:
+    resolution: {integrity: sha512-D5vIoztZOq1XM54LUdttJVc96ggEsIfju2JBvht06pSzpckp3C7HReun67Bghzrtdsq9XdMGbSSB3v3GhMNmAA==}
     hasBin: true
 
   binary-extensions@2.3.0:
@@ -1004,8 +1004,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  caniuse-lite@1.0.30001759:
-    resolution: {integrity: sha512-Pzfx9fOKoKvevQf8oCXoyNRQ5QyxJj+3O0Rqx2V5oxT61KGx8+n6hV/IUyJeifUci2clnmmKVpvtiqRzgiWjSw==}
+  caniuse-lite@1.0.30001760:
+    resolution: {integrity: sha512-7AAMPcueWELt1p3mi13HR/LHH0TJLT11cnwDJEs3xA4+CK/PLKeO9Kl1oru24htkyUKtkGCvAx4ohB0Ttry8Dw==}
 
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
@@ -1066,8 +1066,8 @@ packages:
   dlv@1.1.3:
     resolution: {integrity: sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==}
 
-  electron-to-chromium@1.5.266:
-    resolution: {integrity: sha512-kgWEglXvkEfMH7rxP5OSZZwnaDWT7J9EoZCujhnpLbfi0bbNtRkgdX2E3gt0Uer11c61qCYktB3hwkAS325sJg==}
+  electron-to-chromium@1.5.267:
+    resolution: {integrity: sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw==}
 
   entities@6.0.1:
     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
@@ -1580,8 +1580,8 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
-  vite@7.2.6:
-    resolution: {integrity: sha512-tI2l/nFHC5rLh7+5+o7QjKjSR04ivXDF4jcgV0f/bTQ+OJiITy5S6gaynVsEM+7RqzufMnVbIon6Sr5x1SDYaQ==}
+  vite@7.2.7:
+    resolution: {integrity: sha512-ITcnkFeR3+fI8P1wMgItjGrR10170d8auB4EpMLPqmx6uxElH3a/hHGQabSHKdqd4FXWO1nFIp9rRn7JQ34ACQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -1679,7 +1679,7 @@ snapshots:
     dependencies:
       '@atcute/lexicons': 1.2.5
 
-  '@atcute/bluesky@3.2.12':
+  '@atcute/bluesky@3.2.13':
     dependencies:
       '@atcute/atproto': 3.1.9
       '@atcute/lexicons': 1.2.5
@@ -1702,12 +1702,12 @@ snapshots:
       '@atcute/multibase': 1.1.6
       '@atcute/uint8array': 1.0.6
 
-  '@atcute/client@4.1.0':
+  '@atcute/client@4.1.1':
     dependencies:
       '@atcute/identity': 1.1.3
       '@atcute/lexicons': 1.2.5
 
-  '@atcute/crypto@2.2.6':
+  '@atcute/crypto@2.3.0':
     dependencies:
       '@atcute/multibase': 1.1.6
       '@atcute/uint8array': 1.0.6
@@ -1717,7 +1717,7 @@ snapshots:
     dependencies:
       '@atcute/cbor': 2.2.8
       '@atcute/cid': 2.2.6
-      '@atcute/crypto': 2.2.6
+      '@atcute/crypto': 2.3.0
       '@atcute/identity': 1.1.3
       '@atcute/lexicons': 1.2.5
       '@atcute/multibase': 1.1.6
@@ -1756,7 +1756,7 @@ snapshots:
       '@atcute/car': 5.0.0
       '@atcute/cbor': 2.2.8
       '@atcute/cid': 2.2.6
-      '@atcute/crypto': 2.2.6
+      '@atcute/crypto': 2.3.0
       '@atcute/lexicons': 1.2.5
       '@atcute/mst': 0.1.0
       '@atcute/uint8array': 1.0.6
@@ -2316,7 +2316,7 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/node@22.19.1':
+  '@types/node@22.19.2':
     dependencies:
       undici-types: 6.21.0
 
@@ -2338,7 +2338,7 @@ snapshots:
   autoprefixer@10.4.22(postcss@8.5.6):
     dependencies:
       browserslist: 4.28.1
-      caniuse-lite: 1.0.30001759
+      caniuse-lite: 1.0.30001760
       fraction.js: 5.3.4
       normalize-range: 0.1.2
       picocolors: 1.1.1
@@ -2361,7 +2361,7 @@ snapshots:
     optionalDependencies:
       solid-js: 1.9.10
 
-  baseline-browser-mapping@2.9.4: {}
+  baseline-browser-mapping@2.9.5: {}
 
   binary-extensions@2.3.0: {}
 
@@ -2373,9 +2373,9 @@ snapshots:
 
   browserslist@4.28.1:
     dependencies:
-      baseline-browser-mapping: 2.9.4
-      caniuse-lite: 1.0.30001759
-      electron-to-chromium: 1.5.266
+      baseline-browser-mapping: 2.9.5
+      caniuse-lite: 1.0.30001760
+      electron-to-chromium: 1.5.267
       node-releases: 2.0.27
       update-browserslist-db: 1.2.2(browserslist@4.28.1)
 
@@ -2383,7 +2383,7 @@ snapshots:
 
   camelcase-css@2.0.1: {}
 
-  caniuse-lite@1.0.30001759: {}
+  caniuse-lite@1.0.30001760: {}
 
   chokidar@3.6.0:
     dependencies:
@@ -2435,7 +2435,7 @@ snapshots:
 
   dlv@1.1.3: {}
 
-  electron-to-chromium@1.5.266: {}
+  electron-to-chromium@1.5.267: {}
 
   entities@6.0.1: {}
 
@@ -2924,7 +2924,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite-plugin-solid@2.11.10(solid-js@1.9.10)(vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1)):
+  vite-plugin-solid@2.11.10(solid-js@1.9.10)(vite@7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1)):
     dependencies:
       '@babel/core': 7.28.5
       '@types/babel__core': 7.20.5
@@ -2932,12 +2932,12 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.9.10
       solid-refresh: 0.6.3(solid-js@1.9.10)
-      vite: 7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1)
-      vitefu: 1.1.1(vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1))
+      vite: 7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1)
+      vitefu: 1.1.1(vite@7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1))
     transitivePeerDependencies:
       - supports-color
 
-  vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1):
+  vite@7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -2946,14 +2946,14 @@ snapshots:
       rollup: 4.53.3
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 22.19.1
+      '@types/node': 22.19.2
       fsevents: 2.3.3
       jiti: 1.21.7
       terser: 5.44.1
 
-  vitefu@1.1.1(vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1)):
+  vitefu@1.1.1(vite@7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1)):
     optionalDependencies:
-      vite: 7.2.6(@types/node@22.19.1)(jiti@1.21.7)(terser@5.44.1)
+      vite: 7.2.7(@types/node@22.19.2)(jiti@1.21.7)(terser@5.44.1)
 
   web-streams-polyfill@3.3.3:
     optional: true
