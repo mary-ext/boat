@@ -104,7 +104,7 @@ const Frontpage = () => {
 				{
 					name: `Migrate account`,
 					description: `Move your account data to another server`,
-					href: null,
+					href: '/account-migrate',
 					icon: MoveUpOutlinedIcon,
 				},
 			],

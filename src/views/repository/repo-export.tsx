@@ -11,6 +11,7 @@ import { isServiceUrlString } from '~/api/types/strings';
 import { useTitle } from '~/lib/navigation/router';
 import { makeAbortable } from '~/lib/utils/abortable';
 import { formatBytes } from '~/lib/utils/intl/bytes';
+import { iterateStream } from '~/lib/utils/stream';
 
 import Button from '~/components/inputs/button';
 import TextInput from '~/components/inputs/text-input';
@@ -219,22 +220,3 @@ const RepoExportPage = () => {
 };
 
 export default RepoExportPage;
-
-export async function* iterateStream<T>(stream: ReadableStream<T>) {
-	// Get a lock on the stream
-	const reader = stream.getReader();
-
-	try {
-		while (true) {
-			const { done, value } = await reader.read();
-
-			if (done) {
-				return;
-			}
-
-			yield value;
-		}
-	} finally {
-		reader.releaseLock();
-	}
-}

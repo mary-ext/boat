@@ -4,13 +4,14 @@ import { createId } from '~/lib/hooks/id';
 
 import type { BoundInputEvent } from './_types';
 
-interface TextInputProps {
+export interface TextInputProps {
 	label: JSX.Element;
 	blurb?: JSX.Element;
 	monospace?: boolean;
 	type?: 'text' | 'password' | 'url' | 'email';
 	name?: string;
 	required?: boolean;
+	disabled?: boolean;
 	autocomplete?: 'off' | 'on' | 'one-time-code' | 'username';
 	autocorrect?: 'off' | 'on';
 	pattern?: string;
@@ -55,6 +56,7 @@ const TextInput = (props: TextInputProps) => {
 				id={fieldId}
 				name={props.name}
 				required={props.required}
+				disabled={props.disabled}
 				autocomplete={props.autocomplete}
 				pattern={props.pattern}
 				placeholder={props.placeholder}

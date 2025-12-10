@@ -54,6 +54,11 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/account-migrate',
+		component: lazy(() => import('./views/account/account-migrate/page')),
+	},
+
+	{
 		path: '*',
 		component: lazy(() => import('./views/_404')),
 	},
