@@ -8,12 +8,10 @@ export const sortThreadgateAllow = (allow: ThreadgateState['allow']) => {
 			const aType = a.$type;
 			const bType = b.$type;
 
-			// Sort list rules alphabetically by list URI when comparing two list rules
 			if (aType === 'app.bsky.feed.threadgate#listRule' && aType === bType) {
 				return collator.compare(a.list, b.list);
 			}
 
-			// Sort all other rules alphabetically by type
 			return collator.compare(aType, bType);
 		});
 	}
