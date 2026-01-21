@@ -178,6 +178,23 @@ const Step2_RulesInput = ({
 				</legend>
 
 				<ToggleInput
+					label="followers"
+					checked={hasThreadRule({ $type: 'app.bsky.feed.threadgate#followerRule' })}
+					onChange={(next) => {
+						if (next) {
+							setCustomThreadRules([
+								...(threadRules() ?? []),
+								{ $type: 'app.bsky.feed.threadgate#followerRule' },
+							]);
+						} else {
+							setCustomThreadRules(
+								threadRules()?.filter((rule) => rule.$type !== 'app.bsky.feed.threadgate#followerRule'),
+							);
+						}
+					}}
+				/>
+
+				<ToggleInput
 					label="followed users"
 					checked={hasThreadRule({ $type: 'app.bsky.feed.threadgate#followingRule' })}
 					onChange={(next) => {
